@@ -38,7 +38,7 @@ class ToastDocument:
         if audioConfiguration.looping:
             self.SetAttribute(audioNode, "loop", str(audioConfiguration.looping).lower())
             # Looping audio requires the duration attribute in the audio element's parent toast element to be "long"
-            self.AddDuration("long")
+            self.SetDuration("long")
 
     def SetTextField(self, newValue, nodePosition: int):
         targetNode = self.xmlDocument.get_elements_by_tag_name("text").item(nodePosition)
@@ -52,7 +52,7 @@ class ToastDocument:
         imageNode = self.xmlDocument.get_elements_by_tag_name("image").item(0)
         self.SetNodeStringValue(imageNode.attributes.get_named_item("src"), f"file:///{imagePath}")
 
-    def AddDuration(self, duration):
+    def SetDuration(self, duration):
         durationNode = self.xmlDocument.get_elements_by_tag_name("toast").item(0)
         self.SetAttribute(durationNode, "duration", duration)
 
@@ -64,7 +64,7 @@ class ToastDocument:
         else:
             toastNode = self.xmlDocument.get_elements_by_tag_name("toast").item(0)
             self.SetAttribute(toastNode, "template", "ToastGeneric")
-            self.AddDuration("long")
+            self.SetDuration("long")
 
             actionsNode = self.xmlDocument.create_element("actions")
             toastNode.append_child(actionsNode)

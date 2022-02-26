@@ -33,7 +33,7 @@ class BaseWindowsToaster:
             toastContent.SetTextField(fieldContent, i)
 
         if toast.duration != ToastDuration.Default:
-            toastContent.AddDuration(toast.duration.value)
+            toastContent.SetDuration(toast.duration.value)
 
         if toast.timestamp is not None:
             toastContent.SetCustomTimestamp(toast.timestamp)
