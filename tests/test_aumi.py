@@ -71,3 +71,4 @@ def test_create_shell_link():
     assert propertyStore.GetValue(propertyKey).ToString() == "Test.Notification"
 
     linkPath.unlink()
+    assert linkPath.exists() is False
