@@ -1,7 +1,10 @@
 __pycache__/
 *.py[cod]
+.dmypy.json
 
 dist/
 *.egg-info/
 
 .idea
+
+main.py

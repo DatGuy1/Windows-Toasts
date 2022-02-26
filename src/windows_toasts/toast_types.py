@@ -1,18 +1,8 @@
-from __future__ import annotations
-
 import warnings
 from enum import Enum
 from pathlib import Path
-from typing import Callable
 
-from winsdk.windows.ui.notifications import (
-    ToastActivatedEventArgs,
-    ToastDismissedEventArgs,
-    ToastFailedEventArgs,
-    ToastTemplateType
-)
-
-from .toast_audio import ToastAudio
+from winsdk.windows.ui.notifications import ToastTemplateType
 
 
 class ToastDuration(Enum):
@@ -23,31 +13,49 @@ class ToastDuration(Enum):
 
 class Toast:
     ToastType = None
+    HasImage = False
 
     def __init__(self):
         """
         Base class for a toast. Should not be directly created
         """
-        self.audio: ToastAudio = ToastAudio()
-        self.duration: ToastDuration = ToastDuration.Default
-        self.hasImage: bool = False
-        self.imagePath: Path | None = None
-        self.textFields: list = []
+        self.audio = None
+        self.actions = []
+        self.duration = ToastDuration.Default
+        self.imagePath = None
+        self.textFields = []
+        self.timestamp = None
 
-        self.on_activated: Callable[[ToastActivatedEventArgs], None] | None = None
-        self.on_dismissed: Callable[[ToastDismissedEventArgs], None] | None = None
-        self.on_failed: Callable[[ToastFailedEventArgs], None] | None = None
+        self.on_activated = None
+        self.on_dismissed = None
+        self.on_failed = None
 
-    def SetHeadline(self, headlineText: str) -> None:
+    def AddAction(self, actionName, actionArguments):
         """
-        Sets the headline (top line) for the toast. Use SetBody if toast has only one line
+        Add an action to the action list. For example, if you're setting up a reminder,
+        you would use 'action=remindlater&date=2020-01-20' as arguments. Maximum of five.
+
+        :param actionName: Value that will be displayed on the button
+        :type actionName: str
+        :param actionArguments: Arguments that will be available in the callback.
+        :type actionArguments: str
+        """
+        if len(self.actions) >= 5:
+            warnings.warn(f"Cannot add any more actions, you're already at five")
+            return
+
+        self.actions.append((actionName, actionArguments))
+
+    def SetHeadline(self, headlineText):
+        """
+        Sets the headline (top line) for the toast. Warns to use SetBody if toast has only one line
         """
         if len(self.textFields) < 2:
             warnings.warn(f"Toast of type {self.__class__.__name__} has no headline, only a body")
 
         self.textFields[0] = headlineText
 
-    def SetBody(self, bodyText: str) -> None:
+    def SetBody(self, bodyText):
         """
         Sets the text that will be displayed in the body of a single-lined toast
         """
@@ -56,19 +64,19 @@ class Toast:
         else:
             self.SetFirstLine(bodyText)
 
-    def SetFirstLine(self, lineText: str) -> None:
+    def SetFirstLine(self, lineText):
         """
         Sets the text that will be displayed in the first line (not the headline) of a multi-lined toast
         """
         self.textFields[1] = lineText
 
-    def SetSecondLine(self, lineText: str) -> None:
+    def SetSecondLine(self, lineText):
         """
         Sets the text that will be displayed in the second line of a two-lined (plus headline) toast
         """
         self.textFields[2] = lineText
 
-    def SetImage(self, imagePath: str | Path):
+    def SetImage(self, imagePath):
         """
         Sets the image that will be displayed as the icon of the toast. Only works for ToastImageAndText classes
 
@@ -79,6 +87,13 @@ class Toast:
             imagePath = Path(imagePath)
 
         self.imagePath = imagePath.resolve()
+
+    def SetCustomTimestamp(self, notificationTime):
+        """
+        Sets a custom notification timestamp. If you don't provide a custom timestamp,
+        Windows uses the time that your notification was sent
+        """
+        self.timestamp = notificationTime
 
 
 class ToastText1(Toast):
@@ -100,7 +115,7 @@ class ToastText2(Toast):
         One string of bold text on the first line, one string of regular text wrapped across the second and third lines
         """
         super().__init__()
-        self.textFields = [""]
+        self.textFields = ["", ""]
 
 
 class ToastText3(Toast):
@@ -111,7 +126,7 @@ class ToastText3(Toast):
         One string of bold text wrapped across the first and second lines, one string of regular text on the third line
         """
         super().__init__()
-        self.textFields = ["", "", ""]
+        self.textFields = ["", ""]
 
 
 class ToastText4(Toast):
@@ -128,6 +143,7 @@ class ToastText4(Toast):
 
 class ToastImageAndText1(Toast):
     ToastType = ToastTemplateType.TOAST_IMAGE_AND_TEXT01
+    HasImage = True
 
     def __init__(self):
         """
@@ -135,11 +151,11 @@ class ToastImageAndText1(Toast):
         """
         super().__init__()
         self.textFields = [""]
-        self.hasImage = True
 
 
 class ToastImageAndText2(Toast):
     ToastType = ToastTemplateType.TOAST_IMAGE_AND_TEXT02
+    HasImage = True
 
     def __init__(self):
         """
@@ -153,6 +169,7 @@ class ToastImageAndText2(Toast):
 
 class ToastImageAndText3(Toast):
     ToastType = ToastTemplateType.TOAST_IMAGE_AND_TEXT03
+    HasImage = True
 
     def __init__(self):
         """
@@ -161,11 +178,11 @@ class ToastImageAndText3(Toast):
         """
         super().__init__()
         self.textFields = ["", ""]
-        self.hasImage = True
 
 
 class ToastImageAndText4(Toast):
     ToastType = ToastTemplateType.TOAST_IMAGE_AND_TEXT04
+    HasImage = True
 
     def __init__(self):
         """
@@ -174,4 +191,3 @@ class ToastImageAndText4(Toast):
         """
         super().__init__()
         self.textFields = ["", "", ""]
-        self.hasImage = True

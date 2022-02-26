@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum
+from typing import Union
 
 
 class AudioSource(Enum):
@@ -32,7 +33,14 @@ class AudioSource(Enum):
 
 @dataclass
 class ToastAudio:
-    sound: AudioSource = AudioSource.Default
+    """
+    Container class for audio configuration in a toast
+
+    :param sound: Selected AudioSource to play
+    :type sound: Union[AudioSource, str]
+    :param looping: Whether the audio should loop once it ends. Stops abruptly when the notification is dismissed
+    :type looping: bool
+    """
+    sound: Union[AudioSource, str] = AudioSource.Default
     looping: bool = False
     silent: bool = False
-

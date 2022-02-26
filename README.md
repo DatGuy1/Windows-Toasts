@@ -1,16 +1,18 @@
-# Windows-Toasts <a href="https://pypi.org/project/windows-toasts/" alt="PyPI version"><img src="https://img.shields.io/pypi/v/windows-toasts" /></a> <a href="https://pypi.org/project/windows-toasts/" alt="Supported Python versions"><img src="https://img.shields.io/pypi/pyversions/windows-toasts" /></a>
+# Windows-Toasts <a href="https://pypi.org/project/windows-toasts/" alt="PyPI version"><img src="https://img.shields.io/pypi/v/windows-toasts" /></a> <a href="https://pypi.org/project/windows-toasts/" alt="Supported Python versions"><img src="https://img.shields.io/pypi/pyversions/windows-toasts" /></a> [![Downloads](https://pepy.tech/badge/windows-toasts/month)](https://pepy.tech/project/windows-toasts)
 
 **Windows-Toasts** is a Python library used to send [toast notifications](https://docs.microsoft.com/en-us/windows/apps/design/shell/tiles-and-notifications/adaptive-interactive-toasts) on Windows machines.
 
 ## Installation
-Windows-Toasts supports Windows 10 and 11. While toasts do work on Windows 8.1 and below, Microsoft added features in Windows 10 that were never backported. 
+Windows-Toasts supports Windows 10 and 11. While toast notifications do work on Windows 8.1 and below, Microsoft added features in Windows 10 that were never backported. 
 
-Windows-Toasts is on PyPI:
+Windows-Toasts is available through PyPI:
 ```console
 $ python -m pip install windows-toasts
 ``` 
 
 ## Usage
+
+Simple usage:
 
 ```python
 >>> from windows_toasts import WindowsToaster, ToastText1

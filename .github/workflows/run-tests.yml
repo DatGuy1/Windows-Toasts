@@ -1,0 +1,32 @@
+name: Tests
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.7", "3.8", "3.9", "3.10"]
+        os: [windows-latest]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Update pip, wheel, setuptools, build
+      run: |
+        python -m pip install -U pip wheel setuptools build twine
+    - name: Install dependencies
+      run: |
+        python -m pip install -r requirements-dev.txt
+    - name: Install self
+      run: |
+        python -m pip install .
+    - name: Run tests
+      run: |
+        pytest tests
