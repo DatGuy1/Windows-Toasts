@@ -1,3 +1,4 @@
+from .events import ToastActivatedEventArgs
 from .toast_audio import AudioSource, ToastAudio
 from .toast_types import (
     ToastDuration,
@@ -14,6 +15,7 @@ from .windows_toasts import InteractableWindowsToaster, WindowsToaster
 
 __all__ = [
     "AudioSource",
+    "ToastActivatedEventArgs",
     "ToastAudio",
     "ToastDuration",
     "ToastImageAndText1",
