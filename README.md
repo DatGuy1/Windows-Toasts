@@ -27,6 +27,8 @@ Simple usage:
 
 I created this library since the other Windows toast notification libraries were all but abandoned, lacked features, and were using pywin32 bindings.
 
+Using WinRT may come with its own limitations. However, the only issue I've encountered compared to using pywin32 bindings is not being able to select the duration in seconds, but rather as short/long.
+
 ## Credits
 
 The code is adapted from [mohabouje's wonderful C++ WinToasts library](https://github.com/mohabouje/WinToast)
