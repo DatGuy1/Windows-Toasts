@@ -52,7 +52,6 @@ class BaseWindowsToaster:
         notificationToSend = ToastNotification(self.setup_toast(toast).xmlDocument)
         if toast.on_activated is not None:
             # For some reason on_activated's type is generic, so cast it
-            # noinspection PyProtectedMember
             notificationToSend.add_activated(
                 lambda _, eventArgs: toast.on_activated(ToastActivatedEventArgs.fromWinRt(eventArgs))
             )
