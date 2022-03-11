@@ -14,5 +14,9 @@ class ToastActivatedEventArgs:
     @classmethod
     def fromWinRt(cls, eventArgs):
         activatedEventArgs = WinRtToastActivatedEventArgs._from(eventArgs)
-        textInput = IPropertyValue._from(activatedEventArgs.user_input.lookup("textBox")).get_string()
+        try:
+            textInput = IPropertyValue._from(activatedEventArgs.user_input.lookup("textBox")).get_string()
+        except OSError:
+            textInput = None
+
         return cls(activatedEventArgs.arguments, textInput)
