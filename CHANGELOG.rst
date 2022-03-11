@@ -1,7 +1,10 @@
-Unversioned
+0.3.0 (2022-03-11)
 ======
 
 - Renamed AddDuration to SetDuration
+- Implemented text inputs fields. Use with SetInputField(placeholderText)
+- Switched to using a first party ToastActivatedEventArgs class instead of WinRT's
+- Added simple test to make sure toasts don't throw errors
 
 0.2.0 (2022-02-26)
 ======
@@ -18,4 +21,4 @@ Major Revamp
 0.1.3 (2022-02-19)
 ======
 
-- Initial release
+- Initial public release
