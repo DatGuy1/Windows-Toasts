@@ -1,8 +1,9 @@
 import warnings
 
 from winsdk.windows.data.xml.dom import XmlDocument
-from winsdk.windows.ui.notifications import ToastActivatedEventArgs, ToastNotification, ToastNotificationManager
+from winsdk.windows.ui.notifications import ToastNotification, ToastNotificationManager
 
+from .events import ToastActivatedEventArgs
 from .toast_document import ToastDocument
 from .toast_types import ToastDuration
 
@@ -53,7 +54,7 @@ class BaseWindowsToaster:
             # For some reason on_activated's type is generic, so cast it
             # noinspection PyProtectedMember
             notificationToSend.add_activated(
-                lambda _, eventArgs: toast.on_activated(ToastActivatedEventArgs._from(eventArgs))
+                lambda _, eventArgs: toast.on_activated(ToastActivatedEventArgs.fromWinRt(eventArgs))
             )
 
         if toast.on_dismissed is not None:
@@ -77,6 +78,12 @@ class WindowsToaster(BaseWindowsToaster):
                 "actions, instantiate a InteractableWindowsToaster class instead"
             )
 
+        if toast.textInputPlaceholder is not None:
+            warnings.warn(
+                "Input fields are not supported in WindowsToaster. If you'd like to use "
+                "input fields, instantiate a InteractableWindowsToaster class instead"
+            )
+
         super().show_toast(toast)
 
 
@@ -98,5 +105,8 @@ class InteractableWindowsToaster(BaseWindowsToaster):
 
         for customAction in toast.actions:
             toastContent.AddAction(customAction[0], customAction[1])
+
+        if toast.textInputPlaceholder is not None:
+            toastContent.SetInputField(toast.textInputPlaceholder)
 
         return toastContent
