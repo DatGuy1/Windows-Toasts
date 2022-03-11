@@ -24,6 +24,7 @@ class Toast:
         self.duration = ToastDuration.Default
         self.imagePath = None
         self.textFields = []
+        self.textInputPlaceholder = None
         self.timestamp = None
 
         self.on_activated = None
@@ -87,6 +88,14 @@ class Toast:
             imagePath = Path(imagePath)
 
         self.imagePath = imagePath.resolve()
+
+    def SetInputField(self, placeholderText):
+        """
+        Adds an input field to the notification. It will be supplied as user_input of type ValueSet in on_activated
+        :param placeholderText: Placeholder text to display the the input field
+        :type placeholderText: str
+        """
+        self.textInputPlaceholder = placeholderText
 
     def SetCustomTimestamp(self, notificationTime):
         """
