@@ -1,3 +1,9 @@
+0.3.1 (2022-03-11)
+======
+
+- Attribution text now only displays if using interactable toaster without a custom AUMI
+- Fixed bug when binding on_activated without an input field
+
 0.3.0 (2022-03-11)
 ======
 

@@ -9,7 +9,7 @@ with open("README.md", "r", encoding="utf-8") as f:
 
 setup(
     name="windows-toasts",
-    version="0.3.0",
+    version="0.3.1",
     description="Windows toast notifications sender",
     long_description=readme,
     long_description_content_type="text/markdown",
