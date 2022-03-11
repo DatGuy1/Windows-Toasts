@@ -31,6 +31,7 @@ def test_register_hkey():
             pass
 
 
+# noinspection PyUnresolvedReferences
 def test_create_shell_link():
     import pythoncom
     from pywintypes import IID
@@ -49,6 +50,7 @@ def test_create_shell_link():
     linkPath = Path(os.getenv("APPDATA")) / "Microsoft" / "Windows" / "Start Menu" / "Programs" / f"{appName}.lnk"
     assert linkPath.exists()
 
+    # noinspection PyTypeChecker
     shellLink: PyIShellLink = pythoncom.CoCreateInstance(
         shell.CLSID_ShellLink,
         None,
@@ -59,9 +61,11 @@ def test_create_shell_link():
     persistFile.Load(str(linkPath), STGM_READ)
     shellLink.Resolve(0, shell.SLR_ANY_MATCH | shell.SLR_NO_UI)
 
+    # noinspection PyArgumentList
     assert shellLink.GetPath(shell.SLGP_SHORTPATH)[0] == ""
     assert shellLink.GetArguments() == ""
     assert shellLink.GetWorkingDirectory() == ""
+    # noinspection PyArgumentList
     assert shellLink.GetIconLocation() == ("", 0)
 
     propertyStore = shellLink.QueryInterface(propsys.IID_IPropertyStore)

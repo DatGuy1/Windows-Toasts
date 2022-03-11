@@ -26,6 +26,7 @@ class IconFileAction(argparse.Action):
         setattr(namespace, self.dest, values)
 
 
+# noinspection PyUnresolvedReferences
 def create_shell_link(appId: str, appName: str, iconPath: Optional[Path] = None, overwrite: bool = False,
                       appDataPath: str = os.getenv("APPDATA")):
     # See https://github.com/mohabouje/WinToast/blob/master/src/wintoastlib.cpp#L594
@@ -44,6 +45,7 @@ def create_shell_link(appId: str, appName: str, iconPath: Optional[Path] = None,
             )
 
     # Adapted from https://github.com/mhammond/pywin32/blob/main/com/win32comext/shell/demos/create_link.py
+    # noinspection PyTypeChecker
     shellLink = pythoncom.CoCreateInstance(
         shell.CLSID_ShellLink,
         None,
