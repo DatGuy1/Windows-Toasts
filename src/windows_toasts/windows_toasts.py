@@ -42,7 +42,6 @@ class BaseWindowsToaster:
         if toast.audio is not None:
             toastContent.SetAudioAttributes(toast.audio)
 
-        toastContent.SetAttributionText(self.applicationText)
         return toastContent
 
     def show_toast(self, toast):
@@ -87,7 +86,7 @@ class WindowsToaster(BaseWindowsToaster):
 
 
 class InteractableWindowsToaster(BaseWindowsToaster):
-    def __init__(self, applicationText, notifierAUMI="{1AC14E77-02E7-4E5D-B744-2EB1AE5198B7}\\cmd.exe"):
+    def __init__(self, applicationText, notifierAUMI=None):
         """
         WindowsToaster, but uses an AUMI to support actions. Actions require a recognised AUMI to trigger on_activated,
         otherwise it triggers on_dismissed with no arguments
@@ -97,10 +96,19 @@ class InteractableWindowsToaster(BaseWindowsToaster):
         :param notifierAUMI: AUMI to use. Defaults to Command Prompt. To use a custom AUMI, see one of the scripts
         """
         super().__init__(applicationText)
+        if notifierAUMI is None:
+            self.defaultAUMI = True
+            notifierAUMI = "{1AC14E77-02E7-4E5D-B744-2EB1AE5198B7}\\cmd.exe"
+        else:
+            self.defaultAUMI = False
+
         self.toastNotifier = ToastNotificationManager.create_toast_notifier(notifierAUMI)
 
     def setup_toast(self, toast):
         toastContent = super().setup_toast(toast)
+        # If we haven't set up our own AUMI, put our application text in the attribution field
+        if self.defaultAUMI:
+            toastContent.SetAttributionText(self.applicationText)
 
         for customAction in toast.actions:
             toastContent.AddAction(customAction[0], customAction[1])
