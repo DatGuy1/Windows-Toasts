@@ -1,8 +1,9 @@
-dev
+0.3.3 (2022-03-18)
 ======
 
 - Fixed bug where user input would not work if there were no buttons
-- Added test for user input
+- register_hkey_aumi will now raise an error if supplied image is not a .ico file
+- Added tests for user input and attribution text
 
 0.3.2 (2022-03-18)
 ======
