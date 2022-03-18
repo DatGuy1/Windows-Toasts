@@ -1,14 +1,10 @@
 import warnings
-from typing import TYPE_CHECKING
 
 from winsdk.windows.ui.notifications import ToastNotification, ToastNotificationManager
 
 from .events import ToastActivatedEventArgs
 from .toast_document import ToastDocument
 from .toast_types import ToastDuration
-
-if TYPE_CHECKING:
-    from winsdk.windows.data.xml.dom import XmlDocument
 
 
 class BaseWindowsToaster:
@@ -27,7 +23,7 @@ class BaseWindowsToaster:
         Setup toast to send. Should only be used internally
 
         :return: XML built from a template of the supplied toast type
-        :rtype: XmlDocument
+        :rtype: ToastDocument
         """
         # noinspection DuplicatedCode
         toastContent = ToastDocument(ToastNotificationManager.get_template_content(toast.ToastType))
