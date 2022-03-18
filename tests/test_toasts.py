@@ -123,17 +123,15 @@ def test_warnings_toast():
 
 
 def test_image_toast():
-    import pathlib
-
     from windows_toasts import ToastImageAndText4
 
     newToast = ToastImageAndText4()
 
-    newToast.SetHeadline("Hello")
+    newToast.SetHeadline("Hello, World!")
     newToast.SetFirstLine("Foo")
     newToast.SetSecondLine("Bar")
 
-    newToast.SetImage(pathlib.Path("C:/Windows/System32/@WLOGO_48x48.png"))
+    newToast.SetImage("C:/Windows/System32/@WLOGO_48x48.png")
 
     FakeWindowsToaster("Python").show_toast(newToast)
 
@@ -156,3 +154,14 @@ def test_input_toast():
     newToast.SetInputField("What's on your mind?")
 
     FakeWindowsToaster("Python").show_toast(newToast)
+
+
+def test_attribution_text_toast():
+    from windows_toasts import ToastImageAndText3
+
+    newToast = ToastImageAndText3()
+    newToast.SetHeadline("Hello, World!")
+    newToast.SetFirstLine("Foobar")
+
+    toastContent = FakeWindowsToaster("Python").setup_toast(newToast)
+    toastContent.SetAttributionText("Windows-Toasts")
