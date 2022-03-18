@@ -55,60 +55,48 @@ class FakeWindowsToaster:
 
 
 def test_simple_toast():
-    try:
-        from windows_toasts import ToastText1
+    from windows_toasts import ToastText3
 
-        simpleToast = ToastText1()
-        simpleToast.SetBody("Hello, simple world!")
-        simpleToast.on_activated = lambda _: print("Toast clicked!")
+    simpleToast = ToastText3()
 
-        FakeWindowsToaster("Python").show_toast(simpleToast)
-    except OSError as osError:
-        if osError.winerror == -2143420155:
-            print("The testing platform doesn't support notifications. Skipping test_simple_toast")
-            return
+    simpleToast.SetHeadline("Hello, World!")
+    simpleToast.SetFirstLine("Foobar")
 
-        raise
+    simpleToast.on_activated = lambda _: print("Toast clicked!")
+
+    FakeWindowsToaster("Python").show_toast(simpleToast)
 
 
 def test_interactable_toast():
-    try:
-        from windows_toasts import ToastActivatedEventArgs, ToastImageAndText2
+    from windows_toasts import ToastActivatedEventArgs, ToastImageAndText2
 
-        def notificationActivated(activatedEventArgs: ToastActivatedEventArgs):
-            print(f"Clicked event args: {activatedEventArgs.arguments}")
-            print(activatedEventArgs.input)
+    def notificationActivated(activatedEventArgs: ToastActivatedEventArgs):
+        print(f"Clicked event args: {activatedEventArgs.arguments}")
+        print(activatedEventArgs.input)
 
-        newToast = ToastImageAndText2()
-        newToast.SetBody("Hello, interactable world!")
-        newToast.AddAction("First", "clicked=first")
-        newToast.AddAction("Second", "clicked=second")
-        newToast.SetInputField("Write your placeholder text here!")
+    newToast = ToastImageAndText2()
+    newToast.SetBody("Hello, interactable world!")
+    newToast.AddAction("First", "clicked=first")
+    newToast.AddAction("Second", "clicked=second")
+    newToast.SetInputField("Write your placeholder text here!")
 
-        newToast.on_activated = notificationActivated
-        FakeWindowsToaster("Python").show_toast(newToast)
-    except OSError as osError:
-        if osError.winerror == -2143420155:
-            print("The testing platform doesn't support notifications. Skipping test_interactable_toast")
-            return
-
-        raise
+    newToast.on_activated = notificationActivated
+    FakeWindowsToaster("Python").show_toast(newToast)
 
 
 def test_audio_toast():
-    try:
-        from windows_toasts import AudioSource, ToastAudio, ToastText2
+    from windows_toasts import AudioSource, ToastAudio, ToastText2
 
-        newToast = ToastText2()
-        newToast.audio = ToastAudio(AudioSource.IM, looping=True)
+    toaster = FakeWindowsToaster("Python")
 
-        FakeWindowsToaster("Python").show_toast(newToast)
-    except OSError as osError:
-        if osError.winerror == -2143420155:
-            print("The testing platform doesn't support notifications. Skipping test_audio_toast")
-            return
+    newToast = ToastText2()
+    newToast.audio = ToastAudio(AudioSource.IM, looping=True)
 
-        raise
+    toaster.show_toast(newToast)
+
+    newToast.audio.silent = True
+
+    toaster.show_toast(newToast)
 
 
 def test_warnings_toast():
@@ -153,9 +141,18 @@ def test_image_toast():
 def test_custom_timestamp_toast():
     from datetime import datetime, timedelta
 
-    from windows_toasts import ToastText3
+    from windows_toasts import ToastText4
 
-    newToast = ToastText3()
+    newToast = ToastText4()
     newToast.SetCustomTimestamp(datetime.utcnow() - timedelta(hours=1))
+
+    FakeWindowsToaster("Python").show_toast(newToast)
+
+
+def test_input_toast():
+    from windows_toasts import ToastImageAndText1
+
+    newToast = ToastImageAndText1()
+    newToast.SetInputField("What's on your mind?")
 
     FakeWindowsToaster("Python").show_toast(newToast)
