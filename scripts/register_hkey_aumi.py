@@ -14,8 +14,11 @@ def register_hkey(appId: str, appName: str, iconPath: Optional[pathlib.Path]):
         # If we try and add a registry key not in administrator mode we get 'PermissionError: Access is denied'
         raise RuntimeError("You must run this script in administrator mode in order to create a registry key.")
 
-    if iconPath is not None and not iconPath.exists():  # pragma: no cover
-        raise ValueError(f"Could not register the application: File {iconPath} does not exist")
+    if iconPath is not None:  # pragma: no cover
+        if not iconPath.exists():
+            raise ValueError(f"Could not register the application: File {iconPath} does not exist")
+        elif iconPath.suffix != ".ico":
+            raise ValueError(f"Could not register the application: File {iconPath} must be of type .ico")
 
     winreg.ConnectRegistry(None, winreg.HKEY_LOCAL_MACHINE)
     keyPath = f"SOFTWARE\\Classes\\AppUserModelId\\{appId}"

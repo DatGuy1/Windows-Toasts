@@ -1,3 +1,12 @@
+from pathlib import Path
+
+# Is this path constant for every Windows instance?
+iconPath = Path(
+    "C:\\Windows\\WinSxS\\amd64_microsoft-windows-dxp-deviceexperience_31bf3856ad364e35_10.0.19041"
+    ".746_none_251e769058968366\\folder.ico"
+)
+
+
 def test_register_hkey():
     import ctypes
 
@@ -8,7 +17,7 @@ def test_register_hkey():
 
     appId = "Test.Notification"
     appName = "Notification Test"
-    register_hkey(appId, appName, None)
+    register_hkey(appId, appName, iconPath)
 
     # noinspection PyCompatibility
     import winreg
@@ -20,11 +29,9 @@ def test_register_hkey():
         assert displayValue[1] == winreg.REG_SZ
         assert displayValue[0] == appName
 
-        try:
-            winreg.QueryValueEx(masterKey, "IconUri")
-            assert False
-        except FileNotFoundError:
-            pass
+        iconUri = winreg.QueryValueEx(masterKey, "IconUri")
+        assert iconUri[1] == winreg.REG_SZ
+        assert iconUri[0] == str(iconPath)
 
         winreg.DeleteKeyEx(winreg.HKEY_LOCAL_MACHINE, keyPath)
         try:
@@ -47,10 +54,9 @@ def test_create_shell_link():
 
     appId = "Test.Notification"
     appName = "Notification Test"
-    create_shell_link(appId, appName)
+    create_shell_link(appId, appName, iconPath)
 
     import os
-    from pathlib import Path
 
     linkPath = Path(os.getenv("APPDATA")) / "Microsoft" / "Windows" / "Start Menu" / "Programs" / f"{appName}.lnk"
     assert linkPath.exists()
