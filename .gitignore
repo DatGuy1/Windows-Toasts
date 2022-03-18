@@ -1,6 +1,9 @@
 __pycache__/
 *.py[cod]
+.coverage
+.coverage.*
 .dmypy.json
+coverage.xml
 
 dist/
 *.egg-info/

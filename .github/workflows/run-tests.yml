@@ -21,12 +21,14 @@ jobs:
     - name: Update pip, wheel, setuptools, build
       run: |
         python -m pip install -U pip wheel setuptools build twine
-    - name: Install dependencies
+    - name: Install testing dependencies
       run: |
         python -m pip install -r requirements-dev.txt
     - name: Install self
       run: |
         python -m pip install .
-    - name: Run tests
+    - name: Generate coverage report
       run: |
-        pytest tests
+        pytest --cov=windows_toasts --cov-report=xml tests/
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v2.1.0
