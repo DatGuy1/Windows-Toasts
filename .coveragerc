@@ -6,4 +6,5 @@ omit =
 exclude_lines =
     pragma: no cover
     except ImportError:
+    if TYPE_CHECKING:
     if __name__ == .__main__.:

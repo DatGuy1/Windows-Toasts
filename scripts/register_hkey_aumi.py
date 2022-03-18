@@ -3,6 +3,7 @@
 import argparse
 import ctypes
 import pathlib
+
 # noinspection PyCompatibility
 import winreg
 from typing import Optional

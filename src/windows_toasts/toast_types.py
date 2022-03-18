@@ -42,7 +42,7 @@ class Toast:
         :type actionArguments: str
         """
         if len(self.actions) >= 5:
-            warnings.warn(f"Cannot add any more actions, you're already at five")
+            warnings.warn("Cannot add any more actions, you're already at five")
             return
 
         self.actions.append((actionName, actionArguments))

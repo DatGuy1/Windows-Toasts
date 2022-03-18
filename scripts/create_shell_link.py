@@ -1,12 +1,10 @@
 #!/usr/bin/env python
 
 import argparse
-
 import os
 import sys
-
-from typing import Any, Optional
 from pathlib import Path
+from typing import Any, Optional
 
 try:
     import pythoncom
@@ -27,8 +25,13 @@ class IconFileAction(argparse.Action):  # pragma: no cover
 
 
 # noinspection PyUnresolvedReferences
-def create_shell_link(appId: str, appName: str, iconPath: Optional[Path] = None, overwrite: bool = False,
-                      appDataPath: str = os.getenv("APPDATA")):
+def create_shell_link(
+    appId: str,
+    appName: str,
+    iconPath: Optional[Path] = None,
+    overwrite: bool = False,
+    appDataPath: str = os.getenv("APPDATA"),
+):
     # See https://github.com/mohabouje/WinToast/blob/master/src/wintoastlib.cpp#L594
     if appDataPath is None:  # pragma: no cover
         raise RuntimeError("Couldn't find APPDATA path. Please rerun this script with the --appdata argument")
@@ -47,10 +50,7 @@ def create_shell_link(appId: str, appName: str, iconPath: Optional[Path] = None,
     # Adapted from https://github.com/mhammond/pywin32/blob/main/com/win32comext/shell/demos/create_link.py
     # noinspection PyTypeChecker
     shellLink = pythoncom.CoCreateInstance(
-        shell.CLSID_ShellLink,
-        None,
-        pythoncom.CLSCTX_INPROC_SERVER,
-        shell.IID_IShellLink,
+        shell.CLSID_ShellLink, None, pythoncom.CLSCTX_INPROC_SERVER, shell.IID_IShellLink
     )
     # Set shell link arguments
     shellLink.SetPath("")
@@ -76,14 +76,11 @@ if __name__ == "__main__":  # pragma: no cover
     parser.add_argument("--app_id", "-a", type=str, required=True, help="Application User Model ID for identification")
     parser.add_argument("--name", "-n", type=str, required=True, help="Display name on notification")
     parser.add_argument(
-        "--icon", "-i", type=Path,
-        required=False, action=IconFileAction,
-        help="Path to image file for desired icon"
+        "--icon", "-i", type=Path, required=False, action=IconFileAction, help="Path to image file for desired icon"
     )
     if sys.version_info >= (3, 9):
         parser.add_argument(
-            "--overwrite", "-o", action=argparse.BooleanOptionalAction,
-            help="Overwrite if a link already exists"
+            "--overwrite", "-o", action=argparse.BooleanOptionalAction, help="Overwrite if a link already exists"
         )
     else:
         parser.add_argument(

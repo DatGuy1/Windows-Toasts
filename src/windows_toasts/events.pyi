@@ -1,4 +1,5 @@
 from typing import Optional
+
 # noinspection PyProtectedMember
 from winsdk import _winrt
 

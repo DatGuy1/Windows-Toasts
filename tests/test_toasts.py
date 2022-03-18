@@ -1,6 +1,7 @@
+from winsdk.windows.ui.notifications import ToastNotification, ToastNotificationManager
+
 from windows_toasts import ToastActivatedEventArgs, ToastDuration
 from windows_toasts.toast_document import ToastDocument
-from winsdk.windows.ui.notifications import ToastNotification, ToastNotificationManager
 
 
 # noinspection DuplicatedCode
@@ -54,7 +55,7 @@ class FakeWindowsToaster:
 
 def test_simple_toast():
     try:
-        from windows_toasts import ToastText1, WindowsToaster
+        from windows_toasts import ToastText1
 
         simpleToast = ToastText1()
         simpleToast.SetBody("Hello, simple world!")
@@ -71,9 +72,7 @@ def test_simple_toast():
 
 def test_interactable_toast():
     try:
-        from windows_toasts import (
-            AudioSource, InteractableWindowsToaster, ToastActivatedEventArgs, ToastAudio, ToastImageAndText2
-        )
+        from windows_toasts import ToastActivatedEventArgs, ToastImageAndText2
 
         def notificationActivated(activatedEventArgs: ToastActivatedEventArgs):
             print(f"Clicked event args: {activatedEventArgs.arguments}")
@@ -97,9 +96,8 @@ def test_interactable_toast():
 
 def test_audio_toast():
     try:
-        from windows_toasts import (
-            AudioSource, WindowsToaster, ToastAudio, ToastText1
-        )
+        from windows_toasts import AudioSource, ToastAudio, ToastText1
+
         newToast = ToastText1()
         newToast.audio = ToastAudio(AudioSource.IM, looping=True)
 

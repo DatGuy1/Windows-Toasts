@@ -18,10 +18,7 @@ setup(
     url="https://github.com/DatGuy1/Windows-Toasts",
     packages=packages,
     package_dir={"": "src"},
-    package_data={
-        "": ["LICENSE"],
-        "windows_toasts": ["py.typed"]
-    },
+    package_data={"": ["LICENSE"], "windows_toasts": ["py.typed"]},
     include_package_data=True,
     scripts=["scripts/create_shell_link.py", "scripts/register_hkey_aumi.py"],
     python_requires=">=3.7",
@@ -36,9 +33,7 @@ setup(
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
         "License :: OSI Approved :: Apache Software License",
-        "Operating System :: Microsoft :: Windows :: Windows 10"
+        "Operating System :: Microsoft :: Windows :: Windows 10",
     ],
-    project_urls={
-        "Bug Tracker": "https://github.com/DatGuy1/Windows-Toasts/issues"
-    }
+    project_urls={"Bug Tracker": "https://github.com/DatGuy1/Windows-Toasts/issues"},
 )

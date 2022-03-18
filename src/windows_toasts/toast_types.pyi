@@ -2,7 +2,9 @@ import datetime
 from enum import Enum
 from pathlib import Path
 from typing import Callable, ClassVar, List, Literal, Optional, Tuple, Union
-from winsdk.windows.ui.notifications import (ToastDismissedEventArgs, ToastFailedEventArgs, ToastTemplateType)
+
+from winsdk.windows.ui.notifications import ToastDismissedEventArgs, ToastFailedEventArgs, ToastTemplateType
+
 from .events import ToastActivatedEventArgs
 from .toast_audio import ToastAudio
 

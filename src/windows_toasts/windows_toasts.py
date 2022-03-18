@@ -1,11 +1,14 @@
 import warnings
+from typing import TYPE_CHECKING
 
-from winsdk.windows.data.xml.dom import XmlDocument
 from winsdk.windows.ui.notifications import ToastNotification, ToastNotificationManager
 
 from .events import ToastActivatedEventArgs
 from .toast_document import ToastDocument
 from .toast_types import ToastDuration
+
+if TYPE_CHECKING:
+    from winsdk.windows.data.xml.dom import XmlDocument
 
 
 class BaseWindowsToaster:
@@ -26,6 +29,7 @@ class BaseWindowsToaster:
         :return: XML built from a template of the supplied toast type
         :rtype: XmlDocument
         """
+        # noinspection DuplicatedCode
         toastContent = ToastDocument(ToastNotificationManager.get_template_content(toast.ToastType))
         if toast.HasImage and toast.imagePath is not None:
             toastContent.SetImageField(str(toast.imagePath))

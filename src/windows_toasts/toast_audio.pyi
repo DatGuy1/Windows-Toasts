@@ -1,7 +1,6 @@
 from enum import Enum
 from typing import Union
 
-
 class AudioSource(Enum):
     Default: str
     IM: str

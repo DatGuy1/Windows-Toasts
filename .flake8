@@ -1,0 +1,19 @@
+# The following rules are incompatible with or enforced by black:
+#       E203 whitespace before ':' -- scripts only
+#       E301 expected 1 blank line -- stubs only
+#       E302 expected 2 blank lines -- stubs only
+#       E305 expected 2 blank lines -- stubs only
+#       E501 line too long
+
+# Some rules are considered irrelevant to stub files:
+#       E701 multiple statements on one line (colon) -- disallows "..." on the same line
+#       F401 imported but unused -- does not recognize re-exports
+#            https://github.com/PyCQA/pyflakes/issues/474
+#       F822 undefined name in __all__ -- flake8 does not recognize 'foo: Any'
+#            https://github.com/PyCQA/pyflakes/issues/533
+
+[flake8]
+max-line-length = 120
+per-file-ignores =
+  *.py: E203, E501
+  *.pyi: E301, E302, E305, E501, E701, E741, F401, F403, F405, F822

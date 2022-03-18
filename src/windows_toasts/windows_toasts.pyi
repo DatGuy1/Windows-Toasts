@@ -1,7 +1,9 @@
+from typing import Optional
+
+from winsdk.windows.ui.notifications import ToastNotifier
+
 from .toast_document import ToastDocument
 from .toast_types import Toast
-from typing import Optional
-from winsdk.windows.ui.notifications import ToastNotifier
 
 class BaseWindowsToaster:
     applicationText: str

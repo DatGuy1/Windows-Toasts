@@ -9,7 +9,7 @@ from .toast_types import (
     ToastText1,
     ToastText2,
     ToastText3,
-    ToastText4
+    ToastText4,
 )
 from .windows_toasts import InteractableWindowsToaster, WindowsToaster
 
@@ -27,5 +27,5 @@ __all__ = [
     "ToastText3",
     "ToastText4",
     "InteractableWindowsToaster",
-    "WindowsToaster"
+    "WindowsToaster",
 ]

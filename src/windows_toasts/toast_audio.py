@@ -41,6 +41,7 @@ class ToastAudio:
     :param looping: Whether the audio should loop once it ends. Stops abruptly when the notification is dismissed
     :type looping: bool
     """
+
     sound: Union[AudioSource, str] = AudioSource.Default
     looping: bool = False
     silent: bool = False

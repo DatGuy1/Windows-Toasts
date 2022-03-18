@@ -1,7 +1,8 @@
 import datetime
 
-from .toast_audio import ToastAudio
 from winsdk.windows.data.xml.dom import IXmlNode, XmlDocument
+
+from .toast_audio import ToastAudio
 
 
 class ToastDocument:
