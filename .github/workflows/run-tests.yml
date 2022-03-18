@@ -29,6 +29,6 @@ jobs:
         python -m pip install .
     - name: Generate coverage report
       run: |
-        pytest --cov=windows_toasts --cov-report=xml tests/
+        pytest --cov=windows_toasts --cov=scripts/ --cov-report=xml tests/
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v2.1.0
