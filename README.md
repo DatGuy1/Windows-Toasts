@@ -23,6 +23,8 @@ Simple usage:
 >>> wintoaster.show_toast(newToast)
 ```
 
+Proper documentation is in progress, but meanwhile you can take inspiration from the tests in tests/test_toasts.py.
+
 ## But I already saw this package three times on PyPI!
 
 I created this library since the other Windows toast notification libraries were all but abandoned, lacked features, and were using pywin32 bindings.

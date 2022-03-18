@@ -1,3 +1,10 @@
+0.3.2 (2022-03-18)
+======
+
+- Removed leftovers from older versions
+- Added proper code style and enforcement
+- Added tests to vastly increase coverage
+
 0.3.1 (2022-03-11)
 ======
 
