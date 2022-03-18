@@ -151,6 +151,7 @@ def test_input_toast():
     from windows_toasts import ToastImageAndText1
 
     newToast = ToastImageAndText1()
+    newToast.SetBody("You. Yes, you.")
     newToast.SetInputField("What's on your mind?")
 
     FakeWindowsToaster("Python").show_toast(newToast)
