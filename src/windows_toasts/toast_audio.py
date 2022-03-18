@@ -31,6 +31,7 @@ class AudioSource(Enum):
     Call10 = "Looping.Call10"
 
 
+# noinspection PyUnresolvedReferences
 @dataclass
 class ToastAudio:
     """
