@@ -1,4 +1,4 @@
-# Windows-Toasts <a href="https://pypi.org/project/windows-toasts/" alt="PyPI version"><img src="https://img.shields.io/pypi/v/windows-toasts" /></a> <a href="https://pypi.org/project/windows-toasts/" alt="Supported Python versions"><img src="https://img.shields.io/pypi/pyversions/windows-toasts" /></a> [![Downloads](https://pepy.tech/badge/windows-toasts/month)](https://pepy.tech/project/windows-toasts)
+# Windows-Toasts [![PyPI version](https://img.shields.io/pypi/v/windows-toasts)](https://pypi.org/project/windows-toasts/) [![Supported Python versions](https://img.shields.io/pypi/pyversions/windows-toasts)](https://pypi.org/project/windows-toasts/) [![Downloads](https://pepy.tech/badge/windows-toasts/month)](https://pepy.tech/project/windows-toasts) [![codecov](https://codecov.io/gh/DatGuy1/Windows-Toasts/branch/master/graph/badge.svg?token=ZD8OF2SF61)](https://codecov.io/gh/DatGuy1/Windows-Toasts)
 
 **Windows-Toasts** is a Python library used to send [toast notifications](https://docs.microsoft.com/en-us/windows/apps/design/shell/tiles-and-notifications/adaptive-interactive-toasts) on Windows machines.
 
