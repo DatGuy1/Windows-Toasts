@@ -1,3 +1,4 @@
+from pytest import warns
 from winsdk.windows.ui.notifications import ToastNotification, ToastNotificationManager
 
 from windows_toasts import ToastActivatedEventArgs, ToastDuration
@@ -96,9 +97,9 @@ def test_interactable_toast():
 
 def test_audio_toast():
     try:
-        from windows_toasts import AudioSource, ToastAudio, ToastText1
+        from windows_toasts import AudioSource, ToastAudio, ToastText2
 
-        newToast = ToastText1()
+        newToast = ToastText2()
         newToast.audio = ToastAudio(AudioSource.IM, looping=True)
 
         FakeWindowsToaster("Python").show_toast(newToast)
@@ -108,3 +109,53 @@ def test_audio_toast():
             return
 
         raise
+
+
+def test_warnings_toast():
+    from windows_toasts import ToastText1
+
+    newToast = ToastText1()
+    with warns(UserWarning, match="has no headline, only a body"):
+        newToast.SetHeadline("Hello, World!")
+
+    assert len(newToast.textFields) == 1
+    assert newToast.textFields[0] == "Hello, World!"
+
+    for i in range(1, 6):
+        newToast.AddAction(f"Button #{i}", str(i))
+
+    with warns(UserWarning, match="Cannot add any more actions, you're already at five"):
+        newToast.AddAction("Button 6", str(6))
+
+    assert len(newToast.actions) == 5
+    for i, toastAction in enumerate(newToast.actions):
+        assert newToast.actions[i] == (f"Button #{i + 1}", str(i + 1))
+
+    FakeWindowsToaster("Python").show_toast(newToast)
+
+
+def test_image_toast():
+    import pathlib
+
+    from windows_toasts import ToastImageAndText4
+
+    newToast = ToastImageAndText4()
+
+    newToast.SetHeadline("Hello")
+    newToast.SetFirstLine("Foo")
+    newToast.SetSecondLine("Bar")
+
+    newToast.SetImage(pathlib.Path("C:/Windows/System32/@WLOGO_48x48.png"))
+
+    FakeWindowsToaster("Python").show_toast(newToast)
+
+
+def test_custom_timestamp_toast():
+    from datetime import datetime, timedelta
+
+    from windows_toasts import ToastText3
+
+    newToast = ToastText3()
+    newToast.SetCustomTimestamp(datetime.utcnow() - timedelta(hours=1))
+
+    FakeWindowsToaster("Python").show_toast(newToast)
