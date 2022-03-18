@@ -74,7 +74,7 @@ def test_create_shell_link():
     assert shellLink.GetArguments() == ""
     assert shellLink.GetWorkingDirectory() == ""
     # noinspection PyArgumentList
-    assert shellLink.GetIconLocation() == ("", 0)
+    assert shellLink.GetIconLocation() == (str(iconPath), 0)
 
     propertyStore = shellLink.QueryInterface(propsys.IID_IPropertyStore)
     assert propertyStore.GetCount() == 1
