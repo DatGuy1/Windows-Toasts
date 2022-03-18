@@ -45,7 +45,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements-dev.txt
+        pip install black isort flake8
     - name: Format per black code style
       uses: psf/black@stable
     - name: Order imports
