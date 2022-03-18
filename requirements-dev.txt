@@ -1,5 +1,12 @@
+# Formatting
+black[colorama]==22.1.0
+flake8==4.0.1
+isort==5.10.1
+
+# Testing
 pytest==7.1.1
 pytest-cov==3.0.0
 
+# Testing libraries
 pywin32==303
 pywin32-stubs==0.1.4
