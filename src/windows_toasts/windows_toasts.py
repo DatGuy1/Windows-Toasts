@@ -48,6 +48,7 @@ class BaseWindowsToaster:
         """
         Displays the passed notification toast
         """
+        # noinspection DuplicatedCode
         notificationToSend = ToastNotification(self.setup_toast(toast).xmlDocument)
         if toast.on_activated is not None:
             # For some reason on_activated's type is generic, so cast it
