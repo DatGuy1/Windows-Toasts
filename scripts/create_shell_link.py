@@ -18,7 +18,7 @@ except ImportError:
     )
 
 
-class IconFileAction(argparse.Action):
+class IconFileAction(argparse.Action):  # pragma: no cover
     def __call__(self, parser_container, namespace, values: Any, option_string=None):
         if values.suffix != ".ico":
             raise ValueError("The supplied icon file is not of type .ico.")
@@ -30,13 +30,13 @@ class IconFileAction(argparse.Action):
 def create_shell_link(appId: str, appName: str, iconPath: Optional[Path] = None, overwrite: bool = False,
                       appDataPath: str = os.getenv("APPDATA")):
     # See https://github.com/mohabouje/WinToast/blob/master/src/wintoastlib.cpp#L594
-    if appDataPath is None:
+    if appDataPath is None:  # pragma: no cover
         raise RuntimeError("Couldn't find APPDATA path. Please rerun this script with the --appdata argument")
 
     programsPath = Path(appDataPath) / "Microsoft" / "Windows" / "Start Menu" / "Programs"
     shellLinkPath = programsPath / f"{appName}.lnk"
     linkExists = shellLinkPath.exists()
-    if linkExists:
+    if linkExists:  # pragma: no cover
         if overwrite:
             print("Script run with --overwrite, overwriting existing link...")
         else:
@@ -70,7 +70,7 @@ def create_shell_link(appId: str, appName: str, iconPath: Optional[Path] = None,
     print(f"Successfully {'modified' if linkExists else 'created'} shell link with the AUMI '{appId}'")
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     parser = argparse.ArgumentParser(description="Create shell link for use in toast notifications")
     parser.add_argument("--appdata", "-ad", type=str, required=False, help="AppData path if script fails to find it")
     parser.add_argument("--app_id", "-a", type=str, required=True, help="Application User Model ID for identification")

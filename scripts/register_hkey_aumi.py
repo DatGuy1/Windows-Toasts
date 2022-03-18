@@ -9,11 +9,11 @@ from typing import Optional
 
 
 def register_hkey(appId: str, appName: str, iconPath: Optional[pathlib.Path]):
-    if ctypes.windll.shell32.IsUserAnAdmin() == 0:
+    if ctypes.windll.shell32.IsUserAnAdmin() == 0:  # pragma: no cover
         # If we try and add a registry key not in administrator mode we get 'PermissionError: Access is denied'
         raise RuntimeError("You must run this script in administrator mode in order to create a registry key.")
 
-    if iconPath is not None and not iconPath.exists():
+    if iconPath is not None and not iconPath.exists():  # pragma: no cover
         raise ValueError(f"Could not register the application: File {iconPath} does not exist")
 
     winreg.ConnectRegistry(None, winreg.HKEY_LOCAL_MACHINE)
