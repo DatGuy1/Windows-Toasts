@@ -1,10 +1,11 @@
 from pathlib import Path
 
-# Is this path constant for every Windows instance?
+# Is this path constant for every Windows instance? Better find one that is
 iconPath = Path(
     "C:\\Windows\\WinSxS\\amd64_microsoft-windows-dxp-deviceexperience_31bf3856ad364e35_10.0.19041"
     ".746_none_251e769058968366\\folder.ico"
 )
+pathExists = iconPath.exists()
 
 
 def test_register_hkey():
@@ -17,7 +18,7 @@ def test_register_hkey():
 
     appId = "Test.Notification"
     appName = "Notification Test"
-    register_hkey(appId, appName, iconPath)
+    register_hkey(appId, appName, iconPath if pathExists else None)
 
     # noinspection PyCompatibility
     import winreg
@@ -29,9 +30,16 @@ def test_register_hkey():
         assert displayValue[1] == winreg.REG_SZ
         assert displayValue[0] == appName
 
-        iconUri = winreg.QueryValueEx(masterKey, "IconUri")
-        assert iconUri[1] == winreg.REG_SZ
-        assert iconUri[0] == str(iconPath)
+        if pathExists:
+            iconUri = winreg.QueryValueEx(masterKey, "IconUri")
+            assert iconUri[1] == winreg.REG_SZ
+            assert iconUri[0] == str(iconPath)
+        else:
+            try:
+                winreg.QueryValueEx(masterKey, "IconUri")
+                assert False
+            except FileNotFoundError:
+                pass
 
         winreg.DeleteKeyEx(winreg.HKEY_LOCAL_MACHINE, keyPath)
         try:
@@ -54,7 +62,7 @@ def test_create_shell_link():
 
     appId = "Test.Notification"
     appName = "Notification Test"
-    create_shell_link(appId, appName, iconPath)
+    create_shell_link(appId, appName, iconPath if pathExists else None)
 
     import os
 
@@ -73,8 +81,13 @@ def test_create_shell_link():
     assert shellLink.GetPath(shell.SLGP_SHORTPATH)[0] == ""
     assert shellLink.GetArguments() == ""
     assert shellLink.GetWorkingDirectory() == ""
-    # noinspection PyArgumentList
-    assert shellLink.GetIconLocation() == (str(iconPath), 0)
+
+    if pathExists:
+        # noinspection PyArgumentList
+        assert shellLink.GetIconLocation() == (str(iconPath), 0)
+    else:
+        # noinspection PyArgumentList
+        assert shellLink.GetIconLocation() == ("", 0)
 
     propertyStore = shellLink.QueryInterface(propsys.IID_IPropertyStore)
     assert propertyStore.GetCount() == 1
