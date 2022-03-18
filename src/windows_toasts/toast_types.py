@@ -173,7 +173,6 @@ class ToastImageAndText2(Toast):
         """
         super().__init__()
         self.textFields = ["", ""]
-        self.hasImage = True
 
 
 class ToastImageAndText3(Toast):
