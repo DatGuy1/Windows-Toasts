@@ -54,21 +54,23 @@ class ToastDocument:
         self.SetNodeStringValue(imageNode.attributes.get_named_item("src"), f"file:///{imagePath}")
 
     def SetInputField(self, placeholderText):
+        inputNode = self.xmlDocument.create_element("input")
+        self.SetAttribute(inputNode, "id", "textBox")
+        self.SetAttribute(inputNode, "type", "text")
+        self.SetAttribute(inputNode, "placeHolderContent", placeholderText)
+
         actionNodes = self.xmlDocument.get_elements_by_tag_name("actions")
         actionsNode: IXmlNode
         if actionNodes.length > 0:
             actionsNode = actionNodes.item(0)
+            actionsNode.insert_before(inputNode, actionsNode.first_child)
         else:
             toastNode = self.xmlDocument.get_elements_by_tag_name("toast").item(0)
 
             actionsNode = self.xmlDocument.create_element("actions")
             toastNode.append_child(actionsNode)
 
-        inputNode = self.xmlDocument.create_element("input")
-        self.SetAttribute(inputNode, "id", "textBox")
-        self.SetAttribute(inputNode, "type", "text")
-        self.SetAttribute(inputNode, "placeHolderContent", placeholderText)
-        actionsNode.insert_before(inputNode, actionsNode.first_child)
+            actionsNode.append_child(inputNode)
 
     def SetDuration(self, duration):
         durationNode = self.xmlDocument.get_elements_by_tag_name("toast").item(0)

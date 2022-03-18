@@ -1,3 +1,9 @@
+dev
+======
+
+- Fixed bug where user input would not work if there were no buttons
+- Added test for user input
+
 0.3.2 (2022-03-18)
 ======
 
