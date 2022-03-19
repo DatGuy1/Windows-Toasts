@@ -1,5 +1,6 @@
 [run]
 omit =
+    scripts/publish_gh_release_notes.py
     */windows_toasts.py
 
 [report]
