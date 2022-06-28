@@ -1,5 +1,5 @@
 # Formatting
-black[colorama]==22.3.0
+black[colorama]==22.6.0
 flake8==4.0.1
 isort==5.10.1
 
