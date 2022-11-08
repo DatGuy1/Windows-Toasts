@@ -8,5 +8,5 @@ pytest==7.1.1
 pytest-cov==4.0.0
 
 # Testing libraries
-pywin32==304
+pywin32==305
 pywin32-stubs==1.0.7
