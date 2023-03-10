@@ -1,3 +1,7 @@
+0.4.0 (2023-03-10)
+=====
+- Added Windows 11 and Python 3.12 classifiers
+
 0.3.3 (2022-03-18)
 ======
 
