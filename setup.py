@@ -23,7 +23,7 @@ setup(
     scripts=["scripts/create_shell_link.py", "scripts/register_hkey_aumi.py"],
     python_requires=">=3.7",
     install_requires=requires,
-    license="Apache License 2.0",
+    license="Apache 2.0",
     zip_safe=False,
     classifiers=[
         "Programming Language :: Python :: 3",
