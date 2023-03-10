@@ -1,6 +1,6 @@
 # Formatting
 black[colorama]==23.1.0
-flake8==5.0.4
+flake8==6.0.0
 isort==5.10.1
 
 # Testing
