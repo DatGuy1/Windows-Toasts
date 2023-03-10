@@ -1,29 +1,31 @@
 import warnings
+from typing import Optional
 
-from winsdk.windows.ui.notifications import ToastNotification, ToastNotificationManager
+from winsdk.windows.ui.notifications import ToastNotification, ToastNotificationManager, ToastNotifier
 
 from .events import ToastActivatedEventArgs
 from .toast_document import ToastDocument
-from .toast_types import ToastDuration
+from .toast_types import Toast, ToastDuration
 
 
-class BaseWindowsToaster:
-    def __init__(self, applicationText):
-        """
-        Wrapper to simplify WinRT's ToastNotificationManager
+class __BaseWindowsToaster:
+    """
+    Wrapper to simplify WinRT's ToastNotificationManager
 
-        :param applicationText: Text to display the application as
-        :type applicationText: str
-        """
+    :param applicationText: Text to display the application as
+    """
+    applicationText: str
+    toastNotifier: Optional[ToastNotifier]
+
+    def __init__(self, applicationText: str):
         self.applicationText = applicationText
         self.toastNotifier = None
 
-    def setup_toast(self, toast):
+    def _setup_toast(self, toast: Toast) -> ToastDocument:
         """
-        Setup toast to send. Should only be used internally
+        Setup toast to send. Should generally be used internally
 
         :return: XML built from a template of the supplied toast type
-        :rtype: ToastDocument
         """
         # noinspection DuplicatedCode
         toastContent = ToastDocument(ToastNotificationManager.get_template_content(toast.ToastType))
@@ -44,12 +46,13 @@ class BaseWindowsToaster:
 
         return toastContent
 
-    def show_toast(self, toast):
+    def show_toast(self, toast: Toast) -> None:
         """
-        Displays the passed notification toast
+        Display the passed notification toast
+        :param toast: Toast to display
         """
+        notificationToSend = ToastNotification(self._setup_toast(toast).xmlDocument)
         # noinspection DuplicatedCode
-        notificationToSend = ToastNotification(self.setup_toast(toast).xmlDocument)
         if toast.on_activated is not None:
             # For some reason on_activated's type is generic, so cast it
             notificationToSend.add_activated(
@@ -65,7 +68,14 @@ class BaseWindowsToaster:
         self.toastNotifier.show(notificationToSend)
 
 
-class WindowsToaster(BaseWindowsToaster):
+class WindowsToaster(__BaseWindowsToaster):
+    """
+    Basic toaster, used to display toasts without actions and/or input fields.
+    If you need to use them, see :class:`WindowsToaster`
+
+    :param applicationText: Text to display the application as
+    """
+
     def __init__(self, applicationText):
         super().__init__(applicationText)
         self.toastNotifier = ToastNotificationManager.create_toast_notifier(applicationText)
@@ -86,16 +96,16 @@ class WindowsToaster(BaseWindowsToaster):
         super().show_toast(toast)
 
 
-class InteractableWindowsToaster(BaseWindowsToaster):
-    def __init__(self, applicationText, notifierAUMI=None):
-        """
-        WindowsToaster, but uses an AUMI to support actions. Actions require a recognised AUMI to trigger on_activated,
-        otherwise it triggers on_dismissed with no arguments
+class InteractableWindowsToaster(__BaseWindowsToaster):
+    """
+    :class:`WindowsToaster`, but uses an AUMI to support actions. Actions require a recognised AUMI to trigger
+    on_activated,otherwise it triggers on_dismissed with no arguments
 
-        :param applicationText: Text to display the application as
-        :type applicationText: str
-        :param notifierAUMI: AUMI to use. Defaults to Command Prompt. To use a custom AUMI, see one of the scripts
-        """
+    :param applicationText: Text to display the application as
+    :param notifierAUMI: AUMI to use. Defaults to Command Prompt. To use a custom AUMI, see one of the scripts
+    """
+
+    def __init__(self, applicationText: str, notifierAUMI: Optional[str] = None):
         super().__init__(applicationText)
         if notifierAUMI is None:
             self.defaultAUMI = True
@@ -105,8 +115,8 @@ class InteractableWindowsToaster(BaseWindowsToaster):
 
         self.toastNotifier = ToastNotificationManager.create_toast_notifier(notifierAUMI)
 
-    def setup_toast(self, toast):
-        toastContent = super().setup_toast(toast)
+    def _setup_toast(self, toast):
+        toastContent = super()._setup_toast(toast)
         # If we haven't set up our own AUMI, put our application text in the attribution field
         if self.defaultAUMI:
             toastContent.SetAttributionText(self.applicationText)
@@ -118,3 +128,6 @@ class InteractableWindowsToaster(BaseWindowsToaster):
             toastContent.SetInputField(toast.textInputPlaceholder)
 
         return toastContent
+
+    def show_toast(self, toast: Toast):
+        super().show_toast(toast)
