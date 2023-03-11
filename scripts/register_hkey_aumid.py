@@ -27,7 +27,7 @@ def register_hkey(appId: str, appName: str, iconPath: Optional[pathlib.Path]):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Register AUMI in the registry for use in toast notifications")
+    parser = argparse.ArgumentParser(description="Register AUMID in the registry for use in toast notifications")
     parser.add_argument("--app_id", "-a", type=str, required=True, help="Application User Model ID for identification")
     parser.add_argument("--name", "-n", type=str, required=True, help="Display name on notification")
     parser.add_argument("--icon", "-i", type=pathlib.Path, required=False, help="Path to image file for desired icon")

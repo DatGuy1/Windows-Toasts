@@ -57,7 +57,7 @@ def create_shell_link(
     if iconPath is not None:
         shellLink.SetIconLocation(str(iconPath.resolve()), 0)
 
-    # Set AUMI to supplied argument
+    # Set AUMID to supplied argument
     propertyStore = shellLink.QueryInterface(propsys.IID_IPropertyStore)
     propertyKey = propsys.PSGetPropertyKeyFromName("System.AppUserModel.ID")
     propertyStore.SetValue(propertyKey, propsys.PROPVARIANTType(appId))
@@ -65,7 +65,7 @@ def create_shell_link(
     # Save file
     # noinspection PyUnresolvedReferences
     propertyStore.QueryInterface(pythoncom.IID_IPersistFile).Save(str(shellLinkPath), True)
-    print(f"Successfully {'modified' if linkExists else 'created'} shell link with the AUMI '{appId}'")
+    print(f"Successfully {'modified' if linkExists else 'created'} shell link with the AUMID '{appId}'")
 
 
 def main():

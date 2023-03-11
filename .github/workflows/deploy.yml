@@ -43,4 +43,4 @@ jobs:
           GH_RELEASE_NOTES_TOKEN: ${{ github.token }}
         run: |
           sudo apt-get install pandoc
-          python src/scripts/publish_gh_release_notes.py
+          python scripts/publish_gh_release_notes.py

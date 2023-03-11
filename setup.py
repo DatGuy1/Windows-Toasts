@@ -17,13 +17,13 @@ setup(
     author_email="datguysteam@gmail.com",
     url="https://github.com/DatGuy1/Windows-Toasts",
     packages=packages,
-    package_dir={"": "src"},
+    package_dir={"windows_toasts": "src/windows_toasts"},
     package_data={"": ["LICENSE"], "windows_toasts": ["py.typed"]},
     include_package_data=True,
     entry_points={
         'console_scripts': [
             'create_shell_link = scripts.create_shell_link:main',
-            'register_hkey_aumi = scripts.register_hkey_aumi:main'
+            'register_hkey_aumid = scripts.register_hkey_aumid:main'
         ]
     },
     python_requires=">=3.8",
