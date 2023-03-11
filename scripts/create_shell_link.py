@@ -4,15 +4,6 @@ import sys
 from pathlib import Path
 from typing import Any, Optional
 
-try:
-    import pythoncom
-    from win32com.propsys import propsys
-    from win32com.shell import shell
-except ImportError:
-    raise ImportError(
-        "pywin32 is required to run create_shell_link.py. To install, execute 'pip install pywin32' in a terminal"
-    )
-
 
 class IconFileAction(argparse.Action):  # pragma: no cover
     def __call__(self, parser_container, namespace, values: Any, option_string=None):
@@ -24,15 +15,24 @@ class IconFileAction(argparse.Action):  # pragma: no cover
 
 # noinspection PyUnresolvedReferences
 def create_shell_link(
-    appId: str,
-    appName: str,
-    iconPath: Optional[Path] = None,
-    overwrite: bool = False,
-    appDataPath: str = os.getenv("APPDATA"),
+        appId: str,
+        appName: str,
+        iconPath: Optional[Path] = None,
+        overwrite: bool = False,
+        appDataPath: str = os.getenv("APPDATA"),
 ):
     # See https://github.com/mohabouje/WinToast/blob/master/src/wintoastlib.cpp#L594
     if appDataPath is None:  # pragma: no cover
         raise RuntimeError("Couldn't find APPDATA path. Please rerun this script with the --appdata argument")
+
+    try:
+        import pythoncom
+        from win32com.propsys import propsys
+        from win32com.shell import shell
+    except ImportError:
+        raise ImportError(
+            "pywin32 is required to run create_shell_link.py. To install, execute 'pip install pywin32' in a terminal"
+        )
 
     programsPath = Path(appDataPath) / "Microsoft" / "Windows" / "Start Menu" / "Programs"
     shellLinkPath = programsPath / f"{appName}.lnk"
