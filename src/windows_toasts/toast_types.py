@@ -118,7 +118,7 @@ class Toast:
         :param imagePath: The path to an image, be it a file or online (max 3 MB)
         """
         if not self.HasImage:
-            warnings.warn(f"Class {self.__name__} does not support images. This will not work.")
+            warnings.warn(f"Toast of type {self.__class__.__name__} does not support images. This will not work.")
             return
 
         if isinstance(imagePath, str) and urlparse(imagePath).scheme in ("http", "https"):
