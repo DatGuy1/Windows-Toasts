@@ -8,7 +8,7 @@ import sys
 
 sys.path.insert(0, os.path.abspath("../src"))
 
-import windows_toasts
+import windows_toasts  # noqa: E402
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
