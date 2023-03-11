@@ -14,7 +14,7 @@ def test_register_hkey():
     if ctypes.windll.shell32.IsUserAnAdmin() == 0:
         return
 
-    from scripts.register_hkey_aumi import register_hkey
+    from scripts.register_hkey_aumid import register_hkey
 
     appId = "Test.Notification"
     appName = "Notification Test"
@@ -51,12 +51,16 @@ def test_register_hkey():
 
 # noinspection PyUnresolvedReferences
 def test_create_shell_link():
-    import pythoncom
-    from pywintypes import IID
-    from win32com.propsys import propsys
-    from win32com.shell import shell
-    from win32com.storagecon import STGM_READ
-    from win32typing import PyIPersistFile, PyIShellLink
+    try:
+        import pythoncom
+        from pywintypes import IID
+        from win32com.propsys import propsys
+        from win32com.shell import shell
+        from win32com.storagecon import STGM_READ
+        from win32typing import PyIPersistFile, PyIShellLink
+    except ImportError as e:
+        print(f"You must first install pywin32 and pywin32-stubs! {e}")
+        return
 
     from scripts.create_shell_link import create_shell_link
 

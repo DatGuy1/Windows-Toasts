@@ -9,7 +9,7 @@
 ======
 
 - Fixed bug where user input would not work if there were no buttons
-- register_hkey_aumi will now raise an error if supplied image is not a .ico file
+- register_hkey_aumid will now raise an error if supplied image is not a .ico file
 - Added tests for user input and attribution text
 
 0.3.2 (2022-03-18)
@@ -22,7 +22,7 @@
 0.3.1 (2022-03-11)
 ======
 
-- Attribution text now only displays if using interactable toaster without a custom AUMI
+- Attribution text now only displays if using interactable toaster without a custom AUMID
 - Fixed bug when binding on_activated without an input field
 
 0.3.0 (2022-03-11)
@@ -41,7 +41,7 @@ Major Revamp
 
 - Create InteractiveWindowsToaster, used for custom actions
 - Move typing to .pyi stubs
-- Add scripts to generate custom AUMIs for toasts
+- Add scripts to generate custom AUMIDs for toasts
 - Add tests for those scripts
 
 
