@@ -4,6 +4,7 @@
 - Merge typing back inline
 - Dropped Python 3.7 support
 - Changed scripts to use entry_points
+- Created documentation on https://windows-toasts.readthedocs.io/en/latest/
 
 0.3.3 (2022-03-18)
 ======
