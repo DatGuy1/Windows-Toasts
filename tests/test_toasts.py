@@ -9,12 +9,13 @@ from windows_toasts.toast_document import ToastDocument
 class FakeWindowsToaster:
     def __init__(self, applicationText):
         self.applicationText = applicationText
+        self.toastNotifier = ToastNotificationManager.create_toast_notifier(applicationText)
 
     @staticmethod
     def setup_toast(toast):
         toastContent = ToastDocument(ToastNotificationManager.get_template_content(toast.ToastType))
         if toast.HasImage and toast.imagePath is not None:
-            toastContent.SetImageField(str(toast.imagePath))
+            toastContent.SetImageField(toast.imagePath)
 
         for i, fieldContent in enumerate(toast.textFields):
             toastContent.SetTextField(fieldContent, i)
@@ -37,9 +38,6 @@ class FakeWindowsToaster:
         return toastContent
 
     def show_toast(self, toast):
-        """
-        Displays the passed notification toast
-        """
         notificationToSend = ToastNotification(self.setup_toast(toast).xmlDocument)
         if toast.on_activated is not None:
             # For some reason on_activated's type is generic, so cast it
@@ -52,6 +50,8 @@ class FakeWindowsToaster:
 
         if toast.on_failed is not None:
             notificationToSend.add_failed(lambda _, eventArgs: toast.on_failed(eventArgs))
+
+        self.toastNotifier.show(notificationToSend)
 
 
 def test_simple_toast():
@@ -112,7 +112,7 @@ def test_warnings_toast():
     for i in range(1, 6):
         newToast.AddAction(f"Button #{i}", str(i))
 
-    with warns(UserWarning, match="Cannot add any more actions, you're already at five"):
+    with warns(UserWarning, match="Cannot add any more actions, you've already reached five"):
         newToast.AddAction("Button 6", str(6))
 
     assert len(newToast.actions) == 5
@@ -131,7 +131,7 @@ def test_image_toast():
     newToast.SetFirstLine("Foo")
     newToast.SetSecondLine("Bar")
 
-    newToast.SetImage("C:/Windows/System32/@WLOGO_48x48.png")
+    newToast.SetImage("C:/Windows/System32/@WLOGO_96x96.png")
 
     FakeWindowsToaster("Python").show_toast(newToast)
 
@@ -164,5 +164,8 @@ def test_attribution_text_toast():
     newToast.SetHeadline("Hello, World!")
     newToast.SetFirstLine("Foobar")
 
-    toastContent = FakeWindowsToaster("Python").setup_toast(newToast)
+    FakeToaster = FakeWindowsToaster("Python")
+    toastContent = FakeToaster.setup_toast(newToast)
     toastContent.SetAttributionText("Windows-Toasts")
+
+    FakeToaster.toastNotifier.show(ToastNotification(toastContent.xmlDocument))
