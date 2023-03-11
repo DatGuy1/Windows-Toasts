@@ -1,6 +1,6 @@
 from setuptools import setup
 
-packages = ["windows_toasts"]
+packages = ["windows_toasts", "scripts"]
 
 requires = ["winsdk"]
 
@@ -20,7 +20,12 @@ setup(
     package_dir={"": "src"},
     package_data={"": ["LICENSE"], "windows_toasts": ["py.typed"]},
     include_package_data=True,
-    scripts=["scripts/create_shell_link.py", "scripts/register_hkey_aumi.py"],
+    entry_points={
+        'console_scripts': [
+            'create_shell_link = scripts.create_shell_link:main',
+            'register_hkey_aumi = scripts.register_hkey_aumi:main'
+        ]
+    },
     python_requires=">=3.8",
     install_requires=requires,
     license="Apache 2.0",

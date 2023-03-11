@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import argparse
 import ctypes
 import pathlib
@@ -28,7 +26,7 @@ def register_hkey(appId: str, appName: str, iconPath: Optional[pathlib.Path]):
             winreg.SetValueEx(masterKey, "IconUri", 0, winreg.REG_SZ, str(iconPath.resolve()))
 
 
-if __name__ == "__main__":
+def main():
     parser = argparse.ArgumentParser(description="Register AUMI in the registry for use in toast notifications")
     parser.add_argument("--app_id", "-a", type=str, required=True, help="Application User Model ID for identification")
     parser.add_argument("--name", "-n", type=str, required=True, help="Display name on notification")
@@ -37,3 +35,7 @@ if __name__ == "__main__":
 
     register_hkey(args.app_id, args.name, args.icon)
     print(f"Successfully registered the application ID '{args.app_id}'")
+
+
+if __name__ == "__main__":
+    main()

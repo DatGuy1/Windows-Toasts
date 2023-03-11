@@ -3,6 +3,7 @@
 - Added Windows 11 and Python 3.12 classifiers
 - Merge typing back inline
 - Dropped Python 3.7 support
+- Changed scripts to use entry_points
 
 0.3.3 (2022-03-18)
 ======

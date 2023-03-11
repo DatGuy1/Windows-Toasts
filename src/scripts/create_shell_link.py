@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import argparse
 import os
 import sys
@@ -12,7 +10,7 @@ try:
     from win32com.shell import shell
 except ImportError:
     raise ImportError(
-        "pywin32 is required to run create_shell_link.py.To install, execute 'pip install pywin32' in a terminal"
+        "pywin32 is required to run create_shell_link.py. To install, execute 'pip install pywin32' in a terminal"
     )
 
 
@@ -70,7 +68,7 @@ def create_shell_link(
     print(f"Successfully {'modified' if linkExists else 'created'} shell link with the AUMI '{appId}'")
 
 
-if __name__ == "__main__":  # pragma: no cover
+def main():
     parser = argparse.ArgumentParser(description="Create shell link for use in toast notifications")
     parser.add_argument("--appdata", "-ad", type=str, required=False, help="AppData path if script fails to find it")
     parser.add_argument("--app_id", "-a", type=str, required=True, help="Application User Model ID for identification")
@@ -91,3 +89,7 @@ if __name__ == "__main__":  # pragma: no cover
     create_shell_link(
         appId=args.app_id, appName=args.name, iconPath=args.icon, overwrite=args.overwrite, appDataPath=args.appdata
     )
+
+
+if __name__ == "__main__":  # pragma: no cover
+    main()
