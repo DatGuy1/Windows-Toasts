@@ -106,6 +106,9 @@ def test_warnings_toast():
     with warns(UserWarning, match="has no headline, only a body"):
         newToast.SetHeadline("Hello, World!")
 
+    with warns(UserWarning, match="does not support images"):
+        newToast.SetImage("C:/Windows/System32/@WLOGO_96x96.png")
+
     assert len(newToast.textFields) == 1
     assert newToast.textFields[0] == "Hello, World!"
 
@@ -131,6 +134,7 @@ def test_image_toast():
     newToast.SetFirstLine("Foo")
     newToast.SetSecondLine("Bar")
 
+    newToast.SetImage("https://www.python.org/static/community_logos/python-powered-h-140x182.png")
     newToast.SetImage("C:/Windows/System32/@WLOGO_96x96.png")
 
     FakeWindowsToaster("Python").show_toast(newToast)

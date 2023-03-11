@@ -26,7 +26,7 @@ def register_hkey(appId: str, appName: str, iconPath: Optional[pathlib.Path]):
             winreg.SetValueEx(masterKey, "IconUri", 0, winreg.REG_SZ, str(iconPath.resolve()))
 
 
-def main():
+def main():  # pragma: no cover
     parser = argparse.ArgumentParser(description="Register AUMID in the registry for use in toast notifications")
     parser.add_argument("--app_id", "-a", type=str, required=True, help="Application User Model ID for identification")
     parser.add_argument("--name", "-n", type=str, required=True, help="Display name on notification")
