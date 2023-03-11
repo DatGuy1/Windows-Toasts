@@ -4,6 +4,9 @@ from typing import Union
 
 
 class AudioSource(Enum):
+    """
+    Different audios built into Windows
+    """
     Default = "Default"
     IM = "IM"
     Mail = "Mail"
@@ -31,16 +34,17 @@ class AudioSource(Enum):
     Call10 = "Looping.Call10"
 
 
-# noinspection PyUnresolvedReferences
 @dataclass
 class ToastAudio:
     """
-    Container class for audio configuration in a toast
+    Audio configuration in a toast
 
     :param sound: Selected AudioSource to play
     :type sound: Union[AudioSource, str]
     :param looping: Whether the audio should loop once it ends. Stops abruptly when the notification is dismissed
     :type looping: bool
+    :param silent: Silence any audio
+    :type silent: bool
     """
 
     sound: Union[AudioSource, str] = AudioSource.Default

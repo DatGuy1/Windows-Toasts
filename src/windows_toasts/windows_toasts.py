@@ -30,7 +30,7 @@ class __BaseWindowsToaster:
         # noinspection DuplicatedCode
         toastContent = ToastDocument(ToastNotificationManager.get_template_content(toast.ToastType))
         if toast.HasImage and toast.imagePath is not None:
-            toastContent.SetImageField(str(toast.imagePath))
+            toastContent.SetImageField(toast.imagePath)
 
         for i, fieldContent in enumerate(toast.textFields):
             toastContent.SetTextField(fieldContent, i)
@@ -49,6 +49,7 @@ class __BaseWindowsToaster:
     def show_toast(self, toast: Toast) -> None:
         """
         Display the passed notification toast
+
         :param toast: Toast to display
         """
         notificationToSend = ToastNotification(self._setup_toast(toast).xmlDocument)
@@ -71,16 +72,16 @@ class __BaseWindowsToaster:
 class WindowsToaster(__BaseWindowsToaster):
     """
     Basic toaster, used to display toasts without actions and/or input fields.
-    If you need to use them, see :class:`WindowsToaster`
+    If you need to use them, see :class:`InteractableWindowsToaster`
 
     :param applicationText: Text to display the application as
     """
 
-    def __init__(self, applicationText):
+    def __init__(self, applicationText: str):
         super().__init__(applicationText)
         self.toastNotifier = ToastNotificationManager.create_toast_notifier(applicationText)
 
-    def show_toast(self, toast):
+    def show_toast(self, toast: Toast) -> None:
         if len(toast.actions) > 0:
             warnings.warn(
                 "Actions are not supported in WindowsToaster. If you'd like to use "
@@ -98,27 +99,27 @@ class WindowsToaster(__BaseWindowsToaster):
 
 class InteractableWindowsToaster(__BaseWindowsToaster):
     """
-    :class:`WindowsToaster`, but uses an AUMI to support actions. Actions require a recognised AUMI to trigger
-    on_activated,otherwise it triggers on_dismissed with no arguments
+    :class:`WindowsToaster`, but uses an AUMID to support actions. Actions require a recognised AUMID to trigger
+    on_activated, otherwise it triggers on_dismissed with no arguments
 
     :param applicationText: Text to display the application as
-    :param notifierAUMI: AUMI to use. Defaults to Command Prompt. To use a custom AUMI, see one of the scripts
+    :param notifierAUMID: AUMID to use. Defaults to Command Prompt. To use a custom AUMID, see one of the scripts
     """
 
-    def __init__(self, applicationText: str, notifierAUMI: Optional[str] = None):
+    def __init__(self, applicationText: str, notifierAUMID: Optional[str] = None):
         super().__init__(applicationText)
-        if notifierAUMI is None:
-            self.defaultAUMI = True
-            notifierAUMI = "{1AC14E77-02E7-4E5D-B744-2EB1AE5198B7}\\cmd.exe"
+        if notifierAUMID is None:
+            self.defaultAUMID = True
+            notifierAUMID = "{1AC14E77-02E7-4E5D-B744-2EB1AE5198B7}\\cmd.exe"
         else:
-            self.defaultAUMI = False
+            self.defaultAUMID = False
 
-        self.toastNotifier = ToastNotificationManager.create_toast_notifier(notifierAUMI)
+        self.toastNotifier = ToastNotificationManager.create_toast_notifier(notifierAUMID)
 
     def _setup_toast(self, toast):
         toastContent = super()._setup_toast(toast)
-        # If we haven't set up our own AUMI, put our application text in the attribution field
-        if self.defaultAUMI:
+        # If we haven't set up our own AUMID, put our application text in the attribution field
+        if self.defaultAUMID:
             toastContent.SetAttributionText(self.applicationText)
 
         for customAction in toast.actions:
@@ -129,5 +130,5 @@ class InteractableWindowsToaster(__BaseWindowsToaster):
 
         return toastContent
 
-    def show_toast(self, toast: Toast):
+    def show_toast(self, toast: Toast) -> None:
         super().show_toast(toast)
