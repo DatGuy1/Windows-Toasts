@@ -7,6 +7,7 @@ class AudioSource(Enum):
     """
     Different audios built into Windows
     """
+
     Default = "Default"
     IM = "IM"
     Mail = "Mail"

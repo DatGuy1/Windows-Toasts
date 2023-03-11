@@ -14,6 +14,7 @@ class __BaseWindowsToaster:
 
     :param applicationText: Text to display the application as
     """
+
     applicationText: str
     toastNotifier: Optional[ToastNotifier]
 

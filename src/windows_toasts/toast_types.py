@@ -1,10 +1,10 @@
 import datetime
-from urllib.parse import urlparse
 import warnings
 from enum import Enum
-from pathlib import Path
 from os import PathLike
+from pathlib import Path
 from typing import Callable, ClassVar, List, Literal, Optional, Tuple, Union
+from urllib.parse import urlparse
 
 from winsdk.windows.ui.notifications import ToastDismissedEventArgs, ToastFailedEventArgs, ToastTemplateType
 
@@ -16,6 +16,7 @@ class ToastDuration(Enum):
     """
     Possible values for duration to display toast for
     """
+
     Default: str = "Default"
     Short: str = "short"
     Long: str = "long"
@@ -149,6 +150,7 @@ class ToastText1(Toast):
     """
     A single string wrapped across a maximum of three lines of text
     """
+
     ToastType: ClassVar[Literal[ToastTemplateType.TOAST_TEXT01]] = ToastTemplateType.TOAST_TEXT01
 
     def __init__(self) -> None:
@@ -160,6 +162,7 @@ class ToastText2(Toast):
     """
     One string of bold text on the first line, one string of regular text wrapped across the second and third lines
     """
+
     ToastType: ClassVar[Literal[ToastTemplateType.TOAST_TEXT02]] = ToastTemplateType.TOAST_TEXT02
 
     def __init__(self) -> None:
@@ -171,6 +174,7 @@ class ToastText3(Toast):
     """
     One string of bold text wrapped across the first and second lines, one string of regular text on the third line
     """
+
     ToastType: ClassVar[Literal[ToastTemplateType.TOAST_TEXT03]] = ToastTemplateType.TOAST_TEXT03
 
     def __init__(self) -> None:
@@ -183,6 +187,7 @@ class ToastText4(Toast):
     One string of bold text on the first line, one string of regular text on the second line,
     one string of regular text on the third line
     """
+
     ToastType: ClassVar[Literal[ToastTemplateType.TOAST_TEXT04]] = ToastTemplateType.TOAST_TEXT04
 
     def __init__(self) -> None:
@@ -195,6 +200,7 @@ class ToastImageAndText1(Toast):
     """
     An image and a single string wrapped across a maximum of three lines of text
     """
+
     ToastType: ClassVar[Literal[ToastTemplateType.TOAST_IMAGE_AND_TEXT01]] = ToastTemplateType.TOAST_IMAGE_AND_TEXT01
     HasImage: ClassVar[Literal[True]] = True
 
@@ -208,6 +214,7 @@ class ToastImageAndText2(Toast):
     An image, one string of bold text on the first line, one string of regular text
     wrapped across the second and third lines
     """
+
     ToastType: ClassVar[Literal[ToastTemplateType.TOAST_IMAGE_AND_TEXT02]] = ToastTemplateType.TOAST_IMAGE_AND_TEXT02
     HasImage: ClassVar[Literal[True]] = True
 
@@ -222,6 +229,7 @@ class ToastImageAndText3(Toast):
     An image, one string of bold text on the first line, one string of regular
     text wrapped across the second and third lines
     """
+
     ToastType: ClassVar[Literal[ToastTemplateType.TOAST_IMAGE_AND_TEXT03]] = ToastTemplateType.TOAST_IMAGE_AND_TEXT03
     HasImage: ClassVar[Literal[True]] = True
 
@@ -235,6 +243,7 @@ class ToastImageAndText4(Toast):
     An image, one string of bold text on the first line, one string of regular text
     on the second line, one string of regular text on the third line
     """
+
     ToastType: ClassVar[Literal[ToastTemplateType.TOAST_IMAGE_AND_TEXT04]] = ToastTemplateType.TOAST_IMAGE_AND_TEXT04
     HasImage: ClassVar[Literal[True]] = True
 

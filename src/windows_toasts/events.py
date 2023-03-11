@@ -17,6 +17,7 @@ class ToastActivatedEventArgs:
     :ivar arguments: Arguments provided to :func:`~windows_toasts.toast_types.Toast.AddAction`
     :ivar input: Input in field when using :func:`~windows_toasts.toast_types.Toast.SetInputField`
     """
+
     arguments: Optional[str] = None
     input: Optional[str] = None
 

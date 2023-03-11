@@ -13,6 +13,7 @@ class ToastDocument:
     The meaty XmlDocument wrapper for toasts, which applies all the
     elements configured in :class:`Toast <windows_toasts.toast_types.Toast>`
     """
+
     xmlDocument: XmlDocument
 
     def __init__(self, xmlDocument: XmlDocument) -> None:
@@ -48,7 +49,7 @@ class ToastDocument:
         """
         Set attribution text for the toast. This is used if we're using
         :class:`~windows_toasts.windows_toasts.InteractableWindowsToaster` but haven't set up our own AUMID.
-        `AttributionText on Microsoft.com <https://learn.microsoft.com/en-us/windows/apps/design/shell/tiles-and
+        `AttributionText on Microsoft.com <https://learn.microsoft.com/windows/apps/design/shell/tiles-and
         -notifications/adaptive-interactive-toasts#attribution-text>`_
 
         :param attributionText: Attribution text to set
@@ -63,7 +64,7 @@ class ToastDocument:
     def SetAudioAttributes(self, audioConfiguration: ToastAudio) -> None:
         """
         Apply audio attributes for the toast. If a loop is requested, the toast duration has to be set to long. `Audio
-        on Microsoft.com <https://learn.microsoft.com/en-us/windows/apps/design/shell/tiles-and-notifications/adaptive
+        on Microsoft.com <https://learn.microsoft.com/windows/apps/design/shell/tiles-and-notifications/adaptive
         -interactive-toasts#audio>`_
         """
         audioNode = self.xmlDocument.get_elements_by_tag_name("audio").item(0)
@@ -84,7 +85,7 @@ class ToastDocument:
     def SetTextField(self, newValue: str, nodePosition: int) -> None:
         """
         Set a simple text field. `Text elements on Microsoft.com
-        <https://learn.microsoft.com/en-us/windows/apps/design/shell/tiles-and-notifications/adaptive-interactive-toasts#text-elements>`_
+        <https://learn.microsoft.com/windows/apps/design/shell/tiles-and-notifications/adaptive-interactive-toasts#text-elements>`_
 
         :param newValue: Text to be written
         :param nodePosition: Index of the text fields of the toast type for the text to be written in
@@ -95,7 +96,7 @@ class ToastDocument:
     def SetCustomTimestamp(self, customTimestamp: datetime.datetime) -> None:
         """
         Apply a custom timestamp to display on the toast and in the notification center. `Custom timestamp on
-        Microsoft.com <https://learn.microsoft.com/en-us/windows/apps/design/shell/tiles-and-notifications/adaptive
+        Microsoft.com <https://learn.microsoft.com/windows/apps/design/shell/tiles-and-notifications/adaptive
         -interactive-toasts?tabs=xml#custom-timestamp>`_
 
         :param customTimestamp: The target datetime
@@ -107,7 +108,7 @@ class ToastDocument:
     def SetImageField(self, imagePath: str) -> None:
         """
         Set an image to display. Only works on ToastImageAndText toasts. `Inline image on Microsoft.com
-        <https://learn.microsoft.com/en-us/windows/apps/design/shell/tiles-and-notifications/adaptive-interactive
+        <https://learn.microsoft.com/windows/apps/design/shell/tiles-and-notifications/adaptive-interactive
         -toasts#inline-image>`_
 
         :param imagePath: Sanitised PathLike converted into string
@@ -119,7 +120,7 @@ class ToastDocument:
     def SetInputField(self, placeholderText: str) -> None:
         """
         Set an input field for the user to write in. `Inputs with button bar on Microsoft.com
-        <https://learn.microsoft.com/en-us/windows/apps/design/shell/tiles-and-notifications/adaptive-interactive
+        <https://learn.microsoft.com/windows/apps/design/shell/tiles-and-notifications/adaptive-interactive
         -toasts#quick-reply-text-box>`_
 
         :param placeholderText: Hint about what to write, similarly to HTML
