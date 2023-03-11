@@ -21,9 +21,9 @@ setup(
     package_data={"": ["LICENSE"], "windows_toasts": ["py.typed"]},
     include_package_data=True,
     entry_points={
-        'console_scripts': [
-            'create_shell_link = scripts.create_shell_link:main',
-            'register_hkey_aumid = scripts.register_hkey_aumid:main'
+        "console_scripts": [
+            "create_shell_link = scripts.create_shell_link:main",
+            "register_hkey_aumid = scripts.register_hkey_aumid:main",
         ]
     },
     python_requires=">=3.8",
@@ -39,7 +39,7 @@ setup(
         "Programming Language :: Python :: 3.12",
         "License :: OSI Approved :: Apache Software License",
         "Operating System :: Microsoft :: Windows :: Windows 10",
-        "Operating System :: Microsoft :: Windows :: Windows 11"
+        "Operating System :: Microsoft :: Windows :: Windows 11",
     ],
     project_urls={"Bug Tracker": "https://github.com/DatGuy1/Windows-Toasts/issues"},
 )

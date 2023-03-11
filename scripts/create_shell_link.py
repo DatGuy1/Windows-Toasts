@@ -15,11 +15,11 @@ class IconFileAction(argparse.Action):  # pragma: no cover
 
 # noinspection PyUnresolvedReferences
 def create_shell_link(
-        appId: str,
-        appName: str,
-        iconPath: Optional[Path] = None,
-        overwrite: bool = False,
-        appDataPath: str = os.getenv("APPDATA"),
+    appId: str,
+    appName: str,
+    iconPath: Optional[Path] = None,
+    overwrite: bool = False,
+    appDataPath: str = os.getenv("APPDATA"),
 ):
     # See https://github.com/mohabouje/WinToast/blob/master/src/wintoastlib.cpp#L594
     if appDataPath is None:  # pragma: no cover
@@ -68,7 +68,7 @@ def create_shell_link(
     print(f"Successfully {'modified' if linkExists else 'created'} shell link with the AUMID '{appId}'")
 
 
-def main():
+def main():  # pragma: no cover
     parser = argparse.ArgumentParser(description="Create shell link for use in toast notifications")
     parser.add_argument("--appdata", "-ad", type=str, required=False, help="AppData path if script fails to find it")
     parser.add_argument("--app_id", "-a", type=str, required=True, help="Application User Model ID for identification")
