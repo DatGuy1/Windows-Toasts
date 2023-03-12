@@ -29,7 +29,7 @@ release = windows_toasts.__version__
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-extensions = ["sphinx.ext.autodoc", "autodoc2", "enum_tools.autoenum"]
+extensions = ["autodoc2", "enum_tools.autoenum"]
 
 templates_path = ["_templates"]
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
