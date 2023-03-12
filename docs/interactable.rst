@@ -74,9 +74,8 @@ We can combine the two and a submit button
 Caveats
 -------
 
-You may have noticed something weird in the code above. Why does it say command prompt in the top left, and have the icon for it?
-
+You may have noticed something weird in the code above. Why, when we display the toast, does it say command prompt in the top left, and have the icon for it?
 InteractableWindowsToaster requires an Application User Model ID (AUMID) to function properly.
-The package provides the command prompt as the default, and the applicationText becomes the :meth:`attribution text <windows_toasts.toast_document.ToastDocument.SetAttributionText>`
+The package provides the command prompt as the default, and the applicationText becomes the :meth:`attribution text <windows_toasts.toast_document.ToastDocument.SetAttributionText>`.
 
-You can choose between staying with the default command prompt AUMID, `finding another one <Using an installed AUMID>`_, or `creating your own <Creating a custom AUMID>`_
+You can choose between staying with the default command prompt AUMID, `finding another one <Using an installed AUMID>`_, or `creating your own <Creating a custom AUMID>`_.

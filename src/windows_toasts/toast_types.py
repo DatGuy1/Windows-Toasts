@@ -25,30 +25,28 @@ class ToastDuration(Enum):
 class Toast:
     """
     Base class for a toast. Should not be directly created
-
-    :ivar audio: Audio configuration
-    :vartype audio: Optional[ToastAudio]
-    :ivar actions: List of buttons to include. Implemented through :func:`AddAction`
-    :ivar duration: :class:`ToastDuration`, be it the default, short, or long
-    :ivar imagePath: See :func:`SetImage`
-    :ivar textFields: Various text fields (dependant on subclass)
-    :ivar textInputPlaceholder: Placeholder for a text input box
-    :ivar timestamp: See :func:`SetCustomTimestamp`
-    :ivar on_activated: Callable to execute when the toast is clicked if basic, or a button is clicked if interactable
-    :ivar on_dismissed: Callable to execute when the toast is dismissed (X is clicked or times out) if interactable
-    :ivar on_failed: Callable to execute when the toast fails to display
     """
 
     audio: Optional[ToastAudio]
+    """Audio configuration"""
     actions: List[Tuple[str, str]]
+    """List of buttons to include. Implemented through :func:`AddAction`"""
     duration: Literal[ToastDuration.Default, ToastDuration.Long, ToastDuration.Short]
+    """:class:`ToastDuration` enum, be it the default, short, or long"""
     imagePath: Optional[str]
+    """See :func:`SetImage`"""
     textFields: List[str]
+    """Various text fields (dependant on subclass)"""
     textInputPlaceholder: Optional[str]
+    """Placeholder for a text input box"""
     timestamp: Optional[datetime.datetime]
+    """See :func:`SetCustomTimestamp`"""
     on_activated: Optional[Callable[[ToastActivatedEventArgs], None]]
+    """Callable to execute when the toast is clicked if basic, or a button is clicked if interactable"""
     on_dismissed: Optional[Callable[[ToastDismissedEventArgs], None]]
+    """Callable to execute when the toast is dismissed (X is clicked or times out) if interactable"""
     on_failed: Optional[Callable[[ToastFailedEventArgs], None]]
+    """Callable to execute when the toast fails to display"""
     ToastType: ClassVar[ToastTemplateType] = None
     HasImage: ClassVar[bool] = False
 

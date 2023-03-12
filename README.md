@@ -26,7 +26,7 @@ Simple usage:
 >>> wintoaster.show_toast(newToast)
 ```
 
-Proper documentation is in progress, but meanwhile you can take inspiration from the tests in tests/test_toasts.py.
+Full documentation is available at [readthedocs.io](https://windows-toasts.readthedocs.io/en/latest/)
 
 ## But I already saw this package three times on PyPI!
 
