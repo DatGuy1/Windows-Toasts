@@ -11,7 +11,7 @@ Classes
 API
 ---
 
-.. autoenum:: windows_toasts.toast_types.ToastDuration
+.. autodoc2-object:: windows_toasts.toast_types.ToastDuration
 
 .. py:class:: ToastActivatedEventArgs
    :canonical: windows_toasts.events.ToastActivatedEventArgs

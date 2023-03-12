@@ -1,0 +1,6 @@
+__title__ = "Windows-Toasts"
+__description__ = "Python library used to send toast notifications on Windows machines"
+__url__ = "https://windows-toasts.readthedocs.io/"
+__version__ = "0.4.0"
+__author__ = "DatGuy"
+__license__ = "Apache 2.0"

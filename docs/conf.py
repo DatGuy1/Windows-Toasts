@@ -6,30 +6,32 @@
 import os
 import sys
 
-sys.path.insert(0, os.path.abspath("../src"))
-
-import windows_toasts  # noqa: E402
-
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = "Windows-Toasts"
+# Get __version__.py without importing project
+windows_toasts = {}
+with open("../src/windows_toasts/__version__.py", "r") as f:
+    exec(f.read(), None, windows_toasts)
+
+project = windows_toasts["__title__"]
 copyright = "2023, DatGuy"
-author = "DatGuy"
+author = windows_toasts["__author__"]
+
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 #
 # The short X.Y version.
-version = windows_toasts.__version__
+version = windows_toasts["__version__"]
 # The full version, including alpha/beta/rc tags.
-release = windows_toasts.__version__
+release = windows_toasts["__version__"]
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-extensions = ["sphinx.ext.autodoc", "autodoc2", "enum_tools.autoenum"]
+extensions = ["autodoc2", "enum_tools.autoenum"]
 
 templates_path = ["_templates"]
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]

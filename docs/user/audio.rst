@@ -16,7 +16,7 @@ Module Contents
 Classes
 ~~~~~~~
 
-.. autoenum:: windows_toasts.toast_audio.AudioSource
+.. autodoc2-object:: windows_toasts.toast_audio.AudioSource
 
 .. py:class:: ToastAudio
    :canonical: windows_toasts.toast_audio.ToastAudio
