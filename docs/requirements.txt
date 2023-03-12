@@ -1,2 +1,3 @@
 sphinx==6.1.3
+sphinx-autodoc2==0.4.2
 furo==2022.12.7
