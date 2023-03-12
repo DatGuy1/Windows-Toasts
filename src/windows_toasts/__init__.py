@@ -1,4 +1,4 @@
-from .__version__ import __author__, __description__, __license__, __title__, __url__, __version__
+from .__version__ import __author__, __description__, __license__, __title__, __url__, __version__  # noqa: F401
 from .events import ToastActivatedEventArgs
 from .toast_audio import AudioSource, ToastAudio
 from .toast_types import (
