@@ -40,6 +40,7 @@ autodoc2_hidden_objects = ["private", "inherited"]
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_theme = "furo"
+html_logo = "images/logo.png"
 html_static_path = ["_static"]
 
 autodoc_default_options = {"members": True, "member-order": "bysource", "undoc-members": True}
