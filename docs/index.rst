@@ -36,7 +36,7 @@ Why Windows-Toasts?
 As opposed to other toast notification libraries, Windows-Toasts uses `Windows SDK <https://learn.microsoft.com/en-gb/windows/apps/windows-app-sdk/>`_ bindings to create and deliver notifications.
 This means no less-than-pretty Powershell hackyness and the like, and is in turn scalable, maintainable, and easy to use.
 
-The other packages I've seen also don't use tests or have no active maintainers, while Windows-Toasts has decent test coverage and is fully typed and documented.
+The other packages I've seen also don't use tests or have no active maintainers, while Windows-Toasts has decent test coverage, is fully typed and documented, and has additional features.
 Any issues or feature requests you put on `GitHub <https://github.com/DatGuy1/Windows-Toasts/issues>`_ shouldn't stand there for too long without receiving a response.
 
 Contents

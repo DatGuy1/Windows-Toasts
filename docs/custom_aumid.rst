@@ -31,7 +31,7 @@ Using the registry
 
 Installing a custom AUMID
 -------------------------
-The library comes with two scripts: :code:`create_shell_link`, and :code:`register_hkey_aumid`.
+Custom AUMIDs can display user-defined titles and icons. The library comes with two scripts: :code:`create_shell_link`, and :code:`register_hkey_aumid`.
 
 * :code:`create_shell_link` creates a null shortcut in the start menu folder
 * :code:`register_hkey_aumid` registers a AUMID in the registry.
