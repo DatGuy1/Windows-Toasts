@@ -2,13 +2,20 @@ import warnings
 from datetime import datetime
 from typing import Optional, TypeVar
 
-from winsdk.windows.ui.notifications import ToastNotification, ToastNotificationManager, ToastNotifier, \
-    NotificationData, ScheduledToastNotification, NotificationUpdateResult, ToastNotificationHistory
+from winsdk.windows.ui.notifications import (
+    NotificationData,
+    NotificationUpdateResult,
+    ScheduledToastNotification,
+    ToastNotification,
+    ToastNotificationHistory,
+    ToastNotificationManager,
+    ToastNotifier,
+)
 
-from .wrappers import ToastDuration, ToastScenario
 from .events import ToastActivatedEventArgs
 from .toast_document import ToastDocument
 from .toast_types import Toast
+from .wrappers import ToastDuration, ToastScenario
 
 ToastNotificationT = TypeVar("ToastNotificationT", ToastNotification, ScheduledToastNotification)
 
@@ -205,8 +212,11 @@ class WindowsToaster(__BaseWindowsToaster):
 
     :param applicationText: Text to display the application as
     """
-    __InteractableWarningMessage = "{0} are not supported in WindowsToaster. If you'd like to use {0}, " \
-                                   "instantiate a InteractableWindowsToaster class instead"
+
+    __InteractableWarningMessage = (
+        "{0} are not supported in WindowsToaster. If you'd like to use {0}, "
+        "instantiate a InteractableWindowsToaster class instead"
+    )
 
     def __init__(self, applicationText: str):
         super().__init__(applicationText)

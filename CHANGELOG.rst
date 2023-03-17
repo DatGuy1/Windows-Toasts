@@ -4,9 +4,24 @@
 - Merge typing back inline
 - Dropped Python 3.7 support
 - Changed scripts to use entry_points
-- Created documentation on https://windows-toasts.readthedocs.io/en/latest/
+- Created documentation on https://windows-toasts.readthedocs.io
 - register_hkey_aumid no longer requires user to be an administrator
 - Removed create_shell_link.py script
+- Added many new features for toasts, including:
+    - Initialising toasts with your data rather than setting it afterwards
+    - Dynamically modifying toast content after its display
+    - Multiple images in different slots
+    - Scheduled toasts
+    - Progress bars
+    - Selection boxes input
+    - Improved button configuration
+    - Grouped toasts
+    - Suppressing the popup
+    - Toast expiration time
+    - Toast scenarios
+See the documentation for how to use them!
+
+The next release will be version 1.0.0 and will support on_activated callbacks after the toast has been relegated to the action center
 
 0.3.3 (2022-03-18)
 ======

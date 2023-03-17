@@ -1,46 +1,58 @@
 import datetime
+import uuid
 import warnings
-from enum import Enum
-from os import PathLike
-from pathlib import Path
-from typing import Callable, ClassVar, List, Literal, Optional, Tuple, Union
-from urllib.parse import urlparse
+from typing import Callable, ClassVar, Iterable, List, Literal, Optional, TypeVar
 
 from winsdk.windows.ui.notifications import ToastDismissedEventArgs, ToastFailedEventArgs, ToastTemplateType
 
 from .events import ToastActivatedEventArgs
 from .toast_audio import ToastAudio
+from .wrappers import (
+    ToastButton,
+    ToastDisplayImage,
+    ToastDuration,
+    ToastInputSelectionBox,
+    ToastInputTextBox,
+    ToastProgressBar,
+    ToastScenario,
+)
 
-
-class ToastDuration(Enum):
-    """
-    Possible values for duration to display toast for
-    """
-
-    Default: str = "Default"
-    Short: str = "short"
-    Long: str = "long"
+ToastInput = TypeVar("ToastInput", ToastInputTextBox, ToastInputSelectionBox)
 
 
 class Toast:
     """
-    Base class for a toast. Should not be directly created
+    Base class for a toast. Should not be directly created or used as there are specific SetX() methods for it
     """
 
     audio: Optional[ToastAudio]
     """Audio configuration"""
-    actions: List[Tuple[str, str]]
+    actions: List[ToastButton]
     """List of buttons to include. Implemented through :func:`AddAction`"""
     duration: Literal[ToastDuration.Default, ToastDuration.Long, ToastDuration.Short]
-    """:class:`ToastDuration` enum, be it the default, short, or long"""
-    imagePath: Optional[str]
+    """:class:`~windows_toasts.wrappers.ToastDuration` enum, be it the default, short, or long"""
+    images: List[ToastDisplayImage]
     """See :func:`SetImage`"""
+    scenario: ToastScenario
+    """Scenario for the toast"""
     textFields: List[str]
     """Various text fields (dependant on subclass)"""
-    textInputPlaceholder: Optional[str]
+    inputs: List[ToastInput]
     """Placeholder for a text input box"""
     timestamp: Optional[datetime.datetime]
     """See :func:`SetCustomTimestamp`"""
+    progress_bar: Optional[ToastProgressBar] = None
+    """See :func:`SetProgressBar`"""
+    group: Optional[str] = None
+    """Group to place the toast in"""
+    tag: str
+    """uuid of a tag for the toast"""
+    updates: int
+    """Number of times the toast has been updated"""
+    expiration_time: Optional[datetime.datetime] = None
+    """Expiration time of the toast"""
+    suppress_popup: bool = False
+    """Whether to suppress the toast popup and relegate it immediately to the action center"""
     on_activated: Optional[Callable[[ToastActivatedEventArgs], None]]
     """Callable to execute when the toast is clicked if basic, or a button is clicked if interactable"""
     on_dismissed: Optional[Callable[[ToastDismissedEventArgs], None]]
@@ -48,36 +60,139 @@ class Toast:
     on_failed: Optional[Callable[[ToastFailedEventArgs], None]]
     """Callable to execute when the toast fails to display"""
     ToastType: ClassVar[ToastTemplateType] = None
+    """Type of toast to fetch template for"""
     HasImage: ClassVar[bool] = False
+    """Whether the toast type has an image"""
 
-    def __init__(self) -> None:
-        self.audio = None
+    def __init__(
+        self,
+        audio: Optional[ToastAudio] = None,
+        actions: Iterable[ToastButton] = (),
+        duration: ToastDuration = ToastDuration.Default,
+        scenario: ToastScenario = ToastScenario.Default,
+        progress_bar: Optional[ToastProgressBar] = None,
+        headline: Optional[str] = None,
+        body: Optional[str] = None,
+        first_line: Optional[str] = None,
+        second_line: Optional[str] = None,
+        images: Iterable[ToastDisplayImage] = (),
+        inputs: Iterable[ToastInput] = (),
+        timestamp: Optional[datetime.datetime] = None,
+        group: Optional[str] = None,
+        expiration_time: Optional[datetime.datetime] = None,
+        suppress_popup: bool = False,
+        on_activated: Optional[Callable[[ToastActivatedEventArgs], None]] = None,
+        on_dismissed: Optional[Callable[[ToastDismissedEventArgs], None]] = None,
+        on_failed: Optional[Callable[[ToastFailedEventArgs], None]] = None,
+    ) -> None:
+        """
+        Initialise a toast
+
+        :param audio: See :meth:`SetAudio`
+        :type audio: Optional[ToastAudio]
+        :param actions: Iterable of actions to add; see :meth:`AddAction`
+        :type actions: Iterable[ToastButton]
+        :param duration: See :meth:`SetDuration`
+        :type duration: ToastDuration
+        :param scenario: See :meth:`SetScenario`
+        :type scenario: ToastScenario
+        :param progress_bar: See :meth:`SetProgressBar`
+        :type progress_bar: Optional[ToastProgressBar]
+        :param headline: See :meth:`SetHeadline`
+        :type headline: Optional[str]
+        :param body: See :meth:`SetBody`
+        :type body: Optional[str]
+        :param first_line: See :meth:`SetFirstLine`
+        :type first_line: Optional[str]
+        :param second_line: See :meth:`SetSecondLine`
+        :type second_line: Optional[str]
+        :param images: See :meth:`AddImage`
+        :type images: Iterable[ToastDisplayImage]
+        :param inputs: See :meth:`AddInput`
+        :type inputs: Iterable[ToastInput]
+        :param timestamp: See :meth:`SetCustomTimestamp`
+        :type timestamp: Optional[datetime.datetime]
+        :param group: See :meth:`SetGroup`
+        :type group: Optional[str]
+        :param expiration_time: See :meth:`SetExpirationTime`
+        :type expiration_time: Optional[datetime.datetime]
+        :param suppress_popup: See :meth:`SetSuppressPopup`
+        :type suppress_popup: bool
+        :param on_activated: Callable to execute when the toast is clicked if basic, or a button is clicked if \
+         interactable
+        :type on_activated: Optional[Callable[[ToastActivatedEventArgs], None]]
+        :param on_dismissed: Callable to execute when the toast is dismissed (X is clicked or times out) if interactable
+        :type on_dismissed: Optional[Callable[[ToastDismissedEventArgs], None]]
+        :param on_failed: Callable to execute when the toast fails to display
+        :type on_failed:  Optional[Callable[[ToastFailedEventArgs], None]]
+        """
+        self.SetAudio(audio)
+        self.SetDuration(duration)
+        self.SetScenario(scenario)
+        self.SetCustomTimestamp(timestamp)
+        self.SetGroup(group)
+        self.SetProgressBar(progress_bar)
+        self.SetExpirationTime(expiration_time)
+        self.SetSuppressPopup(suppress_popup)
+
+        if headline is not None:
+            self.SetHeadline(headline)
+        if body is not None:
+            self.SetBody(body)
+        if first_line is not None:
+            self.SetFirstLine(first_line)
+        if second_line is not None:
+            self.SetSecondLine(second_line)
+
         self.actions = []
-        self.duration = ToastDuration.Default
-        self.imagePath = None
-        self.textFields = []
-        self.textInputPlaceholder = None
-        self.timestamp = None
+        for action in actions:
+            self.AddAction(action)
 
-        self.on_activated = None
-        self.on_dismissed = None
-        self.on_failed = None
+        self.images = []
+        for image in images:
+            self.AddImage(image)
 
-    def AddAction(self, actionName: str, actionArguments: str):
+        self.inputs = []
+        for toast_input in inputs:
+            self.AddInput(toast_input)
+
+        self.on_activated = on_activated
+        self.on_dismissed = on_dismissed
+        self.on_failed = on_failed
+
+        self.tag = str(uuid.uuid4())
+        self.updates = 0
+
+    def SetAudio(self, audio: ToastAudio) -> None:
         """
-        Add an action to the action list. For example, if you're setting up a reminder,
-        you would use 'action=remindlater&date=2020-01-20' as arguments. Maximum of five.
-
-        :param actionName: Value that will be displayed on the button
-        :type actionName: str
-        :param actionArguments: Arguments that will be available in the callback
-        :type actionArguments: str
+        Sets the custom audio configuration for the toast
         """
-        if len(self.actions) >= 5:
-            warnings.warn("Cannot add any more actions, you've already reached five")
-            return
+        self.audio = audio
 
-        self.actions.append((actionName, actionArguments))
+    def SetDuration(self, duration: ToastDuration) -> None:
+        """
+        Set the display duration for the toast
+        """
+        self.duration = duration
+
+    def SetScenario(self, scenario: ToastScenario) -> None:
+        """
+        Set whether Windows should consider the notification as important
+        """
+        self.scenario = scenario
+
+    def SetProgressBar(self, progressBar: ToastProgressBar) -> None:
+        """
+        Set a adjustable progress bar for the toast
+        """
+        self.progress_bar = progressBar
+
+    def SetGroup(self, group: str) -> None:
+        """
+        Set a group for the toast. Group is a generic identifier, where you can assign groups like \
+        "wallPosts", "messages", "friendRequests", etc.
+        """
+        self.group = group
 
     def SetHeadline(self, headlineText: str) -> None:
         """
@@ -109,32 +224,46 @@ class Toast:
         """
         self.textFields[2] = lineText
 
-    def SetImage(self, imagePath: Union[str, PathLike]) -> None:
+    def AddAction(self, action: ToastButton) -> None:
         """
-        Sets the image that will be displayed as the icon of the toast. Only works for ToastImageAndText classes
+        Add an action to the action list. For example, if you're setting up a reminder,
+        you would use 'action=remindlater&date=2020-01-20' as arguments. Maximum of five.
 
-        :param imagePath: The path to an image, be it a file or online (max 3 MB)
+        :type action: ToastButton
+        """
+        if len(self.actions) + len(self.inputs) >= 5:
+            warnings.warn(
+                f"Cannot add action '{action.content}', you've already reached the maximum of five actions + inputs"
+            )
+            return
+
+        self.actions.append(action)
+
+    def AddImage(self, image: ToastDisplayImage) -> None:
+        """
+        Adds an the image that will be displayed on the toast. Only works for ToastImageAndText classes
+
+        :param image: :class:`ToastDisplayImage` to display in the toast
         """
         if not self.HasImage:
             warnings.warn(f"Toast of type {self.__class__.__name__} does not support images. This will not work.")
             return
 
-        if isinstance(imagePath, str) and urlparse(imagePath).scheme in ("http", "https"):
-            self.imagePath = imagePath
-            return
-        elif not isinstance(imagePath, Path):
-            imagePath = Path(imagePath)
+        self.images.append(image)
 
-        self.imagePath = imagePath.as_uri()
-
-    def SetInputField(self, placeholderText: str) -> None:
+    def AddInput(self, toast_input: ToastInput) -> None:
         """
         Adds an input field to the notification. It will be supplied as user_input of type ValueSet in on_activated
 
-        :param placeholderText: Placeholder text to display the the input field
-        :type placeholderText: str
+        :param toast_input: :class:`ToastInput` to display in the toast
         """
-        self.textInputPlaceholder = placeholderText
+        if len(self.actions) + len(self.inputs) >= 5:
+            warnings.warn(
+                f"Cannot add input '{toast_input}', you've already reached the maximum of five actions + inputs"
+            )
+            return
+
+        self.inputs.append(toast_input)
 
     def SetCustomTimestamp(self, notificationTime: datetime.datetime) -> None:
         """
@@ -142,6 +271,18 @@ class Toast:
         Windows uses the time that your notification was sent
         """
         self.timestamp = notificationTime
+
+    def SetExpirationTime(self, expirationTime: datetime.datetime) -> None:
+        """
+        Sets a time for the toast to expire on in the action center. If it is on-screen, nothing will happen
+        """
+        self.expiration_time = expirationTime
+
+    def SetSuppressPopup(self, suppressPopup: bool) -> None:
+        """
+        Sets whether to suppress the popup and instead immediately place it in the action center
+        """
+        self.suppress_popup = suppressPopup
 
 
 class ToastText1(Toast):
@@ -151,8 +292,8 @@ class ToastText1(Toast):
 
     ToastType: ClassVar[Literal[ToastTemplateType.TOAST_TEXT01]] = ToastTemplateType.TOAST_TEXT01
 
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
         self.textFields = [""]
 
 
@@ -163,8 +304,8 @@ class ToastText2(Toast):
 
     ToastType: ClassVar[Literal[ToastTemplateType.TOAST_TEXT02]] = ToastTemplateType.TOAST_TEXT02
 
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
         self.textFields = ["", ""]
 
 
@@ -175,8 +316,8 @@ class ToastText3(Toast):
 
     ToastType: ClassVar[Literal[ToastTemplateType.TOAST_TEXT03]] = ToastTemplateType.TOAST_TEXT03
 
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
         self.textFields = ["", ""]
 
 
@@ -188,8 +329,8 @@ class ToastText4(Toast):
 
     ToastType: ClassVar[Literal[ToastTemplateType.TOAST_TEXT04]] = ToastTemplateType.TOAST_TEXT04
 
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
         self.textFields = ["", "", ""]
 
 
@@ -202,8 +343,8 @@ class ToastImageAndText1(Toast):
     ToastType: ClassVar[Literal[ToastTemplateType.TOAST_IMAGE_AND_TEXT01]] = ToastTemplateType.TOAST_IMAGE_AND_TEXT01
     HasImage: ClassVar[Literal[True]] = True
 
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
         self.textFields = [""]
 
 
@@ -216,8 +357,8 @@ class ToastImageAndText2(Toast):
     ToastType: ClassVar[Literal[ToastTemplateType.TOAST_IMAGE_AND_TEXT02]] = ToastTemplateType.TOAST_IMAGE_AND_TEXT02
     HasImage: ClassVar[Literal[True]] = True
 
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
         self.textFields = ["", ""]
 
 
@@ -231,8 +372,8 @@ class ToastImageAndText3(Toast):
     ToastType: ClassVar[Literal[ToastTemplateType.TOAST_IMAGE_AND_TEXT03]] = ToastTemplateType.TOAST_IMAGE_AND_TEXT03
     HasImage: ClassVar[Literal[True]] = True
 
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
         self.textFields = ["", ""]
 
 
@@ -245,6 +386,6 @@ class ToastImageAndText4(Toast):
     ToastType: ClassVar[Literal[ToastTemplateType.TOAST_IMAGE_AND_TEXT04]] = ToastTemplateType.TOAST_IMAGE_AND_TEXT04
     HasImage: ClassVar[Literal[True]] = True
 
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
         self.textFields = ["", "", ""]

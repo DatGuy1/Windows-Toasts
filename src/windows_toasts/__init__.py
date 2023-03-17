@@ -1,8 +1,7 @@
-from .__version__ import __author__, __description__, __license__, __title__, __url__, __version__  # noqa: F401
-from .events import ToastActivatedEventArgs
+from ._version import __author__, __description__, __license__, __title__, __url__, __version__  # noqa: F401
+from .events import ToastActivatedEventArgs, ToastDismissedEventArgs, ToastFailedEventArgs
 from .toast_audio import AudioSource, ToastAudio
 from .toast_types import (
-    ToastDuration,
     ToastImageAndText1,
     ToastImageAndText2,
     ToastImageAndText3,
@@ -12,13 +11,36 @@ from .toast_types import (
     ToastText3,
     ToastText4,
 )
-from .windows_toasts import InteractableWindowsToaster, WindowsToaster
+from .toasters import InteractableWindowsToaster, WindowsToaster
+from .wrappers import (
+    ToastButton,
+    ToastButtonColour,
+    ToastDisplayImage,
+    ToastDuration,
+    ToastImage,
+    ToastInputSelectionBox,
+    ToastInputTextBox,
+    ToastProgressBar,
+    ToastScenario,
+    ToastSelection,
+)
 
 __all__ = [
-    "AudioSource",
+    # _version.py
+    "__author__",
+    "__description__",
+    "__license__",
+    "__title__",
+    "__url__",
+    "__version__",
+    # events.py
     "ToastActivatedEventArgs",
+    "ToastDismissedEventArgs",
+    "ToastFailedEventArgs",
+    # toast_audio.py
+    "AudioSource",
     "ToastAudio",
-    "ToastDuration",
+    # toast_types.py
     "ToastImageAndText1",
     "ToastImageAndText2",
     "ToastImageAndText3",
@@ -27,6 +49,18 @@ __all__ = [
     "ToastText2",
     "ToastText3",
     "ToastText4",
+    # toasters.py
     "InteractableWindowsToaster",
     "WindowsToaster",
+    # wrappers.py
+    "ToastButton",
+    "ToastButtonColour",
+    "ToastDisplayImage",
+    "ToastDuration",
+    "ToastImage",
+    "ToastInputSelectionBox",
+    "ToastInputTextBox",
+    "ToastProgressBar",
+    "ToastScenario",
+    "ToastSelection",
 ]

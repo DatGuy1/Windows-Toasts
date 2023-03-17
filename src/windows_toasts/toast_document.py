@@ -1,23 +1,57 @@
 import datetime
-from typing import TypeVar
+from typing import TypeVar, Union
 
 from winsdk.windows.data.xml.dom import IXmlNode, XmlDocument, XmlElement
 
 from .toast_audio import ToastAudio
+from .wrappers import (
+    ToastButton,
+    ToastDisplayImage,
+    ToastDuration,
+    ToastInputSelectionBox,
+    ToastInputTextBox,
+    ToastProgressBar,
+    ToastScenario,
+)
 
 IXmlType = TypeVar("IXmlType", IXmlNode, XmlElement)
 
 
 class ToastDocument:
     """
-    The meaty XmlDocument wrapper for toasts, which applies all the
-    elements configured in :class:`Toast <windows_toasts.toast_types.Toast>`
+    The XmlDocument wrapper for toasts, which applies all the
+    attributes configured in :class:`~windows_toasts.toast_types.Toast`
     """
 
     xmlDocument: XmlDocument
 
     def __init__(self, xmlDocument: XmlDocument) -> None:
         self.xmlDocument = xmlDocument
+        self.inputFields = 0
+
+    @staticmethod
+    def GetAttributeValue(nodeAttribute: IXmlType, attributeName: str) -> str:
+        """
+        Helper function that returns an attribute's value
+
+        :param nodeAttribute: Node that has the attribute
+        :type nodeAttribute: IXmlType
+        :param attributeName: Name of the attribute, e.g. "duration"
+        :type attributeName: str
+        :return: The value of the attribute
+        :rtype: str
+        """
+        return nodeAttribute.attributes.get_named_item(attributeName).inner_text
+
+    def GetElementByTagName(self, tagName: str) -> IXmlType:
+        """
+        Helper function to get the first element by its tag name
+
+        :param tagName: The name of the tag for the element
+        :type tagName: str
+        :rtype: IXmlType
+        """
+        return self.xmlDocument.get_elements_by_tag_name(tagName).item(0)
 
     def SetAttribute(self, nodeAttribute: IXmlType, attributeName: str, attributeValue: str) -> None:
         """
@@ -48,13 +82,13 @@ class ToastDocument:
     def SetAttributionText(self, attributionText: str) -> None:
         """
         Set attribution text for the toast. This is used if we're using
-        :class:`~windows_toasts.windows_toasts.InteractableWindowsToaster` but haven't set up our own AUMID.
+        :class:`~windows_toasts.toasters.InteractableWindowsToaster` but haven't set up our own AUMID.
         `AttributionText on Microsoft.com <https://learn.microsoft.com/windows/apps/design/shell/tiles-and
         -notifications/adaptive-interactive-toasts#attribution-text>`_
 
         :param attributionText: Attribution text to set
         """
-        bindingNode = self.xmlDocument.get_elements_by_tag_name("binding").item(0)
+        bindingNode = self.GetElementByTagName("binding")
 
         newElement = self.xmlDocument.create_element("text")
         bindingNode.append_child(newElement)
@@ -67,7 +101,7 @@ class ToastDocument:
         on Microsoft.com <https://learn.microsoft.com/windows/apps/design/shell/tiles-and-notifications/adaptive
         -interactive-toasts#audio>`_
         """
-        audioNode = self.xmlDocument.get_elements_by_tag_name("audio").item(0)
+        audioNode = self.GetElementByTagName("audio")
         if audioNode is None:
             audioNode = self.xmlDocument.create_element("audio")
             self.xmlDocument.select_single_node("/toast").append_child(audioNode)
@@ -80,15 +114,29 @@ class ToastDocument:
         if audioConfiguration.looping:
             self.SetAttribute(audioNode, "loop", str(audioConfiguration.looping).lower())
             # Looping audio requires the duration attribute in the audio element's parent toast element to be "long"
-            self.SetDuration("long")
+            self.SetDuration(ToastDuration.Long)
 
-    def SetTextField(self, newValue: str, nodePosition: int) -> None:
+    def SetTextField(self, nodePosition: int) -> None:
         """
         Set a simple text field. `Text elements on Microsoft.com
         <https://learn.microsoft.com/windows/apps/design/shell/tiles-and-notifications/adaptive-interactive-toasts#text-elements>`_
 
-        :param newValue: Text to be written
         :param nodePosition: Index of the text fields of the toast type for the text to be written in
+        """
+        targetNode = self.xmlDocument.get_elements_by_tag_name("text").item(nodePosition)
+
+        # We used to simply set it to newValue, but since we've now switched to AdaptiveText we just set it to text{i}
+        # self.SetNodeStringValue(targetNode, newValue)
+
+        # Set it to i + 1 just because starting at 1 rather than 0 is easier on the eye
+        self.SetNodeStringValue(targetNode, f"{{text{nodePosition + 1}}}")
+
+    def SetTextFieldStatic(self, nodePosition: int, newValue: str) -> None:
+        """
+        :meth:`SetTextField` but static, generally used for scheduled toasts
+
+        :param nodePosition: Index of the text fields of the toast type for the text to be written in
+        :param newValue: Content value of the text field
         """
         targetNode = self.xmlDocument.get_elements_by_tag_name("text").item(nodePosition)
         self.SetNodeStringValue(targetNode, newValue)
@@ -102,80 +150,164 @@ class ToastDocument:
         :param customTimestamp: The target datetime
         :type customTimestamp: datetime.datetime
         """
-        toastNode = self.xmlDocument.get_elements_by_tag_name("toast").item(0)
+        toastNode = self.GetElementByTagName("toast")
         self.SetAttribute(toastNode, "displayTimestamp", customTimestamp.strftime("%Y-%m-%dT%H:%M:%SZ"))
 
-    def SetImageField(self, imagePath: str) -> None:
+    def AddImage(self, displayImage: ToastDisplayImage) -> None:
         """
-        Set an image to display. Only works on ToastImageAndText toasts. `Inline image on Microsoft.com
+        Add an image to display. Only works on ToastImageAndText toasts. `Inline image on Microsoft.com
         <https://learn.microsoft.com/windows/apps/design/shell/tiles-and-notifications/adaptive-interactive
         -toasts#inline-image>`_
 
-        :param imagePath: Sanitised PathLike converted into string
-        :type imagePath: str
+        :type displayImage: ToastDisplayImage
         """
-        imageNode = self.xmlDocument.get_elements_by_tag_name("image").item(0)
-        self.SetNodeStringValue(imageNode.attributes.get_named_item("src"), imagePath)
+        imageNode = self.GetElementByTagName("image")
+        if self.GetAttributeValue(imageNode, "src") != "":
+            imageNode = imageNode.clone_node(True)
+            self.SetAttribute(imageNode, "id", "2")
+            self.GetElementByTagName("binding").append_child(imageNode)
 
-    def SetInputField(self, placeholderText: str) -> None:
+        self.SetAttribute(imageNode, "src", str(displayImage.image.path))
+
+        if displayImage.altText is not None:
+            self.SetAttribute(imageNode, "alt", displayImage.altText)
+
+        self.SetAttribute(imageNode, "placement", "hero" if displayImage.large else "appLogoOverride")
+        if displayImage.circleCrop:
+            self.SetAttribute(imageNode, "hint-crop", "circle")
+
+    def SetScenario(self, scenario: ToastScenario) -> None:
         """
-        Set an input field for the user to write in. `Inputs with button bar on Microsoft.com
+        Set whether the notification should be marked as important. `Important Notifications on Microsoft.com
+        <https://learn.microsoft.com/windows/apps/design/shell/tiles-and-notifications/adaptive-interactive-toasts
+        #important-notifications>`_
+
+        :param scenario: Scenario to mark the toast as
+        :type scenario: ToastScenario
+        """
+        toastNode = self.GetElementByTagName("toast")
+        self.SetAttribute(toastNode, "scenario", scenario.value)
+
+    def AddInput(self, toastInput: Union[ToastInputTextBox, ToastInputSelectionBox]) -> None:
+        """
+        Add a field for the user to input. `Inputs with button bar on Microsoft.com
         <https://learn.microsoft.com/windows/apps/design/shell/tiles-and-notifications/adaptive-interactive
         -toasts#quick-reply-text-box>`_
 
-        :param placeholderText: Hint about what to write, similarly to HTML
+        :type toastInput: Union[ToastInputTextBox, ToastInputSelectionBox]
+        :raises: TypeError: If toastInput is neither ToastInputTextBox nor ToastInputSelectionBox
         """
+        isTextBox = isinstance(toastInput, ToastInputTextBox)
+        if not (isTextBox or isinstance(toastInput, ToastInputSelectionBox)):
+            raise TypeError(
+                f"Expected toastInput to be Union[ToastInputTextBox, ToastInputSelectionBox], "
+                f"instead got {type(toastInput)}"
+            )
+
+        self.inputFields += 1
         inputNode = self.xmlDocument.create_element("input")
-        self.SetAttribute(inputNode, "id", "textBox")
-        self.SetAttribute(inputNode, "type", "text")
-        self.SetAttribute(inputNode, "placeHolderContent", placeholderText)
+        self.SetAttribute(inputNode, "id", toastInput.input_id)
+        self.SetAttribute(inputNode, "title", toastInput.caption)
+
+        if isTextBox:
+            self.SetAttribute(inputNode, "type", "text")
+            # noinspection PyUnresolvedReferences
+            self.SetAttribute(inputNode, "placeHolderContent", toastInput.placeholder)
+        else:
+            self.SetAttribute(inputNode, "type", "selection")
+            if toastInput.default_selection is not None:
+                self.SetAttribute(inputNode, "defaultInput", toastInput.default_selection.selection_id)
+
+            for selection in toastInput.selections:
+                selectionElement = self.xmlDocument.create_element("selection")
+                self.SetAttribute(selectionElement, "id", selection.selection_id)
+                self.SetAttribute(selectionElement, "content", selection.content)
+                inputNode.append_child(selectionElement)
 
         actionNodes = self.xmlDocument.get_elements_by_tag_name("actions")
         actionsNode: IXmlType
         if actionNodes.length > 0:
             actionsNode = actionNodes.item(0)
-            actionsNode.insert_before(inputNode, actionsNode.first_child)
+            # actionsNode.insert_before(inputNode, actionsNode.first_child)
+            actionsNode.append_child(inputNode)
         else:
-            toastNode = self.xmlDocument.get_elements_by_tag_name("toast").item(0)
+            toastNode = self.GetElementByTagName("toast")
 
             actionsNode = self.xmlDocument.create_element("actions")
             toastNode.append_child(actionsNode)
 
             actionsNode.append_child(inputNode)
 
-    def SetDuration(self, duration: str) -> None:
+    def SetDuration(self, duration: ToastDuration) -> None:
         """
         Set the duration of the toast. If looping audio is enabled, it will automatically be set to long
 
-        :param duration: str
-        :type duration: str
+        :type duration: ToastDuration
         """
-        durationNode = self.xmlDocument.get_elements_by_tag_name("toast").item(0)
-        self.SetAttribute(durationNode, "duration", duration)
+        durationNode = self.GetElementByTagName("toast")
+        self.SetAttribute(durationNode, "duration", duration.value)
 
-    def AddAction(self, buttonContent: str, arguments: str) -> None:
+    def AddAction(self, action: ToastButton) -> None:
         """
-        Adds a button to the toast. Only works on :obj:`~windows_toasts.windows_toasts.InteractableWindowsToaster`
+        Adds a button to the toast. Only works on :obj:`~windows_toasts.toasters.InteractableWindowsToaster`
 
-        :param buttonContent: Text to display on the button
-        :type buttonContent: str
-        :param arguments: Arguments that will be available in the callback
-        :type arguments: str
+        :type action: ToastButton
         """
         actionNodes = self.xmlDocument.get_elements_by_tag_name("actions")
         actionsNode: IXmlType
         if actionNodes.length > 0:
             actionsNode = actionNodes.item(0)
         else:
-            toastNode = self.xmlDocument.get_elements_by_tag_name("toast").item(0)
+            toastNode = self.GetElementByTagName("toast")
             self.SetAttribute(toastNode, "template", "ToastGeneric")
-            self.SetDuration("long")
 
             actionsNode = self.xmlDocument.create_element("actions")
             toastNode.append_child(actionsNode)
 
         actionNode = self.xmlDocument.create_element("action")
-        self.SetAttribute(actionNode, "content", buttonContent)
-        self.SetAttribute(actionNode, "arguments", arguments)
+        self.SetAttribute(actionNode, "content", action.content)
+        self.SetAttribute(actionNode, "arguments", action.arguments)
         self.SetAttribute(actionNode, "activationType", "background")
+
+        if action.image is not None:
+            self.SetAttribute(actionNode, "imageUri", action.image.path)
+        if action.relatedInput is not None:
+            self.SetAttribute(actionNode, "hint-inputId", action.relatedInput.input_id)
+        if action.inContextMenu:
+            self.SetAttribute(actionNode, "placement", "contextMenu")
+        if action.tooltip is not None:
+            self.SetAttribute(actionNode, "hint-tooltip", action.tooltip)
+        if action.colour is not None:
+            self.SetAttribute(actionNode, "hint-buttonStyle", action.colour.value)
+
         actionsNode.append_child(actionNode)
+
+    def AddProgressBar(self) -> None:
+        """
+        Add a progress bar on your app notification to keep the user informed of the progress of operations.
+        `Progress bar on Microsoft.com <https://learn.microsoft.com/windows/apps/design/shell/tiles-and-notifications
+        /adaptive-interactive-toasts#progress-bar>`_
+        """
+        progressBarNode = self.xmlDocument.create_element("progress")
+        self.SetAttribute(progressBarNode, "status", "{status}")
+        self.SetAttribute(progressBarNode, "value", "{progress}")
+
+        self.SetAttribute(progressBarNode, "valueStringOverride", "{progress_override}")
+        self.SetAttribute(progressBarNode, "title", "{caption}")
+
+        self.GetElementByTagName("binding").append_child(progressBarNode)
+
+    def AddStaticProgressBar(self, progressBar: ToastProgressBar) -> None:
+        """
+        :meth:`AddProgressBar` but static, generally used for scheduled toasts
+        """
+        progressBarNode = self.xmlDocument.create_element("progress")
+        self.SetAttribute(progressBarNode, "status", progressBar.status)
+        self.SetAttribute(
+            progressBarNode, "value", "indeterminate" if progressBar.progress is None else str(progressBar.progress)
+        )
+
+        self.SetAttribute(progressBarNode, "valueStringOverride", progressBar.progress_override)
+        self.SetAttribute(progressBarNode, "title", progressBar.caption)
+
+        self.GetElementByTagName("binding").append_child(progressBarNode)

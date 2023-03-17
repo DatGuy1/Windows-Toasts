@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from enum import Enum
 from os import PathLike
 from pathlib import Path
-from typing import Union, Optional, Sequence
+from typing import Optional, Sequence, Union
 from urllib.parse import urlparse
 
 
@@ -47,6 +47,7 @@ class ToastButtonColour(Enum):
     """
     Possible colours for toast buttons
     """
+
     Default = ""
     Green = "Success"
     Red = "Critical"
@@ -57,6 +58,7 @@ class ToastImage:
     """
     Image that can be displayed in various toast elements
     """
+
     path: str
     """The URI of the image source"""
 
@@ -84,6 +86,7 @@ class ToastDisplayImage:
     """
     Define an image that will be displayed as the icon of the toast
     """
+
     image: ToastImage
     """An image file"""
     altText: Optional[str] = None
@@ -99,8 +102,13 @@ class ToastDisplayImage:
     """
 
     @classmethod
-    def fromPath(cls, imagePath: Union[str, PathLike], altText: Optional[str] = None, large: bool = False,
-                 circleCrop: bool = True) -> ToastDisplayImage:
+    def fromPath(
+        cls,
+        imagePath: Union[str, PathLike],
+        altText: Optional[str] = None,
+        large: bool = False,
+        circleCrop: bool = True,
+    ) -> ToastDisplayImage:
         """
         Create a :class:`ToastDisplayImage` object from path without having to create :class:`ToastImage`
         """
@@ -113,6 +121,7 @@ class ToastProgressBar:
     """
     Progress bar to be included in a toast
     """
+
     status: str
     """
     Status string, which is displayed underneath the progress bar on the left. \
@@ -134,6 +143,7 @@ class _ToastInput(abc.ABC):
     """
     Base input dataclass to be used in toasts
     """
+
     input_id: str
     """Identifier to use for the input"""
     caption: str = ""
@@ -145,6 +155,7 @@ class ToastInputTextBox(_ToastInput):
     """
     A text box that can be added in toasts for the user to enter their input
     """
+
     placeholder: str = ""
     """Optional placeholder for a text input box"""
 
@@ -158,6 +169,7 @@ class ToastSelection:
     """
     An item that the user can select from the drop down list
     """
+
     selection_id: str
     """Identifier for the selection"""
     content: str
@@ -169,13 +181,19 @@ class ToastInputSelectionBox(_ToastInput):
     """
     A selection box control, which lets users pick from a dropdown list of options
     """
+
     selections: Sequence[ToastSelection] = ()
     """Sequence of selections to include in the box"""
     default_selection: Optional[ToastSelection] = None
     """Selection to default to. If None, the default selection will be empty"""
 
-    def __init__(self, input_id: str, caption: str = "", selections: Sequence[ToastSelection] = (),
-                 default_selection: Optional[ToastSelection] = None):
+    def __init__(
+        self,
+        input_id: str,
+        caption: str = "",
+        selections: Sequence[ToastSelection] = (),
+        default_selection: Optional[ToastSelection] = None,
+    ):
         super().__init__(input_id, caption)
         self.selections = selections
         self.default_selection = default_selection
@@ -186,6 +204,7 @@ class ToastButton:
     """
     A button that the user can click on a toast notification
     """
+
     content: str = ""
     """The content displayed on the button"""
     arguments: str = ""
