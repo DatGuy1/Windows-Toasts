@@ -1,5 +1,4 @@
 import argparse
-import ctypes
 import pathlib
 
 # noinspection PyCompatibility
@@ -8,19 +7,15 @@ from typing import Optional
 
 
 def register_hkey(appId: str, appName: str, iconPath: Optional[pathlib.Path]):
-    if ctypes.windll.shell32.IsUserAnAdmin() == 0:  # pragma: no cover
-        # If we try and add a registry key not in administrator mode we get 'PermissionError: Access is denied'
-        raise RuntimeError("You must run this script in administrator mode in order to create a registry key.")
-
     if iconPath is not None:  # pragma: no cover
         if not iconPath.exists():
             raise ValueError(f"Could not register the application: File {iconPath} does not exist")
         elif iconPath.suffix != ".ico":
             raise ValueError(f"Could not register the application: File {iconPath} must be of type .ico")
 
-    winreg.ConnectRegistry(None, winreg.HKEY_LOCAL_MACHINE)
+    winreg.ConnectRegistry(None, winreg.HKEY_CURRENT_USER)
     keyPath = f"SOFTWARE\\Classes\\AppUserModelId\\{appId}"
-    with winreg.CreateKeyEx(winreg.HKEY_LOCAL_MACHINE, keyPath) as masterKey:
+    with winreg.CreateKeyEx(winreg.HKEY_CURRENT_USER, keyPath) as masterKey:
         winreg.SetValueEx(masterKey, "DisplayName", 0, winreg.REG_SZ, appName)
         if iconPath is not None:
             winreg.SetValueEx(masterKey, "IconUri", 0, winreg.REG_SZ, str(iconPath.resolve()))
