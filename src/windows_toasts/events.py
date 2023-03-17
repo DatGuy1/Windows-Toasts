@@ -6,28 +6,34 @@ from typing import Optional
 # noinspection PyProtectedMember
 from winsdk import _winrt
 from winsdk.windows.foundation import IPropertyValue
-from winsdk.windows.ui.notifications import ToastActivatedEventArgs as WinRtToastActivatedEventArgs
+
+# noinspection PyUnresolvedReferences
+from winsdk.windows.ui.notifications import (
+    ToastActivatedEventArgs as WinRtToastActivatedEventArgs,
+    ToastDismissedEventArgs,
+    ToastFailedEventArgs,
+)
 
 
 @dataclass
 class ToastActivatedEventArgs:
     """
     Wrapper over Windows' ToastActivatedEventArgs to fix an issue with reading user input
-
-    :ivar arguments: Arguments provided to :func:`~windows_toasts.toast_types.Toast.AddAction`
-    :ivar input: Input in field when using :func:`~windows_toasts.toast_types.Toast.SetInputField`
     """
 
     arguments: Optional[str] = None
-    input: Optional[str] = None
+    """Arguments provided to :func:`~windows_toasts.toast_types.Toast.AddAction`"""
+    inputs: Optional[dict] = None
+    """Inputs received when using :func:`~windows_toasts.toast_types.Toast.AddInput`"""
 
     # noinspection PyProtectedMember
     @classmethod
     def fromWinRt(cls, eventArgs: _winrt.Object) -> ToastActivatedEventArgs:
         activatedEventArgs = WinRtToastActivatedEventArgs._from(eventArgs)
+        receivedInputs = None
         try:
-            textInput = IPropertyValue._from(activatedEventArgs.user_input.lookup("textBox")).get_string()
+            receivedInputs = {k: IPropertyValue._from(v).get_string() for k, v in activatedEventArgs.user_input.items()}
         except OSError:
-            textInput = None
+            pass
 
-        return cls(activatedEventArgs.arguments, textInput)
+        return cls(activatedEventArgs.arguments, receivedInputs)
