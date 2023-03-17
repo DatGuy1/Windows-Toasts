@@ -4,36 +4,25 @@ Wrappers
 Classes
 -------
 
-.. autodoc2-summary::
-    windows_toasts.toast_types.ToastDuration
+.. autosummary::
+    windows_toasts.wrappers.ToastDuration
+    windows_toasts.wrappers.ToastScenario
+    windows_toasts.wrappers.ToastButtonColour
+    windows_toasts.wrappers.ToastImage
+    windows_toasts.wrappers.ToastDisplayImage
+    windows_toasts.wrappers.ToastProgressBar
+    windows_toasts.wrappers.ToastInputTextBox
+    windows_toasts.wrappers.ToastSelection
+    windows_toasts.wrappers.ToastInputSelectionBox
+    windows_toasts.wrappers.ToastButton
     windows_toasts.events.ToastActivatedEventArgs
 
 API
 ---
 
-.. autodoc2-object:: windows_toasts.toast_types.ToastDuration
+.. automodule:: windows_toasts.wrappers
 
-.. py:class:: ToastActivatedEventArgs
-   :canonical: windows_toasts.events.ToastActivatedEventArgs
+..
+    This will probably go into another file soon
 
-   .. autodoc2-docstring:: windows_toasts.events.ToastActivatedEventArgs
-
-   .. py:attribute:: arguments
-      :canonical: windows_toasts.events.ToastActivatedEventArgs.arguments
-      :type: typing.Optional[str]
-      :value: None
-
-      .. autodoc2-docstring:: windows_toasts.events.ToastActivatedEventArgs.arguments
-
-   .. py:attribute:: input
-      :canonical: windows_toasts.events.ToastActivatedEventArgs.input
-      :type: typing.Optional[str]
-      :value: None
-
-      .. autodoc2-docstring:: windows_toasts.events.ToastActivatedEventArgs.input
-
-   .. py:method:: fromWinRt(eventArgs: winsdk._winrt.Object) -> windows_toasts.events.ToastActivatedEventArgs
-      :canonical: windows_toasts.events.ToastActivatedEventArgs.fromWinRt
-      :classmethod:
-
-      .. autodoc2-docstring:: windows_toasts.events.ToastActivatedEventArgs.fromWinRt
+.. autoclass:: windows_toasts.events.ToastActivatedEventArgs
