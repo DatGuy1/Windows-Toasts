@@ -51,7 +51,7 @@ Contents
    custom_aumid
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 2
    :caption: User reference
 
    user/toasters
@@ -60,10 +60,11 @@ Contents
    user/wrappers
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 1
    :caption: Developer reference
 
    dev/toast_document
+   dev/metadata
 
 
 Indices and tables

@@ -4,7 +4,7 @@ Custom AUMIDs
 How to use
 ----------
 
-When initialising :class:`~windows_toasts.windows_toasts.InteractableWindowsToaster`, pass the custom AUMID as notifierAUMID
+When initialising :class:`~windows_toasts.toasters.InteractableWindowsToaster`, pass the custom AUMID as notifierAUMID
 
 Using an installed AUMID
 ------------------------

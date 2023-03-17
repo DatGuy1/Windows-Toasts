@@ -5,7 +5,7 @@ Interactable toasts are toast notifications that lets the user interact with the
 
 Usage
 -----
-We import :class:`~windows_toasts.windows_toasts.InteractableWindowsToaster` instead of :class:`~windows_toasts.windows_toasts.WindowsToaster`, but the rest is mostly the same. Here's a basic example:
+We import :class:`~windows_toasts.toasters.InteractableWindowsToaster` instead of :class:`~windows_toasts.windows_toasts.WindowsToaster`, but the rest is mostly the same. Here's a basic example:
 
 .. code-block:: python
 
