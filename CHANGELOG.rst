@@ -6,6 +6,7 @@
 - Changed scripts to use entry_points
 - Created documentation on https://windows-toasts.readthedocs.io/en/latest/
 - register_hkey_aumid no longer requires user to be an administrator
+- Removed create_shell_link.py script
 
 0.3.3 (2022-03-18)
 ======

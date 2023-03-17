@@ -22,7 +22,6 @@ setup(
     include_package_data=True,
     entry_points={
         "console_scripts": [
-            "create_shell_link = scripts.create_shell_link:main",
             "register_hkey_aumid = scripts.register_hkey_aumid:main",
         ]
     },
