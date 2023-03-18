@@ -9,7 +9,6 @@ dist/
 *.egg-info/
 
 _build
-docs/apidocs
 
 .idea
 

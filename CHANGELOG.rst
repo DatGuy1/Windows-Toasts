@@ -1,4 +1,4 @@
-0.4.0 (2023-03-10)
+0.4.0 (2023-03-18)
 =====
 - Added Windows 11 and Python 3.12 classifiers
 - Merge typing back inline
