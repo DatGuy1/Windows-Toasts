@@ -8,7 +8,7 @@ from winsdk import _winrt
 from winsdk.windows.foundation import IPropertyValue
 
 # noinspection PyUnresolvedReferences
-from winsdk.windows.ui.notifications import (
+from winsdk.windows.ui.notifications import (  # noqa: F401
     ToastActivatedEventArgs as WinRtToastActivatedEventArgs,
     ToastDismissedEventArgs,
     ToastFailedEventArgs,
