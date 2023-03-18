@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Optional
+from typing import Dict, Optional
 
 # noinspection PyProtectedMember
 from winsdk import _winrt
@@ -30,7 +30,7 @@ class ToastActivatedEventArgs:
     @classmethod
     def fromWinRt(cls, eventArgs: _winrt.Object) -> ToastActivatedEventArgs:
         activatedEventArgs = WinRtToastActivatedEventArgs._from(eventArgs)
-        receivedInputs = None
+        receivedInputs: Optional[Dict[str, str]] = None
         try:
             receivedInputs = {k: IPropertyValue._from(v).get_string() for k, v in activatedEventArgs.user_input.items()}
         except OSError:

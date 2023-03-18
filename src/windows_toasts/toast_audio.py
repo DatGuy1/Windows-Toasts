@@ -51,3 +51,13 @@ class ToastAudio:
     sound: Union[AudioSource, str] = AudioSource.Default
     looping: bool = False
     silent: bool = False
+
+    @property
+    def sound_value(self) -> str:
+        """
+        Returns the string value of the selected sound
+        """
+        if isinstance(self.sound, AudioSource):
+            return self.sound.value
+        else:
+            return self.sound

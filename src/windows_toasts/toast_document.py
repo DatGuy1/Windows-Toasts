@@ -1,11 +1,12 @@
 import datetime
-from typing import TypeVar, Union
+from typing import Optional, TypeVar, Union
 
 from winsdk.windows.data.xml.dom import IXmlNode, XmlDocument, XmlElement
 
 from .toast_audio import ToastAudio
 from .wrappers import (
     ToastButton,
+    ToastButtonColour,
     ToastDisplayImage,
     ToastDuration,
     ToastInputSelectionBox,
@@ -43,7 +44,7 @@ class ToastDocument:
         """
         return nodeAttribute.attributes.get_named_item(attributeName).inner_text
 
-    def GetElementByTagName(self, tagName: str) -> IXmlType:
+    def GetElementByTagName(self, tagName: str) -> Optional[IXmlType]:
         """
         Helper function to get the first element by its tag name
 
@@ -110,7 +111,7 @@ class ToastDocument:
             self.SetAttribute(audioNode, "silent", str(audioConfiguration.silent).lower())
             return
 
-        self.SetAttribute(audioNode, "src", f"ms-winsoundevent:Notification.{audioConfiguration.sound.value}")
+        self.SetAttribute(audioNode, "src", f"ms-winsoundevent:Notification.{audioConfiguration.sound_value}")
         if audioConfiguration.looping:
             self.SetAttribute(audioNode, "loop", str(audioConfiguration.looping).lower())
             # Looping audio requires the duration attribute in the audio element's parent toast element to be "long"
@@ -195,14 +196,8 @@ class ToastDocument:
         -toasts#quick-reply-text-box>`_
 
         :type toastInput: Union[ToastInputTextBox, ToastInputSelectionBox]
-        :raises: TypeError: If toastInput is neither ToastInputTextBox nor ToastInputSelectionBox
         """
         isTextBox = isinstance(toastInput, ToastInputTextBox)
-        if not (isTextBox or isinstance(toastInput, ToastInputSelectionBox)):
-            raise TypeError(
-                f"Expected toastInput to be Union[ToastInputTextBox, ToastInputSelectionBox], "
-                f"instead got {type(toastInput)}"
-            )
 
         self.inputFields += 1
         inputNode = self.xmlDocument.create_element("input")
@@ -225,7 +220,6 @@ class ToastDocument:
                 inputNode.append_child(selectionElement)
 
         actionNodes = self.xmlDocument.get_elements_by_tag_name("actions")
-        actionsNode: IXmlType
         if actionNodes.length > 0:
             actionsNode = actionNodes.item(0)
             # actionsNode.insert_before(inputNode, actionsNode.first_child)
@@ -254,7 +248,6 @@ class ToastDocument:
         :type action: ToastButton
         """
         actionNodes = self.xmlDocument.get_elements_by_tag_name("actions")
-        actionsNode: IXmlType
         if actionNodes.length > 0:
             actionsNode = actionNodes.item(0)
         else:
@@ -277,7 +270,7 @@ class ToastDocument:
             self.SetAttribute(actionNode, "placement", "contextMenu")
         if action.tooltip is not None:
             self.SetAttribute(actionNode, "hint-tooltip", action.tooltip)
-        if action.colour is not None:
+        if action.colour is not ToastButtonColour.Default:
             self.SetAttribute(actionNode, "hint-buttonStyle", action.colour.value)
 
         actionsNode.append_child(actionNode)
@@ -307,7 +300,9 @@ class ToastDocument:
             progressBarNode, "value", "indeterminate" if progressBar.progress is None else str(progressBar.progress)
         )
 
-        self.SetAttribute(progressBarNode, "valueStringOverride", progressBar.progress_override)
-        self.SetAttribute(progressBarNode, "title", progressBar.caption)
+        if progressBar.progress_override is not None:
+            self.SetAttribute(progressBarNode, "valueStringOverride", progressBar.progress_override)
+        if progressBar.caption is not None:
+            self.SetAttribute(progressBarNode, "title", progressBar.caption)
 
         self.GetElementByTagName("binding").append_child(progressBarNode)

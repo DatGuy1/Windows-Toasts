@@ -46,8 +46,8 @@ Contents
    :maxdepth: 3
 
    getting_started
-   advanced_usage
    interactable
+   advanced_usage
    custom_aumid
 
 .. toctree::

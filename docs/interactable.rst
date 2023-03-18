@@ -9,15 +9,15 @@ We import :class:`~windows_toasts.toasters.InteractableWindowsToaster` instead o
 
 .. code-block:: python
 
-    from windows_toasts import InteractableWindowsToaster, ToastText1
+    from windows_toasts import InteractableWindowsToaster, ToastButton, ToastText1
 
     interactableToaster = InteractableWindowsToaster('Questionnaire')
     newToast = ToastText1()
 
     newToast.SetBody('How are you?')
     # Add two actions (buttons)
-    newToast.AddAction('Decent', 'response=decent')
-    newToast.AddAction('Not so good', 'response=bad')
+    newToast.AddAction(ToastButton('Decent', 'response=decent'))
+    newToast.AddAction(ToastButton('Not so good', 'response=bad'))
 
     # Display it like usual
     interactableToaster.show_toast(newToast)
@@ -34,18 +34,25 @@ And we have buttons! We can't do much with them though, at least until we use on
 Input fields
 ~~~~~~~~~~~~
 
-Windows-Toasts also supports using input fields.
+Windows-Toasts also supports using text fields and selection boxes.
 
 .. code-block:: python
 
-    from windows_toasts import InteractableWindowsToaster, ToastText1
+    from windows_toasts import InteractableWindowsToaster, ToastInputTextBox, ToastInputSelectionBox, ToastSelection, ToastText1
 
     interactableToaster = InteractableWindowsToaster('Questionnaire')
-    newToast = ToastText1()
+    newToast = ToastText1(body='Please enter your details')
 
-    newToast.SetBody('What\'s your name?')
-    newToast.SetInputField('Barack Obama')
-    newToast.on_activated = lambda activatedEventArgs: print(activatedEventArgs.input)
+    # A text input field asking the user for their name
+    newToast.AddInput(ToastInputTextBox('name', 'Your name', 'Barack Obama'))
+
+    # Create three selections: Male, female, other, and prefer not to say
+    toastSelections = (ToastSelection('male', 'Male'), ToastSelection('female', 'Female'), ToastSelection('other', 'Other'), ToastSelection('unknown', 'Prefer not to say'))
+    # Initialise the selection box with a caption 'What is your gender?'. The selections are passed in, and it defaults to 'prefer not to say.'
+    selectionBoxInput = ToastInputSelectionBox('gender', 'What is your gender?', toastSelections, default_selection=toastSelections[3])
+    newToast.AddInput(selectionBoxInput)
+
+    newToast.on_activated = lambda activatedEventArgs: print(activatedEventArgs.inputs)
 
     interactableToaster.show_toast(newToast)
 
@@ -65,8 +72,8 @@ We can combine the two and a submit button
     newToast = ToastText1()
 
     newToast.SetBody('What\'s your name?')
-    newToast.SetInputField('Barack Obama')
-    newToast.AddAction('Submit', 'submit')
+    newToast.AddInput(ToastInputTextBox('name', 'Your name', 'Barack Obama'))
+    newToast.AddAction(ToastButton('Submit', 'submit'))
     newToast.on_activated = lambda activatedEventArgs: print(activatedEventArgs.input)
 
     interactableToaster.show_toast(newToast)
@@ -74,7 +81,7 @@ We can combine the two and a submit button
 Caveats
 -------
 
-You may have noticed something weird in the code above. Why, when we display the toast, does it say command prompt in the top left, and have the icon for it?
+You may have noticed something weird when testing the above code. Why, when we display the toast, does it say command prompt in the top left, and have the icon for it?
 InteractableWindowsToaster requires an Application User Model ID (AUMID) to function properly.
 The package provides the command prompt as the default, and the applicationText becomes the :meth:`attribution text <windows_toasts.toast_document.ToastDocument.SetAttributionText>`.
 

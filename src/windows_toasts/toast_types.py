@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+import copy
 import datetime
 import uuid
 import warnings
@@ -32,7 +35,7 @@ class Toast:
     duration: Literal[ToastDuration.Default, ToastDuration.Long, ToastDuration.Short]
     """:class:`~windows_toasts.wrappers.ToastDuration` enum, be it the default, short, or long"""
     images: List[ToastDisplayImage]
-    """See :func:`SetImage`"""
+    """See :func:`AddImage`"""
     scenario: ToastScenario
     """Scenario for the toast"""
     textFields: List[str]
@@ -59,7 +62,7 @@ class Toast:
     """Callable to execute when the toast is dismissed (X is clicked or times out) if interactable"""
     on_failed: Optional[Callable[[ToastFailedEventArgs], None]]
     """Callable to execute when the toast fails to display"""
-    ToastType: ClassVar[ToastTemplateType] = None
+    ToastType: ClassVar[ToastTemplateType]
     """Type of toast to fetch template for"""
     HasImage: ClassVar[bool] = False
     """Whether the toast type has an image"""
@@ -126,6 +129,10 @@ class Toast:
         :param on_failed: Callable to execute when the toast fails to display
         :type on_failed:  Optional[Callable[[ToastFailedEventArgs], None]]
         """
+        self.actions = []
+        self.inputs = []
+        self.images = []
+
         self.SetAudio(audio)
         self.SetDuration(duration)
         self.SetScenario(scenario)
@@ -144,15 +151,12 @@ class Toast:
         if second_line is not None:
             self.SetSecondLine(second_line)
 
-        self.actions = []
         for action in actions:
             self.AddAction(action)
 
-        self.images = []
         for image in images:
             self.AddImage(image)
 
-        self.inputs = []
         for toast_input in inputs:
             self.AddInput(toast_input)
 
@@ -163,7 +167,17 @@ class Toast:
         self.tag = str(uuid.uuid4())
         self.updates = 0
 
-    def SetAudio(self, audio: ToastAudio) -> None:
+    def __eq__(self, other):
+        if isinstance(other, Toast):
+            return other.tag == self.tag
+
+        return False
+
+    def __repr__(self):
+        kws = [f"{key}={value!r}" for key, value in self.__dict__.items()]
+        return "{}({})".format(type(self).__name__, ", ".join(kws))
+
+    def SetAudio(self, audio: Optional[ToastAudio]) -> None:
         """
         Sets the custom audio configuration for the toast
         """
@@ -181,13 +195,13 @@ class Toast:
         """
         self.scenario = scenario
 
-    def SetProgressBar(self, progressBar: ToastProgressBar) -> None:
+    def SetProgressBar(self, progressBar: Optional[ToastProgressBar]) -> None:
         """
         Set a adjustable progress bar for the toast
         """
         self.progress_bar = progressBar
 
-    def SetGroup(self, group: str) -> None:
+    def SetGroup(self, group: Optional[str]) -> None:
         """
         Set a group for the toast. Group is a generic identifier, where you can assign groups like \
         "wallPosts", "messages", "friendRequests", etc.
@@ -241,13 +255,16 @@ class Toast:
 
     def AddImage(self, image: ToastDisplayImage) -> None:
         """
-        Adds an the image that will be displayed on the toast. Only works for ToastImageAndText classes
+        Adds an the image that will be displayed on the toast, with a maximum of two (one as the logo and one large).
+        Only works for ToastImageAndText classes
 
         :param image: :class:`ToastDisplayImage` to display in the toast
         """
         if not self.HasImage:
             warnings.warn(f"Toast of type {self.__class__.__name__} does not support images. This will not work.")
             return
+        if len(self.images) >= 2:
+            warnings.warn("The toast already has the maximum of two images.")
 
         self.images.append(image)
 
@@ -259,20 +276,21 @@ class Toast:
         """
         if len(self.actions) + len(self.inputs) >= 5:
             warnings.warn(
-                f"Cannot add input '{toast_input}', you've already reached the maximum of five actions + inputs"
+                f"Cannot add input '{toast_input.input_id}', "
+                f"you've already reached the maximum of five actions + inputs"
             )
             return
 
         self.inputs.append(toast_input)
 
-    def SetCustomTimestamp(self, notificationTime: datetime.datetime) -> None:
+    def SetCustomTimestamp(self, notificationTime: Optional[datetime.datetime]) -> None:
         """
         Sets a custom notification timestamp. If you don't provide a custom timestamp,
         Windows uses the time that your notification was sent
         """
         self.timestamp = notificationTime
 
-    def SetExpirationTime(self, expirationTime: datetime.datetime) -> None:
+    def SetExpirationTime(self, expirationTime: Optional[datetime.datetime]) -> None:
         """
         Sets a time for the toast to expire on in the action center. If it is on-screen, nothing will happen
         """
@@ -284,6 +302,18 @@ class Toast:
         """
         self.suppress_popup = suppressPopup
 
+    def clone(self) -> Toast:
+        """
+        Clone the current toast and return the new one
+
+        :return: A deep copy of the toast
+        :rtype: Toast
+        """
+        newToast = copy.deepcopy(self)
+        newToast.tag = str(uuid.uuid4())
+
+        return newToast
+
 
 class ToastText1(Toast):
     """
@@ -293,8 +323,8 @@ class ToastText1(Toast):
     ToastType: ClassVar[Literal[ToastTemplateType.TOAST_TEXT01]] = ToastTemplateType.TOAST_TEXT01
 
     def __init__(self, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
         self.textFields = [""]
+        super().__init__(*args, **kwargs)
 
 
 class ToastText2(Toast):
@@ -305,8 +335,8 @@ class ToastText2(Toast):
     ToastType: ClassVar[Literal[ToastTemplateType.TOAST_TEXT02]] = ToastTemplateType.TOAST_TEXT02
 
     def __init__(self, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
         self.textFields = ["", ""]
+        super().__init__(*args, **kwargs)
 
 
 class ToastText3(Toast):
@@ -317,8 +347,8 @@ class ToastText3(Toast):
     ToastType: ClassVar[Literal[ToastTemplateType.TOAST_TEXT03]] = ToastTemplateType.TOAST_TEXT03
 
     def __init__(self, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
         self.textFields = ["", ""]
+        super().__init__(*args, **kwargs)
 
 
 class ToastText4(Toast):
@@ -330,8 +360,8 @@ class ToastText4(Toast):
     ToastType: ClassVar[Literal[ToastTemplateType.TOAST_TEXT04]] = ToastTemplateType.TOAST_TEXT04
 
     def __init__(self, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
         self.textFields = ["", "", ""]
+        super().__init__(*args, **kwargs)
 
 
 # noinspection DuplicatedCode
@@ -344,8 +374,8 @@ class ToastImageAndText1(Toast):
     HasImage: ClassVar[Literal[True]] = True
 
     def __init__(self, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
         self.textFields = [""]
+        super().__init__(*args, **kwargs)
 
 
 class ToastImageAndText2(Toast):
@@ -358,8 +388,8 @@ class ToastImageAndText2(Toast):
     HasImage: ClassVar[Literal[True]] = True
 
     def __init__(self, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
         self.textFields = ["", ""]
+        super().__init__(*args, **kwargs)
 
 
 # noinspection DuplicatedCode
@@ -373,8 +403,8 @@ class ToastImageAndText3(Toast):
     HasImage: ClassVar[Literal[True]] = True
 
     def __init__(self, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
         self.textFields = ["", ""]
+        super().__init__(*args, **kwargs)
 
 
 class ToastImageAndText4(Toast):
@@ -387,5 +417,5 @@ class ToastImageAndText4(Toast):
     HasImage: ClassVar[Literal[True]] = True
 
     def __init__(self, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
         self.textFields = ["", "", ""]
+        super().__init__(*args, **kwargs)

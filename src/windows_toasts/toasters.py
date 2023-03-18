@@ -43,10 +43,8 @@ def _build_adaptable_data(toast: Toast) -> NotificationData:
         notificationData.values.insert(
             "progress", "indeterminate" if progressBar.progress is None else str(progressBar.progress)
         )
-        if progressBar.progress_override is not None:
-            notificationData.values["progress_override"] = progressBar.progress_override
-        if progressBar.caption is not None:
-            notificationData.values["caption"] = progressBar.caption
+        notificationData.values["progress_override"] = progressBar.progress_override or ""
+        notificationData.values["caption"] = progressBar.caption or ""
 
     return notificationData
 
@@ -70,7 +68,7 @@ def _build_toast_notification(toast: Toast, toastNotification: ToastNotification
     return toastNotification
 
 
-class __BaseWindowsToaster:
+class BaseWindowsToaster:
     """
     Wrapper to simplify WinRT's ToastNotificationManager
 
@@ -79,11 +77,10 @@ class __BaseWindowsToaster:
 
     applicationText: str
     notifierAUMID: Optional[str]
-    toastNotifier: Optional[ToastNotifier]
+    toastNotifier: ToastNotifier
 
     def __init__(self, applicationText: str):
         self.applicationText = applicationText
-        self.toastNotifier = None
 
     @property
     def _AUMID(self) -> str:
@@ -132,16 +129,16 @@ class __BaseWindowsToaster:
         toastNotification = ToastNotification(self._setup_toast(toast, True).xmlDocument)
         toastNotification.data = _build_adaptable_data(toast)
 
-        if toast.on_activated is not None:
+        if toast.on_activated is not None:  # pragma: no cover
             # For some reason on_activated's type is generic, so cast it
             toastNotification.add_activated(
                 lambda _, eventArgs: toast.on_activated(ToastActivatedEventArgs.fromWinRt(eventArgs))
             )
 
-        if toast.on_dismissed is not None:
+        if toast.on_dismissed is not None:  # pragma: no cover
             toastNotification.add_dismissed(lambda _, eventArgs: toast.on_dismissed(eventArgs))
 
-        if toast.on_failed is not None:
+        if toast.on_failed is not None:  # pragma: no cover
             toastNotification.add_failed(lambda _, eventArgs: toast.on_failed(eventArgs))
 
         notificationToSend = _build_toast_notification(toast, toastNotification)
@@ -153,7 +150,8 @@ class __BaseWindowsToaster:
         Update the passed notification data with the new data in the clas
 
         :param toast: Toast to update
-        :return Whether the update succeeded
+        :type toast: Toast
+        :return: Whether the update succeeded
         """
         newData = _build_adaptable_data(toast)
         return self.toastNotifier.update(newData, toast.tag) == NotificationUpdateResult.SUCCEEDED
@@ -161,7 +159,9 @@ class __BaseWindowsToaster:
     def schedule_toast(self, toast: Toast, displayTime: datetime) -> None:
         """
         Schedule the passed notification toast. Warning: scheduled toasts cannot be updated or activated (i.e. on_X)
+
         :param toast: Toast to display
+        :type toast: Toast
         :param displayTime: Time to display the toast on
         :type displayTime: datetime
         """
@@ -174,8 +174,7 @@ class __BaseWindowsToaster:
         """
         Unschedule the passed notification toast
 
-        :return Whether the unscheduling failed/succeeded
-        :rtype bool
+        :return: Whether the unscheduling failed or succeeded
         """
         scheduledToasts = self.toastNotifier.get_scheduled_toast_notifications()
         targetNotification = next(
@@ -205,7 +204,7 @@ class __BaseWindowsToaster:
             self.toastNotifier.remove_from_schedule(toast)
 
 
-class WindowsToaster(__BaseWindowsToaster):
+class WindowsToaster(BaseWindowsToaster):
     """
     Basic toaster, used to display toasts without actions and/or inputs.
     If you need to use them, see :class:`InteractableWindowsToaster`
@@ -223,7 +222,7 @@ class WindowsToaster(__BaseWindowsToaster):
         self.notifierAUMI = None
         self.toastNotifier = ToastNotificationManager.create_toast_notifier(applicationText)
 
-    def show_toast(self, toast: Toast) -> None:
+    def show_toast(self, toast: Toast) -> None:  # pragma: no cover
         if len(toast.inputs) > 0:
             warnings.warn(self.__InteractableWarningMessage.format("input fields"))
 
@@ -239,7 +238,7 @@ class WindowsToaster(__BaseWindowsToaster):
         super().show_toast(toast)
 
 
-class InteractableWindowsToaster(__BaseWindowsToaster):
+class InteractableWindowsToaster(BaseWindowsToaster):
     """
     :class:`WindowsToaster`, but uses a AUMID to support actions. Actions require a recognised AUMID to trigger
     on_activated, otherwise it triggers on_dismissed with no arguments
@@ -284,6 +283,3 @@ class InteractableWindowsToaster(__BaseWindowsToaster):
                 toastContent.AddStaticProgressBar(toast.progress_bar)
 
         return toastContent
-
-    def show_toast(self, toast: Toast) -> None:
-        super().show_toast(toast)

@@ -6,7 +6,3 @@ isort==5.12.0
 # Testing
 pytest==7.2.2
 pytest-cov==4.0.0
-
-# Testing libraries
-pywin32==305
-pywin32-stubs==1.0.7

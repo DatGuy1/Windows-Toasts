@@ -6,6 +6,7 @@ Classes
 
 .. autosummary::
     windows_toasts.toasters.ToastNotificationT
+    windows_toasts.toasters.BaseWindowsToaster
     windows_toasts.toasters.WindowsToaster
     windows_toasts.toasters.InteractableWindowsToaster
 

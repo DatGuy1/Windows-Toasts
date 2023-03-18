@@ -21,7 +21,7 @@
     - Toast scenarios
 See the documentation for how to use them!
 
-The next release will be version 1.0.0 and will support on_activated callbacks after the toast has been relegated to the action center
+This release is mostly backwards compatible. The next release will be version 1.0.0, most likely be backwards incompatible, and will support on_activated callbacks after the toast has been relegated to the action center.
 
 0.3.3 (2022-03-18)
 ======

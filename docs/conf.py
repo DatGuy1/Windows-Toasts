@@ -5,6 +5,7 @@
 
 import os
 import sys
+from typing import Dict
 
 sys.path.insert(0, os.path.abspath("../src"))
 
@@ -12,7 +13,7 @@ sys.path.insert(0, os.path.abspath("../src"))
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 # Get version.py without importing project
-windows_toasts = {}
+windows_toasts: Dict[str, str] = {}
 with open("../src/windows_toasts/_version.py", "r") as f:
     exec(f.read(), None, windows_toasts)
 
@@ -38,7 +39,7 @@ extensions = [
     "sphinx.ext.autosummary",
     "sphinx.ext.viewcode",
     "sphinx_toolbox.more_autodoc.typevars",
-    "enum_tools.autoenum"
+    "enum_tools.autoenum",
 ]
 
 templates_path = ["_templates"]

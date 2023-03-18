@@ -127,14 +127,14 @@ class ToastProgressBar:
     Status string, which is displayed underneath the progress bar on the left. \
     This string should reflect the status of the operation, like "Downloading..." or "Installing..."
     """
-    caption: str = ""
+    caption: Optional[str] = None
     """An optional title string"""
     progress: Optional[float] = 0
     """
     The percentage value of the progress bar, {0..1}. Defaults to zero.
     If set to None, it will use an indeterminate bar
     """
-    progress_override: str = ""
+    progress_override: Optional[str] = None
     """Optional string to be displayed instead of the default percentage string"""
 
 
@@ -211,7 +211,7 @@ class ToastButton:
     """String of arguments that the app will later receive if the user clicks this button"""
     image: Optional[ToastImage] = None
     """An image to be used as an icon for the button"""
-    relatedInput: Optional[_ToastInput] = None
+    relatedInput: Optional[Union[ToastInputTextBox, ToastInputSelectionBox]] = None
     """An input to position the button besides"""
     inContextMenu: bool = False
     """Whether to place the button in the context menu rather than the actual toast"""
