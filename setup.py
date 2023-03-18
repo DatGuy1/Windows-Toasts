@@ -26,6 +26,7 @@ setup(
     license="Apache 2.0",
     zip_safe=False,
     classifiers=[
+        "Development Status :: 4 - Beta",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
@@ -36,5 +37,8 @@ setup(
         "Operating System :: Microsoft :: Windows :: Windows 10",
         "Operating System :: Microsoft :: Windows :: Windows 11",
     ],
-    project_urls={"Bug Tracker": "https://github.com/DatGuy1/Windows-Toasts/issues"},
+    project_urls={
+        "Bug Tracker": "https://github.com/DatGuy1/Windows-Toasts/issues",
+        "Documentation": "https://windows-toasts.readthedocs.io",
+    },
 )
