@@ -115,6 +115,29 @@ You can dynamically modify a toast's progress bar or text field
 
     toaster.update_toast(newToast)
 
+From Microsoft.com:
+
+Since Windows 10, you could always replace a notification by sending a new toast with the same Tag and Group. So what's the difference between replacing the toast and updating the toast's data?
+
+.. list-table:: Update or replace a notification
+    :header-rows: 1
+
+    * -
+      - Replacing
+      - Updating
+    * - **Position in Action Center**
+      - Moves the notification to the top of Action Center.
+      - Leaves the notification in place within Action Center.
+    * - **Modifying content**
+      - Can completely change all content/layout of the toast
+      - Can only change progress bar and top-level text
+    * - **Reappearing as popup**
+      - Can reappear as a toast popup if you leave :meth:`~windows_toasts.toast_types.Toast.SetSuppressPopup` set to false (or set to true to silently send it to Action Center)
+      - Won't reappear as a popup; the toast's data is silently updated within Action Center
+    * - **User dismissed**
+      - Regardless of whether user dismissed your previous notification, your replacement toast will always be sent
+      - If the user dismissed your toast, the toast update will fail
+
 Scheduled toasts
 ----------------
 
@@ -135,4 +158,4 @@ You can also schedule a toast to display at a specified time
 ...and much more
 ----------------
 
-See :class:`~windows_toasts.toast_types.Toast` or the tests for more modifications you can make to toast notifications.
+See :class:`windows_toasts.toast_types.Toast` or the tests for more modifications you can make to toast notifications.
