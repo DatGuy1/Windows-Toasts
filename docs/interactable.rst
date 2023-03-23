@@ -52,6 +52,7 @@ Windows-Toasts also supports using text fields and selection boxes.
     selectionBoxInput = ToastInputSelectionBox('gender', 'What is your gender?', toastSelections, default_selection=toastSelections[3])
     newToast.AddInput(selectionBoxInput)
 
+    # For example: {'name': 'John Smith', 'gender': 'male'}
     newToast.on_activated = lambda activatedEventArgs: print(activatedEventArgs.inputs)
 
     interactableToaster.show_toast(newToast)
