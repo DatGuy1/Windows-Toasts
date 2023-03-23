@@ -247,7 +247,7 @@ def test_progress_bar():
     InteractableWindowsToaster("Python", "{1AC14E77-02E7-4E5D-B744-2EB1AE5198B7}\\cmd.exe").show_toast(newToast)
 
 
-def test_scheduled_toast():
+def test_scheduled_toast(pytestconfig):
     from datetime import datetime, timedelta
 
     from src.windows_toasts import ToastProgressBar, ToastText1
@@ -263,12 +263,14 @@ def test_scheduled_toast():
     clonedToast.progress_bar.caption = None
 
     toaster = InteractableWindowsToaster("Python")
-    toaster.schedule_toast(newToast, datetime.now() + timedelta(seconds=10))
-    toaster.schedule_toast(clonedToast, datetime.now() + timedelta(seconds=20))
-    # We would assert here but due to mocking we can't, so just assert that the toast couldn't be found
-    with warns(UserWarning, match="Toast unscheduling failed."):
-        toaster.unschedule_toast(newToast)
-        toaster.unschedule_toast(clonedToast)
+    toaster.schedule_toast(newToast, datetime.now() + timedelta(seconds=5))
+    toaster.schedule_toast(clonedToast, datetime.now() + timedelta(seconds=10))
+
+    if pytestconfig.getoption("real_run"):
+        assert toaster.unschedule_toast(clonedToast)
+    else:
+        with warns(UserWarning, match="Toast unscheduling failed."):
+            toaster.unschedule_toast(clonedToast)
 
 
 def test_clear_toasts():
