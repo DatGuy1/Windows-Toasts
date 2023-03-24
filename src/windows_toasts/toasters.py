@@ -43,7 +43,12 @@ def _build_adaptable_data(toast: Toast) -> NotificationData:
         notificationData.values.insert(
             "progress", "indeterminate" if progressBar.progress is None else str(progressBar.progress)
         )
-        notificationData.values["progress_override"] = progressBar.progress_override or ""
+        progressOverride = progressBar.progress_override
+        if progressOverride is None and progressBar.progress is not None:
+            # Recreate default Windows behaviour while still allowing it to be changed in the future
+            progressOverride = f"{round(progressBar.progress * 100)}%"
+
+        notificationData.values["progress_override"] = progressOverride
         notificationData.values["caption"] = progressBar.caption or ""
 
     return notificationData

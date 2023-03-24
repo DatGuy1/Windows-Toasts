@@ -1,5 +1,10 @@
+Development
+===========
+* Recreated default Windows behaviour for progress bar. This allows it to be changed in the future while remaining faithful to the original implementation.
+
+
 0.4.0 (2023-03-18)
-=====
+==================
 - Added Windows 11 and Python 3.12 classifiers
 - Merge typing back inline
 - Dropped Python 3.7 support
@@ -25,27 +30,27 @@ See the documentation for how to use them!
 This release is mostly backwards compatible. The next release will be version 1.0.0, most likely be backwards incompatible, and will support on_activated callbacks after the toast has been relegated to the action center.
 
 0.3.3 (2022-03-18)
-======
+==================
 
 - Fixed bug where user input would not work if there were no buttons
 - register_hkey_aumid will now raise an error if supplied image is not a .ico file
 - Added tests for user input and attribution text
 
 0.3.2 (2022-03-18)
-======
+==================
 
 - Removed leftovers from older versions
 - Added proper code style and enforcement
 - Added tests to vastly increase coverage
 
 0.3.1 (2022-03-11)
-======
+==================
 
 - Attribution text now only displays if using interactable toaster without a custom AUMID
 - Fixed bug when binding on_activated without an input field
 
 0.3.0 (2022-03-11)
-======
+==================
 
 - Renamed AddDuration to SetDuration
 - Implemented text inputs fields. Use with SetInputField(placeholderText)
@@ -53,7 +58,7 @@ This release is mostly backwards compatible. The next release will be version 1.
 - Added simple test to make sure toasts don't throw errors
 
 0.2.0 (2022-02-26)
-======
+==================
 
 Major Revamp
 ------------
@@ -65,6 +70,6 @@ Major Revamp
 
 
 0.1.3 (2022-02-19)
-======
+==================
 
 - Initial public release
