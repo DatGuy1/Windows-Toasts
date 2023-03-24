@@ -244,7 +244,14 @@ def test_progress_bar():
     )
     newToast = ToastText1(progress_bar=progressBar)
 
-    InteractableWindowsToaster("Python", "{1AC14E77-02E7-4E5D-B744-2EB1AE5198B7}\\cmd.exe").show_toast(newToast)
+    toaster = InteractableWindowsToaster("Python", "{1AC14E77-02E7-4E5D-B744-2EB1AE5198B7}\\cmd.exe")
+    toaster.show_toast(newToast)
+
+    # Branching
+    newToast.progress_bar.progress = 0.75
+    newToast.progress_bar.progress_override = None
+
+    toaster.show_toast(newToast)
 
 
 def test_scheduled_toast(pytestconfig):
