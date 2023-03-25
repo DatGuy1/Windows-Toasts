@@ -2,6 +2,7 @@
 
 ---
 [![PyPI version](https://img.shields.io/pypi/v/windows-toasts)](https://pypi.org/project/windows-toasts/) [![readthedocs.io](https://readthedocs.org/projects/windows-toasts/badge/?version=latest)](https://windows-toasts.readthedocs.io/en/latest/) [![Supported Python versions](https://img.shields.io/pypi/pyversions/windows-toasts)](https://pypi.org/project/windows-toasts/) [![Downloads](https://pepy.tech/badge/windows-toasts/month)](https://pepy.tech/project/windows-toasts) [![codecov](https://codecov.io/gh/DatGuy1/Windows-Toasts/branch/master/graph/badge.svg?token=ZD8OF2SF61)](https://codecov.io/gh/DatGuy1/Windows-Toasts) [![Code Style: Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FDatGuy1%2FWindows-Toasts.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FDatGuy1%2FWindows-Toasts?ref=badge_shield)
 
 **Windows-Toasts** is a Python library used to send [toast notifications](https://docs.microsoft.com/windows/apps/design/shell/tiles-and-notifications/adaptive-interactive-toasts) on Windows machines. Check out the [documentation](https://windows-toasts.readthedocs.io/en/latest/).
 
@@ -39,3 +40,6 @@ Using WinRT may come with its own limitations. However, the only issue I've enco
 The code is adapted from [mohabouje's wonderful C++ WinToasts library](https://github.com/mohabouje/WinToast)
 
 Big thanks to dlech for his [recently created winrt fork](https://github.com/pywinrt/pywinrt)
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FDatGuy1%2FWindows-Toasts.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FDatGuy1%2FWindows-Toasts?ref=badge_large)
