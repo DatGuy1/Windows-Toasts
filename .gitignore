@@ -5,6 +5,7 @@ __pycache__/
 .dmypy.json
 coverage.xml
 
+build/
 dist/
 *.egg-info/
 
