@@ -1,6 +1,6 @@
 Development
 ===========
-* Recreated default Windows behaviour for progress bar. This allows it to be changed in the future while remaining faithful to the original implementation.
+- Recreated default Windows behaviour for progress bar. This allows it to be changed in the future while remaining faithful to the original implementation.
 
 
 0.4.0 (2023-03-18)
