@@ -3,11 +3,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Dict, Optional
 
-# noinspection PyProtectedMember
-from winsdk import _winrt
+from winsdk import system
 from winsdk.windows.foundation import IPropertyValue
-
-# noinspection PyUnresolvedReferences
 from winsdk.windows.ui.notifications import (  # noqa: F401
     ToastActivatedEventArgs as WinRtToastActivatedEventArgs,
     ToastDismissalReason,
@@ -29,7 +26,7 @@ class ToastActivatedEventArgs:
 
     # noinspection PyProtectedMember
     @classmethod
-    def fromWinRt(cls, eventArgs: _winrt.Object) -> ToastActivatedEventArgs:
+    def fromWinRt(cls, eventArgs: system.Object) -> ToastActivatedEventArgs:
         activatedEventArgs = WinRtToastActivatedEventArgs._from(eventArgs)
         receivedInputs: Optional[Dict[str, str]] = None
         try:

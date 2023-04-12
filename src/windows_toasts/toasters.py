@@ -196,8 +196,7 @@ class BaseWindowsToaster:
         """
         Clear toasts popped by this toaster
         """
-        # noinspection PyUnresolvedReferences
-        toastHistory: ToastNotificationHistory = ToastNotificationManager.get_history()
+        toastHistory: ToastNotificationHistory = ToastNotificationManager.history
         toastHistory.clear(self._AUMID)
 
     def clear_scheduled_toasts(self) -> None:
