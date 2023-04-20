@@ -1,7 +1,8 @@
-Development
+0.4.1 (2023-04-20)
 ===========
 - Recreated default Windows behaviour for progress bar. This allows it to be changed in the future while remaining faithful to the original implementation.
-
+- Fixed AttributeError on WindowsToaster.clear_toasts()
+- Bumped winsdk to 1.0.0b9
 
 0.4.0 (2023-03-18)
 ==================
@@ -27,7 +28,7 @@ Development
 
 See the documentation for how to use them!
 
-This release is mostly backwards compatible. The next release will be version 1.0.0, most likely be backwards incompatible, and will support on_activated callbacks after the toast has been relegated to the action center.
+This release is mostly backwards compatible. The next *major* release will be version 1.0.0, most likely be backwards incompatible, and will support on_activated callbacks after the toast has been relegated to the action center.
 
 0.3.3 (2022-03-18)
 ==================
