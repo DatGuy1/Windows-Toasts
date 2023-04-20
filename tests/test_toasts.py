@@ -191,7 +191,7 @@ def test_input_toast():
 def test_custom_duration_toast():
     from src.windows_toasts import ToastDuration, ToastText1
 
-    newToast = ToastText1(duration=ToastDuration.Short)
+    newToast = ToastText1(duration=ToastDuration.Short, body="A short toast")
     WindowsToaster("Python").show_toast(newToast)
 
 
