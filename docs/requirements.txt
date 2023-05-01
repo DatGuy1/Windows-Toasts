@@ -1,4 +1,4 @@
-sphinx==6.2.0
+sphinx==7.0.0
 
 sphinx-jinja2-compat>=0.1.1
 sphinx-toolbox>=2.16.0
