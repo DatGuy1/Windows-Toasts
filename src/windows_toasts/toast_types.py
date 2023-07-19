@@ -69,13 +69,13 @@ class Toast:
 
     def __init__(
         self,
+        body: Optional[str] = None,
         audio: Optional[ToastAudio] = None,
         actions: Iterable[ToastButton] = (),
         duration: ToastDuration = ToastDuration.Default,
         scenario: ToastScenario = ToastScenario.Default,
         progress_bar: Optional[ToastProgressBar] = None,
         headline: Optional[str] = None,
-        body: Optional[str] = None,
         first_line: Optional[str] = None,
         second_line: Optional[str] = None,
         images: Iterable[ToastDisplayImage] = (),
