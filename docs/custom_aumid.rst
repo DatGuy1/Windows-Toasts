@@ -1,10 +1,8 @@
 Custom AUMIDs
 =====================
 
-How to use
-----------
-
-When initialising :class:`~windows_toasts.toasters.InteractableWindowsToaster`, pass the custom AUMID as notifierAUMID
+Custom AUMIDs can be used to display user-defined titles and icons.
+When initialising :class:`~windows_toasts.toasters.InteractableWindowsToaster`, pass the custom AUMID as notifierAUMID.
 
 Using an installed AUMID
 ------------------------
@@ -31,5 +29,5 @@ Using the registry
 
 Installing a custom AUMID
 -------------------------
-Custom AUMIDs can display user-defined titles and icons. The library comes with a script to implement it, :code:`register_hkey_aumid`, registers a AUMID in the registry.
-The arguments can be understood using the --help argument. If you have the Python Scripts directory in your path, you should be able to execute them by opening the command console and entering the name of the script.
+The library comes with a script to implement it, :code:`register_hkey_aumid.py`.
+The arguments can be understood using the --help argument. If you have the Python Scripts directory in your path, you should be able to execute them by opening the command console and simply executing :code:`register_hkey_aumid`.
