@@ -9,7 +9,7 @@ We import :class:`~windows_toasts.toasters.InteractableWindowsToaster` instead o
 
 .. code-block:: python
 
-    from windows_toasts import InteractableWindowsToaster, ToastButton, ToastText1
+    from windows_toasts import InteractableWindowsToaster, ToastActivatedEventArgs, ToastButton, ToastText1
 
     interactableToaster = InteractableWindowsToaster('Questionnaire')
     newToast = ToastText1()
