@@ -3,8 +3,8 @@ from typing import Optional, TypeVar, Union
 
 from toasts_winrt.windows.data.xml.dom import IXmlNode, XmlDocument, XmlElement
 
-from .toast_audio import ToastAudio
 from .toast import Toast
+from .toast_audio import ToastAudio
 from .wrappers import (
     ToastButton,
     ToastButtonColour,
