@@ -20,9 +20,9 @@ class ToastActivatedEventArgs:
     """
 
     arguments: Optional[str] = None
-    """Arguments provided to :func:`~windows_toasts.toast_types.Toast.AddAction`"""
+    """Arguments provided to :func:`~windows_toasts.toast.Toast.AddAction`"""
     inputs: Optional[dict] = None
-    """Inputs received when using :func:`~windows_toasts.toast_types.Toast.AddInput`"""
+    """Inputs received when using :func:`~windows_toasts.toast.Toast.AddInput`"""
 
     # noinspection PyProtectedMember
     @classmethod

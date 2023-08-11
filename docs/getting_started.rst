@@ -39,12 +39,12 @@ To display a toast notification:
 .. code-block:: python
 
     # We import WindowsToaster and a toast format we want
-    from windows_toasts import WindowsToaster, ToastText1
+    from windows_toasts import WindowsToaster, Toast
     # Prepare the toaster for bread (or your notification)
     toaster = WindowsToaster('Python')
     # Initialise the toast
-    newToast = ToastText1()
+    newToast = Toast()
     # Set the body of the notification
-    newToast.SetBody('Hello, World!')
+    newToast.SetFirstLine('Hello, World!')
     # And display it!
     toaster.show_toast(newToast)

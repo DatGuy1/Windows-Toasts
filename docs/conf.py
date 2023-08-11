@@ -12,6 +12,7 @@ sys.path.insert(0, os.path.abspath("../src"))
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
+# I'd love to simply import the project (so I could also use sphinx.ext.doctest), but RTD builds on Ubuntu
 # Get version.py without importing project
 windows_toasts: Dict[str, str] = {}
 with open("../src/windows_toasts/_version.py", "r") as f:

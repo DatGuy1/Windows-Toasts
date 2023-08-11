@@ -55,7 +55,7 @@ Contents
    :caption: User reference
 
    user/toasters
-   user/toast_types
+   user/toast
    user/audio
    user/wrappers
 
