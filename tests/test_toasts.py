@@ -103,7 +103,7 @@ def test_errors_toast(example_image_path):
     newToast = ToastImageAndText1(body="Hello, World!")
 
     with raises(InvalidImageException, match="could not be found"):
-        toastImage = ToastImage(example_image_path.with_suffix(".nonexistant"))
+        _ = ToastImage(example_image_path.with_suffix(".nonexistant"))
 
     newToast.AddImage(displayImage)
     newToast.AddImage(displayImage)
