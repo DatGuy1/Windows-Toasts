@@ -1,7 +1,7 @@
 1.0.0
 =====
-Minor:
-
+Minor
+-----
 - InvalidImageException is thrown when trying to add online images or images that do not exist
 - Body is now the first argument for toasts
 
