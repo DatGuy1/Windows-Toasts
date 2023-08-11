@@ -1,19 +1,24 @@
+import shutil
 from pathlib import Path
 
-# Need to find a path that is constant in every Windows instance/version
-iconPath = Path(
-    "C:\\Windows\\WinSxS\\amd64_microsoft-windows-dxp-deviceexperience_31bf3856ad364e35_10.0.22621"
-    ".1_none_a8baf777ed856ee0\\folder.ico"
-)
-pathExists = iconPath.exists()
+from pytest import raises
 
 
-def test_register_hkey():
+def test_register_hkey(example_image_path):
     from scripts.register_hkey_aumid import register_hkey
 
     appId = "Test.Notification"
     appName = "Notification Test"
-    register_hkey(appId, appName, iconPath if pathExists else None)
+
+    with raises(ValueError, match="does not exist"):
+        register_hkey(appId, appName, Path("no_file.ico"))
+    with raises(ValueError, match="must be of type .ico"):
+        register_hkey(appId, appName, example_image_path)
+
+    exampleIcoPath = example_image_path.with_suffix(".ico")
+    shutil.copy(example_image_path, exampleIcoPath)
+    pathExists = exampleIcoPath.exists()
+    register_hkey(appId, appName, exampleIcoPath if pathExists else None)
 
     import winreg
 
@@ -27,7 +32,7 @@ def test_register_hkey():
         if pathExists:
             iconUri = winreg.QueryValueEx(masterKey, "IconUri")
             assert iconUri[1] == winreg.REG_SZ
-            assert iconUri[0] == str(iconPath)
+            assert iconUri[0] == str(exampleIcoPath)
         else:
             try:
                 winreg.QueryValueEx(masterKey, "IconUri")
@@ -41,3 +46,5 @@ def test_register_hkey():
             assert False
         except (FileNotFoundError, OSError):
             pass
+
+    exampleIcoPath.unlink()

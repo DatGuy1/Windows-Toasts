@@ -7,7 +7,7 @@ from typing import Optional
 
 
 def register_hkey(appId: str, appName: str, iconPath: Optional[pathlib.Path]):
-    if iconPath is not None:  # pragma: no cover
+    if iconPath is not None:
         if not iconPath.exists():
             raise ValueError(f"Could not register the application: File {iconPath} does not exist")
         elif iconPath.suffix != ".ico":
@@ -17,7 +17,7 @@ def register_hkey(appId: str, appName: str, iconPath: Optional[pathlib.Path]):
     keyPath = f"SOFTWARE\\Classes\\AppUserModelId\\{appId}"
     with winreg.CreateKeyEx(winreg.HKEY_CURRENT_USER, keyPath) as masterKey:
         winreg.SetValueEx(masterKey, "DisplayName", 0, winreg.REG_SZ, appName)
-        if iconPath is not None:  # pragma: no cover
+        if iconPath is not None:
             winreg.SetValueEx(masterKey, "IconUri", 0, winreg.REG_SZ, str(iconPath.resolve()))
 
 

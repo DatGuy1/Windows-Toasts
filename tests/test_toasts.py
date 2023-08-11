@@ -21,7 +21,7 @@ def test_simple_toast():
     WindowsToaster("Python").show_toast(simpleToast)
 
 
-def test_interactable_toast():
+def test_interactable_toast(example_image_path):
     from src.windows_toasts import (
         ToastActivatedEventArgs,
         ToastButton,
@@ -36,10 +36,7 @@ def test_interactable_toast():
         print(activatedEventArgs.inputs)
 
     newInput = ToastInputTextBox("input", "Your input:", "Write your placeholder text here!")
-    firstButton = ToastButton(
-        "First", "clicked=first", image=ToastImage("C:/Windows/System32/@WindowsHelloFaceToastIcon.png"),
-        relatedInput=newInput
-    )
+    firstButton = ToastButton("First", "clicked=first", image=ToastImage(example_image_path), relatedInput=newInput)
     newToast = ToastImageAndText2(actions=(firstButton,))
     newToast.SetBody("Hello, interactable world!")
 
@@ -81,7 +78,7 @@ def test_audio_toast():
     toaster.show_toast(loopingToast)
 
 
-def test_warnings_toast():
+def test_warnings_toast(example_image_path):
     from src.windows_toasts import (
         InvalidImageException,
         ToastButton,
@@ -96,16 +93,16 @@ def test_warnings_toast():
     with warns(UserWarning, match="has no headline, only a body"):
         textToast.SetHeadline("Hello, World!")
 
+    displayImage = ToastDisplayImage.fromPath(example_image_path)
     with warns(UserWarning, match="Toast of type ToastText1 does not support images"):
-        textToast.AddImage(ToastDisplayImage.fromPath("C:/Windows/System32/@WindowsHelloFaceToastIcon.png"))
+        textToast.AddImage(displayImage)
 
     assert len(textToast.textFields) == 1
     assert textToast.textFields[0] == "Hello, World!"
 
-    windowsImage = ToastDisplayImage.fromPath("C:/Windows/System32/@WindowsHelloFaceToastIcon.png")
     newToast = ToastImageAndText1(body="Hello, World!")
-    newToast.AddImage(windowsImage)
-    newToast.AddImage(ToastDisplayImage.fromPath("C:/Windows/System32/@WindowsHelloFaceToastIcon.png", large=True))
+    newToast.AddImage(displayImage)
+    newToast.AddImage(displayImage)
     for i in range(1, 6):
         if i < 4:
             newToast.AddAction(ToastButton(f"Button #{i}", str(i)))
@@ -119,7 +116,7 @@ def test_warnings_toast():
         newToast.AddInput(ToastInputTextBox("Input 6", str(6)))
 
     with warns(UserWarning, match="The toast already has the maximum of two images"):
-        newToast.AddImage(windowsImage)
+        newToast.AddImage(displayImage)
 
     with raises(InvalidImageException, match="Online images are not supported"):
         ToastImage("https://www.python.org/static/community_logos/python-powered-h-140x182.png")
@@ -134,12 +131,10 @@ def test_warnings_toast():
     InteractableWindowsToaster("Python").show_toast(newToast)
 
 
-def test_image_toast():
-    import pathlib
-
+def test_image_toast(example_image_path):
     from src.windows_toasts import ToastDisplayImage, ToastImage, ToastImageAndText4
 
-    toastImage = ToastImage(pathlib.Path("C:/Windows/System32/@WindowsHelloFaceToastIcon.png"))
+    toastImage = ToastImage(example_image_path)
     toastDP = ToastDisplayImage(toastImage, altText="Windows logo", large=True)
     newToast = ToastImageAndText4(images=(toastDP,))
 
@@ -147,9 +142,7 @@ def test_image_toast():
     newToast.SetFirstLine("Foo")
     newToast.SetSecondLine("Bar")
 
-    newToast.AddImage(
-        ToastDisplayImage.fromPath("C:/Windows/System32/@WindowsHelloFaceToastIcon.png", circleCrop=False)
-    )
+    newToast.AddImage(ToastDisplayImage.fromPath(str(example_image_path), circleCrop=False))
 
     InteractableWindowsToaster("Python").show_toast(newToast)
 
