@@ -8,6 +8,8 @@ from pathlib import Path
 from typing import Optional, Sequence, Union
 from urllib.parse import urlparse
 
+from .exceptions import InvalidImageException
+
 
 class ToastDuration(Enum):
     """
@@ -74,9 +76,12 @@ class ToastImage:
         :raises: ValueError: If the path to an online image is supplied
         """
         if isinstance(imagePath, str) and urlparse(imagePath).scheme in ("http", "https"):
-            raise ValueError("Online images are not supported")
+            raise InvalidImageException("Online images are not supported")
         elif not isinstance(imagePath, Path):
             imagePath = Path(imagePath)
+
+        if not imagePath.exists():
+            raise InvalidImageException(f"Image with path '{imagePath}' could not be found")
 
         self.path = imagePath.as_uri()
 

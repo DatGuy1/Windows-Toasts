@@ -82,6 +82,7 @@ def test_audio_toast():
 
 def test_warnings_toast():
     from src.windows_toasts import (
+        InvalidImageException,
         ToastButton,
         ToastDisplayImage,
         ToastImage,
@@ -119,7 +120,7 @@ def test_warnings_toast():
     with warns(UserWarning, match="The toast already has the maximum of two images"):
         newToast.AddImage(windowsImage)
 
-    with raises(ValueError, match="Online images are not supported"):
+    with raises(InvalidImageException, match="Online images are not supported"):
         ToastImage("https://www.python.org/static/community_logos/python-powered-h-140x182.png")
 
     assert len(newToast.actions) + len(newToast.inputs) == 5

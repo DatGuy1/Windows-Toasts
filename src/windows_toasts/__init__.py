@@ -1,5 +1,6 @@
 from ._version import __author__, __description__, __license__, __title__, __url__, __version__  # noqa: F401
 from .events import ToastActivatedEventArgs, ToastDismissalReason, ToastDismissedEventArgs, ToastFailedEventArgs
+from .exceptions import InvalidImageException
 from .toast_audio import AudioSource, ToastAudio
 from .toast_types import (
     ToastImageAndText1,
@@ -38,6 +39,8 @@ __all__ = [
     "ToastDismissalReason",
     "ToastDismissedEventArgs",
     "ToastFailedEventArgs",
+    # exceptions.py
+    "InvalidImageException",
     # toast_audio.py
     "AudioSource",
     "ToastAudio",
