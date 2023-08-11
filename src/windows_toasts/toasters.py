@@ -13,8 +13,8 @@ from toasts_winrt.windows.ui.notifications import (
 )
 
 from .events import ToastActivatedEventArgs
-from .toast_document import ToastDocument
 from .toast import Toast
+from .toast_document import ToastDocument
 from .wrappers import ToastDuration, ToastImagePosition, ToastScenario
 
 ToastNotificationT = TypeVar("ToastNotificationT", ToastNotification, ScheduledToastNotification)

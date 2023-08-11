@@ -7,12 +7,12 @@ from src.windows_toasts import InteractableWindowsToaster, WindowsToaster
 
 
 def test_simple_toast():
-    from src.windows_toasts import ToastText3
+    from src.windows_toasts import Toast
 
-    simpleToast = ToastText3()
+    simpleToast = Toast()
 
-    simpleToast.SetHeadline("Hello, World!")
-    simpleToast.SetFirstLine("Foobar")
+    simpleToast.SetFirstLine("Hello, World!")
+    simpleToast.SetSecondLine("Foobar")
 
     simpleToast.on_activated = lambda _: print("Toast clicked!")
     simpleToast.on_dismissed = lambda dismissedEventArgs: print(f"Toast dismissed! {dismissedEventArgs.reason}")
@@ -23,11 +23,11 @@ def test_simple_toast():
 
 def test_interactable_toast(example_image_path):
     from src.windows_toasts import (
+        Toast,
         ToastActivatedEventArgs,
         ToastButton,
         ToastButtonColour,
         ToastImage,
-        ToastImageAndText2,
         ToastInputTextBox,
     )
 
@@ -37,8 +37,8 @@ def test_interactable_toast(example_image_path):
 
     newInput = ToastInputTextBox("input", "Your input:", "Write your placeholder text here!")
     firstButton = ToastButton("First", "clicked=first", image=ToastImage(example_image_path), relatedInput=newInput)
-    newToast = ToastImageAndText2(actions=(firstButton,))
-    newToast.SetBody("Hello, interactable world!")
+    newToast = Toast(actions=(firstButton,))
+    newToast.SetFirstLine("Hello, interactable world!")
 
     newToast.AddInput(newInput)
 
@@ -50,11 +50,11 @@ def test_interactable_toast(example_image_path):
 
 
 def test_audio_toast():
-    from src.windows_toasts import AudioSource, ToastAudio, ToastText2
+    from src.windows_toasts import AudioSource, Toast, ToastAudio
 
     toaster = WindowsToaster("Python")
 
-    originalToast = ToastText2(body="Ding ding!")
+    originalToast = Toast(first_line="Ding ding!")
     originalToast.SetAudio(ToastAudio(AudioSource.IM))
 
     toaster.show_toast(originalToast)
@@ -63,7 +63,7 @@ def test_audio_toast():
     silentToast = originalToast.clone()
     assert silentToast != "False EQ" and silentToast != originalToast
 
-    silentToast.SetBody("Silence...")
+    silentToast.SetFirstLine("Silence...")
     silentToast.audio.silent = True
 
     toaster.show_toast(silentToast)
@@ -81,29 +81,24 @@ def test_audio_toast():
 def test_errors_toast(example_image_path):
     from src.windows_toasts import (
         InvalidImageException,
+        Toast,
         ToastButton,
         ToastDisplayImage,
         ToastImage,
-        ToastImageAndText1,
         ToastInputTextBox,
-        ToastText1,
     )
 
-    textToast = ToastText1()
-    with warns(UserWarning, match="has no headline, only a body"):
-        textToast.SetHeadline("Hello, World!")
+    textToast = Toast()
+    textToast.SetFirstLine("Hello, World!")
 
     displayImage = ToastDisplayImage.fromPath(example_image_path)
-    with warns(UserWarning, match="Toast of type ToastText1 does not support images"):
-        textToast.AddImage(displayImage)
 
     with warns(UserWarning, match="is a proper protocol"):
         textToast.SetLaunchAction("notanactualprotocol")
 
-    assert len(textToast.textFields) == 1
     assert textToast.textFields[0] == "Hello, World!"
 
-    newToast = ToastImageAndText1(body="Hello, World!")
+    newToast = Toast(first_line="Hello, World!")
 
     with raises(InvalidImageException, match="could not be found"):
         _ = ToastImage(example_image_path.with_suffix(".nonexistant"))
@@ -139,15 +134,15 @@ def test_errors_toast(example_image_path):
 
 
 def test_image_toast(example_image_path):
-    from src.windows_toasts import ToastDisplayImage, ToastImage, ToastImageAndText4, ToastImagePosition
+    from src.windows_toasts import Toast, ToastDisplayImage, ToastImage, ToastImagePosition
 
     toastImage = ToastImage(example_image_path)
     toastDP = ToastDisplayImage(toastImage, altText="Windows logo", position=ToastImagePosition.Hero)
-    newToast = ToastImageAndText4(images=(toastDP,))
+    newToast = Toast(images=(toastDP,))
 
-    newToast.SetHeadline("Hello, World!")
-    newToast.SetFirstLine("Foo")
-    newToast.SetSecondLine("Bar")
+    newToast.SetFirstLine("Hello, World!")
+    newToast.SetSecondLine("Foo")
+    newToast.SetThirdLine("Bar")
 
     newToast.AddImage(ToastDisplayImage.fromPath(str(example_image_path), circleCrop=False))
 
@@ -157,19 +152,19 @@ def test_image_toast(example_image_path):
 def test_custom_timestamp_toast():
     from datetime import datetime, timedelta
 
-    from src.windows_toasts import ToastText4
+    from src.windows_toasts import Toast
 
-    newToast = ToastText4(body="This should display as being sent an hour ago")
+    newToast = Toast(first_line="This should display as being sent an hour ago")
     newToast.SetCustomTimestamp(datetime.utcnow() - timedelta(hours=1))
 
     WindowsToaster("Python").show_toast(newToast)
 
 
 def test_input_toast():
-    from src.windows_toasts import ToastInputSelectionBox, ToastInputTextBox, ToastSelection, ToastText1
+    from src.windows_toasts import Toast, ToastInputSelectionBox, ToastInputTextBox, ToastSelection
 
     toastTextBoxInput = ToastInputTextBox("question", "How are you today?", "Enter here!")
-    newToast = ToastText1(inputs=[toastTextBoxInput])
+    newToast = Toast(inputs=[toastTextBoxInput])
 
     toastSelectionBoxInput = ToastInputSelectionBox("selection", "How about some predefined options?")
     toastSelections = (
@@ -185,24 +180,24 @@ def test_input_toast():
     newBoxInput.default_selection = None
     newToast.AddInput(newBoxInput)
 
-    newToast.SetBody("You. Yes, you.")
+    newToast.SetFirstLine("You. Yes, you.")
 
     InteractableWindowsToaster("Python").show_toast(newToast)
 
 
 def test_custom_duration_toast():
-    from src.windows_toasts import ToastDuration, ToastText1
+    from src.windows_toasts import Toast, ToastDuration
 
-    newToast = ToastText1(duration=ToastDuration.Short, body="A short toast")
+    newToast = Toast(duration=ToastDuration.Short, first_line="A short toast")
     WindowsToaster("Python").show_toast(newToast)
 
 
 def test_attribution_text_toast():
-    from src.windows_toasts import ToastImageAndText3
+    from src.windows_toasts import Toast
 
-    newToast = ToastImageAndText3()
-    newToast.SetHeadline("Hello, World!")
-    newToast.SetFirstLine("Foobar")
+    newToast = Toast()
+    newToast.SetFirstLine("Hello, World!")
+    newToast.SetSecondLine("Foobar")
 
     toaster = WindowsToaster("Python")
     toastContent = toaster._setup_toast(newToast, False)
@@ -212,39 +207,39 @@ def test_attribution_text_toast():
 
 
 def test_scenario_toast():
-    from src.windows_toasts import ToastScenario, ToastText4
+    from src.windows_toasts import Toast, ToastScenario
 
-    newToast = ToastText4(headline="Very important toast!", first_line="Are you ready?", second_line="Here it comes!")
+    newToast = Toast(first_line="Very important toast!", second_line="Are you ready?", third_line="Here it comes!")
     newToast.SetScenario(ToastScenario.Important)
 
     WindowsToaster("Python").show_toast(newToast)
 
 
 def test_update_toast():
-    from src.windows_toasts import ToastText1
+    from src.windows_toasts import Toast
 
     toaster = WindowsToaster("Python")
 
-    newToast = ToastText1()
-    newToast.SetBody("Hello, World!")
+    newToast = Toast()
+    newToast.SetFirstLine("Hello, World!")
 
     toaster.show_toast(newToast)
 
     import time
 
     time.sleep(0.5)
-    newToast.SetBody("Goodbye, World!")
+    newToast.SetFirstLine("Goodbye, World!")
 
     toaster.update_toast(newToast)
 
 
 def test_progress_bar():
-    from src.windows_toasts import ToastProgressBar, ToastText1
+    from src.windows_toasts import Toast, ToastProgressBar
 
     progressBar = ToastProgressBar(
         "Preparing...", "Python 4 release", progress=None, progress_override="? millenniums remaining"
     )
-    newToast = ToastText1(progress_bar=progressBar)
+    newToast = Toast(progress_bar=progressBar)
 
     toaster = InteractableWindowsToaster("Python", "{1AC14E77-02E7-4E5D-B744-2EB1AE5198B7}\\cmd.exe")
     toaster.show_toast(newToast)
@@ -259,12 +254,12 @@ def test_progress_bar():
 def test_scheduled_toast(pytestconfig):
     from datetime import datetime, timedelta
 
-    from src.windows_toasts import ToastProgressBar, ToastText1
+    from src.windows_toasts import Toast, ToastProgressBar
 
     progressBar = ToastProgressBar(
         "Preparing...", "Python 4 release", progress=0.5, progress_override="? millenniums remaining"
     )
-    newToast = ToastText1(progress_bar=progressBar, body="Incoming:")
+    newToast = Toast(progress_bar=progressBar, first_line="Incoming:")
 
     # Branching
     clonedToast = newToast.clone()
@@ -291,16 +286,16 @@ def test_clear_toasts():
 def test_expiration_toasts():
     from datetime import datetime, timedelta
 
-    from src.windows_toasts import ToastText1
+    from src.windows_toasts import Toast
 
     expirationTime = datetime.now() + timedelta(minutes=1)
-    newToast = ToastText1(body="Hello, World!", group="Test Toasts", expiration_time=expirationTime)
+    newToast = Toast(first_line="Hello, World!", group="Test Toasts", expiration_time=expirationTime)
     WindowsToaster("Python").show_toast(newToast)
 
 
 def test_protocol_launch():
-    from src.windows_toasts import ToastButton, ToastText1
+    from src.windows_toasts import Toast, ToastButton
 
-    newToast = ToastText1(body="Click on me to open google.com", launch_action="https://google.com")
+    newToast = Toast(first_line="Click on me to open google.com", launch_action="https://google.com")
     newToast.AddAction(ToastButton("Launch calculator", launch="calculator://"))
     InteractableWindowsToaster("Python").show_toast(newToast)
