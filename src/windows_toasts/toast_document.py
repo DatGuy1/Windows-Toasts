@@ -4,6 +4,7 @@ from typing import Optional, TypeVar, Union
 from toasts_winrt.windows.data.xml.dom import IXmlNode, XmlDocument, XmlElement
 
 from .toast_audio import ToastAudio
+from .toast import Toast
 from .wrappers import (
     ToastButton,
     ToastButtonColour,
@@ -22,14 +23,36 @@ IXmlType = TypeVar("IXmlType", IXmlNode, XmlElement)
 class ToastDocument:
     """
     The XmlDocument wrapper for toasts, which applies all the
-    attributes configured in :class:`~windows_toasts.toast_types.Toast`
+    attributes configured in :class:`~windows_toasts.toast.Toast`
     """
 
     xmlDocument: XmlDocument
+    bindingNode: IXmlType
+    """Binding node, as to avoid having to find it every time"""
+    _inputFields: int
+    """Tracker of number of input fields"""
 
-    def __init__(self, xmlDocument: XmlDocument) -> None:
-        self.xmlDocument = xmlDocument
-        self.inputFields = 0
+    def __init__(self, toast: Toast) -> None:
+        self.xmlDocument = XmlDocument()
+        self.xmlDocument.load_xml("<toast><visual><binding></binding></visual></toast>")
+        self.bindingNode = self.GetElementByTagName("binding")
+
+        # Unclear whether this leads to issues regarding spacing
+        for i in range(len(toast.textFields)):
+            textElement = self.xmlDocument.create_element("text")
+            # Needed for WindowsToaster
+            self.SetAttribute(textElement, "id", str(i + 1))
+            self.bindingNode.append_child(textElement)
+
+        # Not sure if this is the best way to do this along with the clone bit in AddImage()
+        if len(toast.images) > 0:
+            imageElement = self.xmlDocument.create_element("image")
+            self.SetAttribute(imageElement, "src", "")
+            # Needed for WindowsToaster
+            self.SetAttribute(imageElement, "id", "1")
+            self.bindingNode.append_child(imageElement)
+
+        self._inputFields = 0
 
     @staticmethod
     def GetAttributeValue(nodeAttribute: IXmlType, attributeName: str) -> str:
@@ -53,6 +76,7 @@ class ToastDocument:
         :type tagName: str
         :rtype: IXmlType
         """
+        # Is this way faster? Or is self.xmlDocument.select_single_node(f"/{tagName}") ?
         return self.xmlDocument.get_elements_by_tag_name(tagName).item(0)
 
     def SetAttribute(self, nodeAttribute: IXmlType, attributeName: str, attributeValue: str) -> None:
@@ -90,10 +114,8 @@ class ToastDocument:
 
         :param attributionText: Attribution text to set
         """
-        bindingNode = self.GetElementByTagName("binding")
-
         newElement = self.xmlDocument.create_element("text")
-        bindingNode.append_child(newElement)
+        self.bindingNode.append_child(newElement)
         self.SetAttribute(newElement, "placement", "attribution")
         self.SetNodeStringValue(newElement, attributionText)
 
@@ -106,7 +128,7 @@ class ToastDocument:
         audioNode = self.GetElementByTagName("audio")
         if audioNode is None:
             audioNode = self.xmlDocument.create_element("audio")
-            self.xmlDocument.select_single_node("/toast").append_child(audioNode)
+            self.GetElementByTagName("toast").append_child(audioNode)
 
         if audioConfiguration.silent:
             self.SetAttribute(audioNode, "silent", str(audioConfiguration.silent).lower())
@@ -127,9 +149,7 @@ class ToastDocument:
         """
         targetNode = self.xmlDocument.get_elements_by_tag_name("text").item(nodePosition)
 
-        # We used to simply set it to newValue, but since we've now switched to AdaptiveText we just set it to text{i}
-        # self.SetNodeStringValue(targetNode, newValue)
-
+        # We used to simply set it to newValue, but since we've now switched to BindableString we just set it to text{i}
         # Set it to i + 1 just because starting at 1 rather than 0 is easier on the eye
         self.SetNodeStringValue(targetNode, f"{{text{nodePosition + 1}}}")
 
@@ -167,7 +187,7 @@ class ToastDocument:
         if self.GetAttributeValue(imageNode, "src") != "":
             imageNode = imageNode.clone_node(True)
             self.SetAttribute(imageNode, "id", "2")
-            self.GetElementByTagName("binding").append_child(imageNode)
+            self.bindingNode.append_child(imageNode)
 
         self.SetAttribute(imageNode, "src", str(displayImage.image.path))
 
@@ -202,7 +222,7 @@ class ToastDocument:
         """
         isTextBox = isinstance(toastInput, ToastInputTextBox)
 
-        self.inputFields += 1
+        self._inputFields += 1
         inputNode = self.xmlDocument.create_element("input")
         self.SetAttribute(inputNode, "id", toastInput.input_id)
         self.SetAttribute(inputNode, "title", toastInput.caption)
@@ -241,8 +261,8 @@ class ToastDocument:
 
         :type duration: ToastDuration
         """
-        durationNode = self.GetElementByTagName("toast")
-        self.SetAttribute(durationNode, "duration", duration.value)
+        toastNode = self.GetElementByTagName("toast")
+        self.SetAttribute(toastNode, "duration", duration.value)
 
     def AddAction(self, action: ToastButton) -> None:
         """
@@ -294,7 +314,7 @@ class ToastDocument:
         self.SetAttribute(progressBarNode, "valueStringOverride", "{progress_override}")
         self.SetAttribute(progressBarNode, "title", "{caption}")
 
-        self.GetElementByTagName("binding").append_child(progressBarNode)
+        self.bindingNode.append_child(progressBarNode)
 
     def AddStaticProgressBar(self, progressBar: ToastProgressBar) -> None:
         """
@@ -311,4 +331,4 @@ class ToastDocument:
         if progressBar.caption is not None:
             self.SetAttribute(progressBarNode, "title", progressBar.caption)
 
-        self.GetElementByTagName("binding").append_child(progressBarNode)
+        self.bindingNode.append_child(progressBarNode)

@@ -5,9 +5,9 @@ import datetime
 import urllib.parse
 import uuid
 import warnings
-from typing import Callable, ClassVar, Iterable, List, Literal, Optional, TypeVar
+from typing import Callable, Iterable, List, Literal, Optional, TypeVar
 
-from toasts_winrt.windows.ui.notifications import ToastDismissedEventArgs, ToastFailedEventArgs, ToastTemplateType
+from toasts_winrt.windows.ui.notifications import ToastDismissedEventArgs, ToastFailedEventArgs
 
 from .events import ToastActivatedEventArgs
 from .toast_audio import ToastAudio
@@ -39,7 +39,7 @@ class Toast:
     """See :func:`AddImage`"""
     scenario: ToastScenario
     """Scenario for the toast"""
-    textFields: List[str]
+    textFields: List[Optional[str]]
     """Various text fields (dependant on subclass)"""
     inputs: List[ToastInput]
     """Placeholder for a text input box"""
@@ -65,22 +65,17 @@ class Toast:
     """Callable to execute when the toast is dismissed (X is clicked or times out) if interactable"""
     on_failed: Optional[Callable[[ToastFailedEventArgs], None]]
     """Callable to execute when the toast fails to display"""
-    ToastType: ClassVar[ToastTemplateType]
-    """Type of toast to fetch template for"""
-    HasImage: ClassVar[bool] = False
-    """Whether the toast type has an image"""
 
     def __init__(
         self,
-        body: Optional[str] = None,
+        first_line: Optional[str] = None,
         audio: Optional[ToastAudio] = None,
         actions: Iterable[ToastButton] = (),
         duration: ToastDuration = ToastDuration.Default,
         scenario: ToastScenario = ToastScenario.Default,
         progress_bar: Optional[ToastProgressBar] = None,
-        headline: Optional[str] = None,
-        first_line: Optional[str] = None,
         second_line: Optional[str] = None,
+        third_line: Optional[str] = None,
         images: Iterable[ToastDisplayImage] = (),
         inputs: Iterable[ToastInput] = (),
         timestamp: Optional[datetime.datetime] = None,
@@ -105,14 +100,12 @@ class Toast:
         :type scenario: ToastScenario
         :param progress_bar: See :meth:`SetProgressBar`
         :type progress_bar: Optional[ToastProgressBar]
-        :param headline: See :meth:`SetHeadline`
-        :type headline: Optional[str]
-        :param body: See :meth:`SetBody`
-        :type body: Optional[str]
         :param first_line: See :meth:`SetFirstLine`
         :type first_line: Optional[str]
         :param second_line: See :meth:`SetSecondLine`
         :type second_line: Optional[str]
+        :param third_line: See :meth:`SetThirdLine`
+        :type third_line: Optional[str]
         :param images: See :meth:`AddImage`
         :type images: Iterable[ToastDisplayImage]
         :param inputs: See :meth:`AddInput`
@@ -138,6 +131,8 @@ class Toast:
         self.actions = []
         self.inputs = []
         self.images = []
+        # Maximum of three text fields (at least until groups are implemented)
+        self.textFields = [None, None, None]
 
         self.SetAudio(audio)
         self.SetDuration(duration)
@@ -149,14 +144,15 @@ class Toast:
         self.SetSuppressPopup(suppress_popup)
         self.SetLaunchAction(launch_action)
 
-        if headline is not None:
-            self.SetHeadline(headline)
-        if body is not None:
-            self.SetBody(body)
+        # Certainly not the best way to do this now we've moved away from templates. Maybe expose textFields further?
+        # The behaviour of only exposing Add[Image/Input] without having an easy way to remove it is poor convention
+        # that I want to remove ASAP
         if first_line is not None:
             self.SetFirstLine(first_line)
         if second_line is not None:
             self.SetSecondLine(second_line)
+        if third_line is not None:
+            self.SetThirdLine(third_line)
 
         for action in actions:
             self.AddAction(action)
@@ -215,33 +211,21 @@ class Toast:
         """
         self.group = group
 
-    def SetHeadline(self, headlineText: str) -> None:
-        """
-        Sets the headline (top line) for the toast. Warns to use SetBody if toast has only one line
-        """
-        if len(self.textFields) < 2:
-            warnings.warn(f"Toast of type {self.__class__.__name__} has no headline, only a body")
-
-        self.textFields[0] = headlineText
-
-    def SetBody(self, bodyText: str) -> None:
-        """
-        Sets the text that will be displayed in the body of a single-lined toast
-        """
-        if len(self.textFields) == 1:
-            self.textFields[0] = bodyText
-        else:
-            self.SetFirstLine(bodyText)
-
     def SetFirstLine(self, lineText: str) -> None:
         """
-        Sets the text that will be displayed in the first line (not the headline) of a multi-lined toast
+        Sets the that will be displayed in the first line of a toast
         """
-        self.textFields[1] = lineText
+        self.textFields[0] = lineText
 
     def SetSecondLine(self, lineText: str) -> None:
         """
-        Sets the text that will be displayed in the second line of a two-lined (plus headline) toast
+        Sets the text that will be displayed in the second line of a toast
+        """
+        self.textFields[1] = lineText
+
+    def SetThirdLine(self, lineText: str) -> None:
+        """
+        Sets the text that will be displayed in the third line of a toast
         """
         self.textFields[2] = lineText
 
@@ -267,9 +251,6 @@ class Toast:
 
         :param image: :class:`ToastDisplayImage` to display in the toast
         """
-        if not self.HasImage:
-            warnings.warn(f"Toast of type {self.__class__.__name__} does not support images. This will not work.")
-            return
         if len(self.images) >= 2:
             warnings.warn("The toast already has the maximum of two images.")
 
@@ -329,109 +310,3 @@ class Toast:
         newToast.tag = str(uuid.uuid4())
 
         return newToast
-
-
-class ToastText1(Toast):
-    """
-    A single string wrapped across a maximum of three lines of text
-    """
-
-    ToastType: ClassVar[Literal[ToastTemplateType.TOAST_TEXT01]] = ToastTemplateType.TOAST_TEXT01
-
-    def __init__(self, *args, **kwargs) -> None:
-        self.textFields = [""]
-        super().__init__(*args, **kwargs)
-
-
-class ToastText2(Toast):
-    """
-    One string of bold text on the first line, one string of regular text wrapped across the second and third lines
-    """
-
-    ToastType: ClassVar[Literal[ToastTemplateType.TOAST_TEXT02]] = ToastTemplateType.TOAST_TEXT02
-
-    def __init__(self, *args, **kwargs) -> None:
-        self.textFields = ["", ""]
-        super().__init__(*args, **kwargs)
-
-
-class ToastText3(Toast):
-    """
-    One string of bold text wrapped across the first and second lines, one string of regular text on the third line
-    """
-
-    ToastType: ClassVar[Literal[ToastTemplateType.TOAST_TEXT03]] = ToastTemplateType.TOAST_TEXT03
-
-    def __init__(self, *args, **kwargs) -> None:
-        self.textFields = ["", ""]
-        super().__init__(*args, **kwargs)
-
-
-class ToastText4(Toast):
-    """
-    One string of bold text on the first line, one string of regular text on the second line,
-    one string of regular text on the third line
-    """
-
-    ToastType: ClassVar[Literal[ToastTemplateType.TOAST_TEXT04]] = ToastTemplateType.TOAST_TEXT04
-
-    def __init__(self, *args, **kwargs) -> None:
-        self.textFields = ["", "", ""]
-        super().__init__(*args, **kwargs)
-
-
-# noinspection DuplicatedCode
-class ToastImageAndText1(Toast):
-    """
-    An image and a single string wrapped across a maximum of three lines of text
-    """
-
-    ToastType: ClassVar[Literal[ToastTemplateType.TOAST_IMAGE_AND_TEXT01]] = ToastTemplateType.TOAST_IMAGE_AND_TEXT01
-    HasImage: ClassVar[Literal[True]] = True
-
-    def __init__(self, *args, **kwargs) -> None:
-        self.textFields = [""]
-        super().__init__(*args, **kwargs)
-
-
-class ToastImageAndText2(Toast):
-    """
-    An image, one string of bold text on the first line, one string of regular text
-    wrapped across the second and third lines
-    """
-
-    ToastType: ClassVar[Literal[ToastTemplateType.TOAST_IMAGE_AND_TEXT02]] = ToastTemplateType.TOAST_IMAGE_AND_TEXT02
-    HasImage: ClassVar[Literal[True]] = True
-
-    def __init__(self, *args, **kwargs) -> None:
-        self.textFields = ["", ""]
-        super().__init__(*args, **kwargs)
-
-
-# noinspection DuplicatedCode
-class ToastImageAndText3(Toast):
-    """
-    An image, one string of bold text on the first line, one string of regular
-    text wrapped across the second and third lines
-    """
-
-    ToastType: ClassVar[Literal[ToastTemplateType.TOAST_IMAGE_AND_TEXT03]] = ToastTemplateType.TOAST_IMAGE_AND_TEXT03
-    HasImage: ClassVar[Literal[True]] = True
-
-    def __init__(self, *args, **kwargs) -> None:
-        self.textFields = ["", ""]
-        super().__init__(*args, **kwargs)
-
-
-class ToastImageAndText4(Toast):
-    """
-    An image, one string of bold text on the first line, one string of regular text
-    on the second line, one string of regular text on the third line
-    """
-
-    ToastType: ClassVar[Literal[ToastTemplateType.TOAST_IMAGE_AND_TEXT04]] = ToastTemplateType.TOAST_IMAGE_AND_TEXT04
-    HasImage: ClassVar[Literal[True]] = True
-
-    def __init__(self, *args, **kwargs) -> None:
-        self.textFields = ["", "", ""]
-        super().__init__(*args, **kwargs)
