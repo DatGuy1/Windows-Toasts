@@ -14,7 +14,7 @@ from toasts_winrt.windows.ui.notifications import (
 
 from .events import ToastActivatedEventArgs
 from .toast_document import ToastDocument
-from .toast_types import Toast
+from .toast import Toast
 from .wrappers import ToastDuration, ToastImagePosition, ToastScenario
 
 ToastNotificationT = TypeVar("ToastNotificationT", ToastNotification, ScheduledToastNotification)
@@ -35,7 +35,8 @@ def _build_adaptable_data(toast: Toast) -> NotificationData:
     notificationData.sequence_number = toast.updates
 
     for i, fieldContent in enumerate(toast.textFields):
-        notificationData.values[f"text{i + 1}"] = fieldContent
+        if fieldContent is not None:
+            notificationData.values[f"text{i + 1}"] = fieldContent
 
     progressBar = toast.progress_bar
     if progressBar is not None:
@@ -98,12 +99,14 @@ class BaseWindowsToaster:
         :return: XML built from a template of the supplied toast type
         """
         # Should this be done in ToastDocument?
-        toastContent = ToastDocument(ToastNotificationManager.get_template_content(toast.ToastType))
-        if toast.HasImage:
-            for image in toast.images:
-                toastContent.AddImage(image)
+        toastContent = ToastDocument(toast)
+        for image in toast.images:
+            toastContent.AddImage(image)
 
         for i, fieldContent in enumerate(toast.textFields):
+            if fieldContent is None:
+                continue
+
             if dynamic:
                 toastContent.SetTextField(i)
             else:
@@ -249,6 +252,16 @@ class WindowsToaster(BaseWindowsToaster):
 
         super().show_toast(toast)
 
+    def _setup_toast(self, toast: Toast, dynamic: bool) -> ToastDocument:
+        for i, textField in enumerate(toast.textFields):
+            if textField is None:
+                toast.textFields[i] = ""
+
+        toastContent = super()._setup_toast(toast, dynamic)
+        toastContent.SetAttribute(toastContent.bindingNode, "template", "ToastImageAndText04")
+
+        return toastContent
+
 
 class InteractableWindowsToaster(BaseWindowsToaster):
     """
@@ -273,8 +286,7 @@ class InteractableWindowsToaster(BaseWindowsToaster):
     def _setup_toast(self, toast, dynamic):
         toastContent = super()._setup_toast(toast, dynamic)
 
-        bindingNode = toastContent.GetElementByTagName("binding")
-        toastContent.SetAttribute(bindingNode, "template", "ToastGeneric")
+        toastContent.SetAttribute(toastContent.bindingNode, "template", "ToastGeneric")
         toastNode = toastContent.GetElementByTagName("toast")
         toastContent.SetAttribute(toastNode, "useButtonStyle", "true")
 

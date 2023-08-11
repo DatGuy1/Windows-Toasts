@@ -2,16 +2,7 @@ from ._version import __author__, __description__, __license__, __title__, __url
 from .events import ToastActivatedEventArgs, ToastDismissalReason, ToastDismissedEventArgs, ToastFailedEventArgs
 from .exceptions import InvalidImageException
 from .toast_audio import AudioSource, ToastAudio
-from .toast_types import (
-    ToastImageAndText1,
-    ToastImageAndText2,
-    ToastImageAndText3,
-    ToastImageAndText4,
-    ToastText1,
-    ToastText2,
-    ToastText3,
-    ToastText4,
-)
+from .toast import Toast
 from .toasters import InteractableWindowsToaster, WindowsToaster
 from .wrappers import (
     ToastButton,
@@ -45,15 +36,8 @@ __all__ = [
     # toast_audio.py
     "AudioSource",
     "ToastAudio",
-    # toast_types.py
-    "ToastImageAndText1",
-    "ToastImageAndText2",
-    "ToastImageAndText3",
-    "ToastImageAndText4",
-    "ToastText1",
-    "ToastText2",
-    "ToastText3",
-    "ToastText4",
+    # toast.py
+    "Toast",
     # toasters.py
     "InteractableWindowsToaster",
     "WindowsToaster",
