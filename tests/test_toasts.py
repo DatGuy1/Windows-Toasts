@@ -78,7 +78,7 @@ def test_audio_toast():
     toaster.show_toast(loopingToast)
 
 
-def test_warnings_toast(example_image_path):
+def test_errors_toast(example_image_path):
     from src.windows_toasts import (
         InvalidImageException,
         ToastButton,
@@ -101,6 +101,10 @@ def test_warnings_toast(example_image_path):
     assert textToast.textFields[0] == "Hello, World!"
 
     newToast = ToastImageAndText1(body="Hello, World!")
+
+    with raises(InvalidImageException, match="could not be found"):
+        toastImage = ToastImage(example_image_path.with_suffix(".nonexistant"))
+
     newToast.AddImage(displayImage)
     newToast.AddImage(displayImage)
     for i in range(1, 6):
