@@ -235,5 +235,7 @@ class ToastButton:
     """Whether to place the button in the context menu rather than the actual toast"""
     tooltip: Optional[str] = None
     """The tooltip for a button, if the button has an empty content string"""
+    launch: Optional[str] = None
+    """An optional protocol to launch when the button is pressed"""
     colour: ToastButtonColour = ToastButtonColour.Default
     """:class:`ToastButtonColour` for the button"""

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import copy
 import datetime
+import urllib.parse
 import uuid
 import warnings
 from typing import Callable, ClassVar, Iterable, List, Literal, Optional, TypeVar
@@ -56,6 +57,8 @@ class Toast:
     """Expiration time of the toast"""
     suppress_popup: bool = False
     """Whether to suppress the toast popup and relegate it immediately to the action center"""
+    launch_action: Optional[str] = None
+    """Protocol to launch when the toast is clicked"""
     on_activated: Optional[Callable[[ToastActivatedEventArgs], None]]
     """Callable to execute when the toast is clicked if basic, or a button is clicked if interactable"""
     on_dismissed: Optional[Callable[[ToastDismissedEventArgs], None]]
@@ -84,6 +87,7 @@ class Toast:
         group: Optional[str] = None,
         expiration_time: Optional[datetime.datetime] = None,
         suppress_popup: bool = False,
+        launch_action: Optional[str] = None,
         on_activated: Optional[Callable[[ToastActivatedEventArgs], None]] = None,
         on_dismissed: Optional[Callable[[ToastDismissedEventArgs], None]] = None,
         on_failed: Optional[Callable[[ToastFailedEventArgs], None]] = None,
@@ -121,6 +125,8 @@ class Toast:
         :type expiration_time: Optional[datetime.datetime]
         :param suppress_popup: See :meth:`SetSuppressPopup`
         :type suppress_popup: bool
+        :param launch_action: See :meth:`SetLaunchAction`
+        :type launch_action: Optional[str]
         :param on_activated: Callable to execute when the toast is clicked if basic, or a button is clicked if \
          interactable
         :type on_activated: Optional[Callable[[ToastActivatedEventArgs], None]]
@@ -141,6 +147,7 @@ class Toast:
         self.SetProgressBar(progress_bar)
         self.SetExpirationTime(expiration_time)
         self.SetSuppressPopup(suppress_popup)
+        self.SetLaunchAction(launch_action)
 
         if headline is not None:
             self.SetHeadline(headline)
@@ -301,6 +308,15 @@ class Toast:
         Sets whether to suppress the popup and instead immediately place it in the action center
         """
         self.suppress_popup = suppressPopup
+
+    def SetLaunchAction(self, launchAction: str) -> None:
+        """
+        Sets the protocol to launch when the toast is clicked
+        """
+        if not urllib.parse.urlparse(launchAction).scheme:
+            warnings.warn(f"Ensure your launch action of {launchAction} is a proper protocol")
+
+        self.launch_action = launchAction
 
     def clone(self) -> Toast:
         """

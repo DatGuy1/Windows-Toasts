@@ -97,6 +97,9 @@ def test_errors_toast(example_image_path):
     with warns(UserWarning, match="Toast of type ToastText1 does not support images"):
         textToast.AddImage(displayImage)
 
+    with warns(UserWarning, match="is a proper protocol"):
+        textToast.SetLaunchAction("notanactualprotocol")
+
     assert len(textToast.textFields) == 1
     assert textToast.textFields[0] == "Hello, World!"
 
