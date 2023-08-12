@@ -6,7 +6,7 @@ import uuid
 import warnings
 from typing import Callable, ClassVar, Iterable, List, Literal, Optional, TypeVar
 
-from winsdk.windows.ui.notifications import ToastDismissedEventArgs, ToastFailedEventArgs, ToastTemplateType
+from toasts_winrt.windows.ui.notifications import ToastDismissedEventArgs, ToastFailedEventArgs, ToastTemplateType
 
 from .events import ToastActivatedEventArgs
 from .toast_audio import ToastAudio

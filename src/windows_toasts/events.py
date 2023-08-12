@@ -3,9 +3,9 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Dict, Optional
 
-from winsdk import system
-from winsdk.windows.foundation import IPropertyValue
-from winsdk.windows.ui.notifications import (  # noqa: F401
+from toasts_winrt import system
+from toasts_winrt.windows.foundation import IPropertyValue
+from toasts_winrt.windows.ui.notifications import (  # noqa: F401
     ToastActivatedEventArgs as WinRtToastActivatedEventArgs,
     ToastDismissalReason,
     ToastDismissedEventArgs,

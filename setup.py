@@ -2,7 +2,7 @@ from setuptools import setup
 
 packages = ["windows_toasts", "scripts"]
 
-requires = ["winsdk==1.0.0b9"]
+requires = ["toasts-winrt==1.0.0"]
 
 with open("README.md", "r", encoding="utf-8") as f:
     readme = f.read()
