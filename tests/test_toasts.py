@@ -136,10 +136,10 @@ def test_errors_toast(example_image_path):
 
 
 def test_image_toast(example_image_path):
-    from src.windows_toasts import ToastDisplayImage, ToastImage, ToastImageAndText4
+    from src.windows_toasts import ToastDisplayImage, ToastImage, ToastImageAndText4, ToastImagePosition
 
     toastImage = ToastImage(example_image_path)
-    toastDP = ToastDisplayImage(toastImage, altText="Windows logo", large=True)
+    toastDP = ToastDisplayImage(toastImage, altText="Windows logo", position=ToastImagePosition.Hero)
     newToast = ToastImageAndText4(images=(toastDP,))
 
     newToast.SetHeadline("Hello, World!")
