@@ -23,7 +23,7 @@ Lets try out displaying an image
     toaster.show_toast(newToast)
 
 .. note::
-    You can display up to two images, and one of them must be marked as 'large'. See :meth:`windows_toasts.toast_types.Toast.AddImage`.
+    When not using InteractableWindowsToaster you can display up to two images, and one of them must be marked as 'large'.
 
 Open a website on click
 -----------------------
