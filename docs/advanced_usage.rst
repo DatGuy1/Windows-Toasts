@@ -47,7 +47,7 @@ when the notification is pressed.
     # Send it
     toaster.show_toast(newToast)
 
-.. note::
+.. warning::
     Make sure your lambda/function takes an argument! The on_x fields pass data back to the callable. on_activated for instance returns :class:`~windows_toasts.events.ToastActivatedEventArgs`.
 
 Play different audio

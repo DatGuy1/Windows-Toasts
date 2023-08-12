@@ -31,6 +31,9 @@ And we have buttons! We can't do much with them though, at least until we use on
 
     newToast.on_activated = activated_callback
 
+.. note::
+    To make sure the activation of the toast triggeres the callback following its relegation to the action center, you must use a `custom AUMID <Creating a custom AUMID>`_.
+
 Input fields
 ~~~~~~~~~~~~
 
