@@ -2,7 +2,7 @@ import warnings
 from datetime import datetime
 from typing import Optional, TypeVar
 
-from winsdk.windows.ui.notifications import (
+from toasts_winrt.windows.ui.notifications import (
     NotificationData,
     NotificationUpdateResult,
     ScheduledToastNotification,

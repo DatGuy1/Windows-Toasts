@@ -1,7 +1,7 @@
 import copy
 
 from pytest import raises, warns
-from winsdk.windows.ui.notifications import ToastNotification
+from toasts_winrt.windows.ui.notifications import ToastNotification
 
 from src.windows_toasts import InteractableWindowsToaster, WindowsToaster
 
