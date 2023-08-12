@@ -9,6 +9,7 @@ from .wrappers import (
     ToastButtonColour,
     ToastDisplayImage,
     ToastDuration,
+    ToastImagePosition,
     ToastInputSelectionBox,
     ToastInputTextBox,
     ToastProgressBar,
@@ -173,7 +174,9 @@ class ToastDocument:
         if displayImage.altText is not None:
             self.SetAttribute(imageNode, "alt", displayImage.altText)
 
-        self.SetAttribute(imageNode, "placement", "hero" if displayImage.large else "appLogoOverride")
+        if displayImage.position != ToastImagePosition.Inline:
+            self.SetAttribute(imageNode, "placement", displayImage.position.value)
+
         if displayImage.circleCrop:
             self.SetAttribute(imageNode, "hint-crop", "circle")
 

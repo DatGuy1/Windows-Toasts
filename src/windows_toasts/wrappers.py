@@ -11,6 +11,16 @@ from urllib.parse import urlparse
 from .exceptions import InvalidImageException
 
 
+class ToastButtonColour(Enum):
+    """
+    Possible colours for toast buttons
+    """
+
+    Default = ""
+    Green = "Success"
+    Red = "Critical"
+
+
 class ToastDuration(Enum):
     """
     Possible values for duration to display toast for
@@ -19,6 +29,19 @@ class ToastDuration(Enum):
     Default: str = "Default"
     Short: str = "short"
     Long: str = "long"
+
+
+class ToastImagePosition(Enum):
+    """
+    Allowed positions for an image to be placed on a toast notification
+    """
+
+    Inline = ""
+    """Inline, after any text elements, filling the full width of the visual area"""
+    Hero = "hero"
+    """Displayed prominently within the toast banner and while inside Notification Center"""
+    AppLogo = "appLogoOverride"
+    """Displayed in a square on the left side of the visual area"""
 
 
 class ToastScenario(Enum):
@@ -43,16 +66,6 @@ class ToastScenario(Enum):
     high-priority app notifications that can break through Focus Assist (Do not Disturb). \
     This can be modified in the notifications settings.
     """
-
-
-class ToastButtonColour(Enum):
-    """
-    Possible colours for toast buttons
-    """
-
-    Default = ""
-    Green = "Success"
-    Red = "Critical"
 
 
 @dataclass(init=False)
@@ -96,7 +109,7 @@ class ToastDisplayImage:
     """An image file"""
     altText: Optional[str] = None
     """A description of the image, for users of assistive technologies"""
-    large: bool = False
+    position: ToastImagePosition = ToastImagePosition.Inline
     """
     Whether to set the image as large and at the top/bottom, or small and to the left. \
     Only works on :class:`InteractableWindowsToaster`
@@ -111,14 +124,14 @@ class ToastDisplayImage:
         cls,
         imagePath: Union[str, PathLike],
         altText: Optional[str] = None,
-        large: bool = False,
+        position: ToastImagePosition = ToastImagePosition.Inline,
         circleCrop: bool = True,
     ) -> ToastDisplayImage:
         """
         Create a :class:`ToastDisplayImage` object from path without having to create :class:`ToastImage`
         """
         image = ToastImage(imagePath)
-        return cls(image, altText, large, circleCrop)
+        return cls(image, altText, position, circleCrop)
 
 
 @dataclass

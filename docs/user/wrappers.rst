@@ -8,6 +8,7 @@ Classes
     windows_toasts.wrappers.ToastDuration
     windows_toasts.wrappers.ToastScenario
     windows_toasts.wrappers.ToastButtonColour
+    windows_toasts.wrappers.ToastImagePosition
     windows_toasts.wrappers.ToastImage
     windows_toasts.wrappers.ToastDisplayImage
     windows_toasts.wrappers.ToastProgressBar

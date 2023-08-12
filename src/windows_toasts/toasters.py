@@ -15,7 +15,7 @@ from winsdk.windows.ui.notifications import (
 from .events import ToastActivatedEventArgs
 from .toast_document import ToastDocument
 from .toast_types import Toast
-from .wrappers import ToastDuration, ToastScenario
+from .wrappers import ToastDuration, ToastImagePosition, ToastScenario
 
 ToastNotificationT = TypeVar("ToastNotificationT", ToastNotification, ScheduledToastNotification)
 
@@ -233,11 +233,14 @@ class WindowsToaster(BaseWindowsToaster):
         if len(toast.actions) > 0:
             warnings.warn(self.__InteractableWarningMessage.format("actions"))
 
+        if len(toast.images) > 2:
+            warnings.warn(self.__InteractableWarningMessage.format("more than two images"))
+
         if toast.progress_bar is not None:
             warnings.warn(self.__InteractableWarningMessage.format("progress bars"))
 
-        if any(toast_image.large for toast_image in toast.images):
-            warnings.warn(self.__InteractableWarningMessage.format("large images"))
+        if any(toast_image.position == ToastImagePosition.Hero for toast_image in toast.images):
+            warnings.warn(self.__InteractableWarningMessage.format("hero placements"))
 
         super().show_toast(toast)
 
