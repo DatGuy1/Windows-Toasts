@@ -103,15 +103,6 @@ class BaseWindowsToaster:
         for image in toast.images:
             toastContent.AddImage(image)
 
-        for i, fieldContent in enumerate(toast.text_fields):
-            if fieldContent is None:
-                continue
-
-            if dynamic:
-                toastContent.SetTextField(i)
-            else:
-                toastContent.SetTextFieldStatic(i, fieldContent)
-
         if toast.duration != ToastDuration.Default:
             toastContent.SetDuration(toast.duration)
 
@@ -252,12 +243,18 @@ class WindowsToaster(BaseWindowsToaster):
 
         super().show_toast(toast)
 
-    def _setup_toast(self, toast: Toast, dynamic: bool) -> ToastDocument:
-        for i, textField in enumerate(toast.text_fields):
-            if textField is None:
-                toast.text_fields[i] = ""
-
+    def _setup_toast(self, toast, dynamic) -> ToastDocument:
         toastContent = super()._setup_toast(toast, dynamic)
+
+        for i, fieldContent in enumerate(toast.text_fields):
+            if fieldContent is None:
+                fieldContent = ""
+
+            if dynamic:
+                toastContent.SetTextField(i)
+            else:
+                toastContent.SetTextFieldStatic(i, fieldContent)
+
         toastContent.SetAttribute(toastContent.bindingNode, "template", "ToastImageAndText04")
 
         return toastContent
@@ -285,6 +282,15 @@ class InteractableWindowsToaster(BaseWindowsToaster):
 
     def _setup_toast(self, toast, dynamic):
         toastContent = super()._setup_toast(toast, dynamic)
+
+        for i, fieldContent in enumerate(toast.text_fields):
+            if fieldContent is None:
+                continue
+
+            if dynamic:
+                toastContent.SetTextField(i)
+            else:
+                toastContent.SetTextFieldStatic(i, fieldContent)
 
         toastContent.SetAttribute(toastContent.bindingNode, "template", "ToastGeneric")
         toastNode = toastContent.GetElementByTagName("toast")
