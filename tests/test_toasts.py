@@ -111,7 +111,7 @@ def test_errors_toast(example_image_path):
     newToast.AddImage(displayImage)
     newToast.AddImage(displayImage)
     for i in range(1, 6):
-        if i < 3:
+        if i < 4:
             newToast.AddAction(ToastButton(f"Button #{i}", str(i)))
         else:
             newToast.AddInput(ToastInputTextBox(f"Input #{i}", str(i)))
