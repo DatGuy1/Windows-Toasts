@@ -45,6 +45,6 @@ To display a toast notification:
     # Initialise the toast
     newToast = Toast()
     # Set the body of the notification
-    newToast.SetFirstLine('Hello, World!')
+    newToast.text_fields = ['Hello, World!']
     # And display it!
     toaster.show_toast(newToast)

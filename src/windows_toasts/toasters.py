@@ -34,7 +34,7 @@ def _build_adaptable_data(toast: Toast) -> NotificationData:
     toast.updates += 1
     notificationData.sequence_number = toast.updates
 
-    for i, fieldContent in enumerate(toast.textFields):
+    for i, fieldContent in enumerate(toast.text_fields):
         if fieldContent is not None:
             notificationData.values[f"text{i + 1}"] = fieldContent
 
@@ -103,7 +103,7 @@ class BaseWindowsToaster:
         for image in toast.images:
             toastContent.AddImage(image)
 
-        for i, fieldContent in enumerate(toast.textFields):
+        for i, fieldContent in enumerate(toast.text_fields):
             if fieldContent is None:
                 continue
 
@@ -253,9 +253,9 @@ class WindowsToaster(BaseWindowsToaster):
         super().show_toast(toast)
 
     def _setup_toast(self, toast: Toast, dynamic: bool) -> ToastDocument:
-        for i, textField in enumerate(toast.textFields):
+        for i, textField in enumerate(toast.text_fields):
             if textField is None:
-                toast.textFields[i] = ""
+                toast.text_fields[i] = ""
 
         toastContent = super()._setup_toast(toast, dynamic)
         toastContent.SetAttribute(toastContent.bindingNode, "template", "ToastImageAndText04")
