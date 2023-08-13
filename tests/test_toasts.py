@@ -20,6 +20,15 @@ def test_simple_toast():
     WindowsToaster("Python").show_toast(simpleToast)
 
 
+def test_multiline_toast():
+    from src.windows_toasts import Toast
+
+    multilineToast = Toast(["Hello, World!", None, "Goodbye, World!"])
+
+    WindowsToaster("Python").show_toast(multilineToast)
+    InteractableWindowsToaster("Python").show_toast(multilineToast)
+
+
 def test_interactable_toast(example_image_path):
     from src.windows_toasts import (
         Toast,
