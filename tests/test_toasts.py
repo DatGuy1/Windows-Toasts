@@ -280,8 +280,9 @@ def test_scheduled_toast(pytestconfig):
 
 
 def test_clear_toasts():
-    InteractableWindowsToaster("Python").clear_scheduled_toasts()
-    InteractableWindowsToaster("Python").clear_toasts()
+    toaster = InteractableWindowsToaster("Python")
+    toaster.clear_scheduled_toasts()
+    toaster.clear_toasts()
 
 
 def test_expiration_toasts():
