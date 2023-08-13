@@ -1,9 +1,14 @@
 1.0.0
 =====
+Major
+-----
+- Replaced winsdk requirement with toasts-winrt (#78)
+
 Minor
 -----
 - InvalidImageException is thrown when trying to add online images or images that do not exist
 - Body is now the first argument for toasts
+- Added support for inline images (#77)
 
 0.4.1 (2023-04-20)
 ===========
