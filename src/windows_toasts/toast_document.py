@@ -38,7 +38,7 @@ class ToastDocument:
         self.bindingNode = self.GetElementByTagName("binding")
 
         # Unclear whether this leads to issues regarding spacing
-        for i in range(len(toast.textFields)):
+        for i in range(len(toast.text_fields)):
             textElement = self.xmlDocument.create_element("text")
             # Needed for WindowsToaster
             self.SetAttribute(textElement, "id", str(i + 1))

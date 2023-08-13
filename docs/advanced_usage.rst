@@ -15,7 +15,7 @@ Lets try out displaying an image
     toaster = WindowsToaster('Windows-Toasts')
 
     newToast = Toast()
-    newToast.SetFirstLine('<--- look, the Windows logo!')
+    newToast.text_fields = ['<--- look, the Windows logo!']
     # str or PathLike
     newToast.AddImage(ToastDisplayImage.fromPath('C:/Windows/System32/@WLOGO_96x96.png'))
 
@@ -27,19 +27,18 @@ Lets try out displaying an image
 Open a website on click
 -----------------------
 
-We use :meth:`windows_toasts.toast.Toast.SetLaunchAction` to open a website when the notification is pressed.
+We use :meth:`windows_toasts.toast.Toast.launch_action` to open a website when the notification is pressed.
 
 .. code-block:: python
 
-    import webbrowser
     from windows_toasts import Toast, WindowsToaster
 
     toaster = WindowsToaster('Rick Astley')
 
     newToast = Toast()
-    newToast.SetFirstLine('Hello there! You just won a thousand dollars! Click me to claim it!')
+    newToast.text_fields = ['Hello there! You just won a thousand dollars! Click me to claim it!']
     # Inline lambda function. This could also be an actual function
-    newToast.SetLaunchAction('https://www.youtube.com/watch?v=dQw4w9WgXcQ')
+    newToast.launch_action = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
 
     # Send it
     toaster.show_toast(newToast)
@@ -57,8 +56,8 @@ There is a list of available, out-of-the-box audio sources at :class:`windows_to
     toaster = WindowsToaster('Windows-Toasts')
 
     newToast = Toast()
-    newToast.SetFirstLine('Ding ding! Ding ding! Ding ding!')
-    newToast.SetAudio(ToastAudio(AudioSource.IM, looping=True))
+    newToast.text_fields = ['Ding ding! Ding ding! Ding ding!']
+    newToast.audio = ToastAudio(AudioSource.IM, looping=True)
 
     toaster.show_toast(newToast)
 
@@ -92,21 +91,20 @@ You can dynamically modify a toast's progress bar or text field
 
     toaster = InteractableWindowsToaster('Python')
 
-    newToast = Toast()
-    newToast.SetFirstLine('Starting.')
+    newToast = Toast(['Starting.'])
     progressBar = ToastProgressBar('Waiting...', progress=0)
-    newToast.SetProgressBar(progressBar)
+    newToast.progress_bar = progressBar
 
     toaster.show_toast(newToast)
 
     for i in range(1, 11):
         time.sleep(1)
         progressBar.progress += 0.1
-        newToast.SetFirstLine(f'Stage {i}')
+        newToast.text_fields = [f'Stage {i}']
 
         toaster.update_toast(newToast)
 
-    newToast.SetFirstLine('Goodbye!')
+    newToast.text_fields = ['Goodbye!']
 
     toaster.update_toast(newToast)
 
@@ -127,7 +125,7 @@ Since Windows 10, you could always replace a notification by sending a new toast
       - Can completely change all content/layout of the toast
       - Can only change progress bar and top-level text
     * - **Reappearing as popup**
-      - Can reappear as a toast popup if you leave :meth:`~windows_toasts.toast.Toast.SetSuppressPopup` set to false (or set to true to silently send it to Action Center)
+      - Can reappear as a toast popup if you leave :meth:`~windows_toasts.toast.Toast.suppress_popup` set to false (or set to true to silently send it to Action Center)
       - Won't reappear as a popup; the toast's data is silently updated within Action Center
     * - **User dismissed**
       - Regardless of whether user dismissed your previous notification, your replacement toast will always be sent
@@ -146,7 +144,7 @@ You can also schedule a toast to display at a specified time
     toaster = WindowsToaster('Python')
 
     displayTime = datetime.now() + timedelta(seconds=10)
-    newToast = Toast(first_line=f'This will pop up at {displayTime}')
+    newToast = Toast([f'This will pop up at {displayTime}'])
 
     toaster.schedule_toast(newToast, displayTime)
 
