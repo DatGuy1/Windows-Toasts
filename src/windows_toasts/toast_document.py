@@ -272,6 +272,8 @@ class ToastDocument:
             self.SetAttribute(actionNode, "hint-tooltip", action.tooltip)
         if action.colour is not ToastButtonColour.Default:
             self.SetAttribute(actionNode, "hint-buttonStyle", action.colour.value)
+        if action.multistep:
+            self.SetAttribute(actionNode, "afterActivationBehavior", "pendingUpdate")
 
         actionsNode.append_child(actionNode)
 

@@ -292,3 +292,30 @@ def test_expiration_toasts():
     expirationTime = datetime.now() + timedelta(minutes=1)
     newToast = ToastText1(body="Hello, World!", group="Test Toasts", expiration_time=expirationTime)
     WindowsToaster("Python").show_toast(newToast)
+
+
+def test_multistep_toast():
+    from src.windows_toasts import ToastActivatedEventArgs, ToastButton, ToastText2
+
+    OUR_CHOICE = "scissors"
+
+    newToast = ToastText2(body="Select your weapon")
+
+    newToast.AddAction(ToastButton("Rock", "rock", multistep=True))
+    newToast.AddAction(ToastButton("Paper", "paper", multistep=True))
+    newToast.AddAction(ToastButton("Scissors", "scissors", multistep=True))
+
+    def nextStep(activatedEventArgs: ToastActivatedEventArgs):
+        newToast.actions = []
+        newToast.SetHeadline(f"I chose {OUR_CHOICE}")
+        if activatedEventArgs.arguments == "rock":
+            newToast.SetBody("Darn! I lost!")
+        elif activatedEventArgs.arguments == "paper":
+            newToast.SetBody("Yay! I win!")
+        elif activatedEventArgs.arguments == "scissors":
+            newToast.SetBody("Geez, we tied")
+
+        InteractableWindowsToaster("Python").show_toast(newToast)
+
+    newToast.on_activated = nextStep
+    InteractableWindowsToaster("Python").show_toast(newToast)

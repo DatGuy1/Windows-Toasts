@@ -224,3 +224,5 @@ class ToastButton:
     """The tooltip for a button, if the button has an empty content string"""
     colour: ToastButtonColour = ToastButtonColour.Default
     """:class:`ToastButtonColour` for the button"""
+    multistep: bool = False
+    """Whether to consider the button as part of a multistep action, therefore making the button "load" when pressed"""
