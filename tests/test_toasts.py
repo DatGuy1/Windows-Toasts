@@ -97,6 +97,9 @@ def test_errors_toast(example_image_path):
     with warns(UserWarning, match="Toast of type ToastText1 does not support images"):
         textToast.AddImage(displayImage)
 
+    with warns(UserWarning, match="is a proper protocol"):
+        textToast.SetLaunchAction("notanactualprotocol")
+
     assert len(textToast.textFields) == 1
     assert textToast.textFields[0] == "Hello, World!"
 
@@ -293,3 +296,11 @@ def test_expiration_toasts():
     expirationTime = datetime.now() + timedelta(minutes=1)
     newToast = ToastText1(body="Hello, World!", group="Test Toasts", expiration_time=expirationTime)
     WindowsToaster("Python").show_toast(newToast)
+
+
+def test_protocol_launch():
+    from src.windows_toasts import ToastButton, ToastText1
+
+    newToast = ToastText1(body="Click on me to open google.com", launch_action="https://google.com")
+    newToast.AddAction(ToastButton("Launch calculator", launch="calculator://"))
+    InteractableWindowsToaster("Python").show_toast(newToast)

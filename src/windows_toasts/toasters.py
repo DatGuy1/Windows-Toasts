@@ -121,7 +121,12 @@ class BaseWindowsToaster:
         if toast.scenario != ToastScenario.Default:
             toastContent.SetScenario(toast.scenario)
 
-        toastContent.SetAttribute(toastContent.GetElementByTagName("toast"), "launch", toast.tag)
+        if toast.launch_action is not None:
+            toastContent.SetAttribute(toastContent.GetElementByTagName("toast"), "launch", toast.launch_action)
+            toastContent.SetAttribute(toastContent.GetElementByTagName("toast"), "activationType", "protocol")
+        else:
+            toastContent.SetAttribute(toastContent.GetElementByTagName("toast"), "launch", toast.tag)
+
         return toastContent
 
     def show_toast(self, toast: Toast) -> None:

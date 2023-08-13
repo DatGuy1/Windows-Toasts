@@ -9,6 +9,7 @@ Minor
 - InvalidImageException is thrown when trying to add online images or images that do not exist
 - Body is now the first argument for toasts
 - Added support for inline images (#77)
+- Added support for launching applications using their protocols (#80)
 
 0.4.1 (2023-04-20)
 ===========

@@ -28,9 +28,7 @@ Lets try out displaying an image
 Open a website on click
 -----------------------
 
-We use :meth:`windows_toasts.toast_types.Toast.on_activated` along with the built-in
-`webbrowser <https://docs.python.org/3/library/webbrowser.html>`_ module to open a website
-when the notification is pressed.
+We use :meth:`windows_toasts.toast_types.Toast.SetLaunchAction` to open a website when the notification is pressed.
 
 .. code-block:: python
 
@@ -42,13 +40,11 @@ when the notification is pressed.
     newToast = ToastText1()
     newToast.SetBody('Hello there! You just won a thousand dollars! Click me to claim it!')
     # Inline lambda function. This could also be an actual function
-    newToast.on_activated = lambda _: webbrowser.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ')
+    newToast.SetLaunchAction('https://www.youtube.com/watch?v=dQw4w9WgXcQ')
 
     # Send it
     toaster.show_toast(newToast)
 
-.. warning::
-    Make sure your lambda/function takes an argument! The on_x fields pass data back to the callable. on_activated for instance returns :class:`~windows_toasts.events.ToastActivatedEventArgs`.
 
 Play different audio
 --------------------
