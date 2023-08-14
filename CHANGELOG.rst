@@ -12,6 +12,7 @@ Minor
 - Body is now the first argument for toasts
 - Added support for inline images (#77)
 - Added support for launching applications using their protocols (#80)
+- Implemented snoozing and dismissing toasts (#83)
 
 0.4.1 (2023-04-20)
 ===========
