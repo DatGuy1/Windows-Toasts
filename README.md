@@ -18,12 +18,12 @@ $ python -m pip install windows-toasts
 Simple usage:
 
 ```python
->>> from windows_toasts import WindowsToaster, ToastText1
->>> wintoaster = WindowsToaster('Python')
->>> newToast = ToastText1()
->>> newToast.SetBody('Hello, world!')
+>>> from windows_toasts import Toast, WindowsToaster
+>>> toaster = WindowsToaster('Python')
+>>> newToast = Toast()
+>>> newToast.text_fields = ['Hello, world!']
 >>> newToast.on_activated = lambda _: print('Toast clicked!')
->>> wintoaster.show_toast(newToast)
+>>> toaster.show_toast(newToast)
 ```
 
 Full documentation is available at [readthedocs.io](https://windows-toasts.readthedocs.io/en/latest/)

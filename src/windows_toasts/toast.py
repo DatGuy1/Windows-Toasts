@@ -150,8 +150,8 @@ class Toast:
 
     def AddImage(self, image: ToastDisplayImage) -> None:
         """
-        Adds an the image that will be displayed on the toast, with a maximum of two (one as the logo and one large).
-        Only works for ToastImageAndText classes
+        Adds an the image that will be displayed on the toast.
+        If using WindowsToaster, a maximum of two (one as the logo and one hero) images will work.
 
         :param image: :class:`ToastDisplayImage` to display in the toast
         """

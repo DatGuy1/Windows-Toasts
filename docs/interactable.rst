@@ -9,10 +9,10 @@ We import :class:`~windows_toasts.toasters.InteractableWindowsToaster` instead o
 
 .. code-block:: python
 
-    from windows_toasts import InteractableWindowsToaster, ToastActivatedEventArgs, ToastButton, ToastText1
+    from windows_toasts import InteractableWindowsToaster, Toast, ToastActivatedEventArgs, ToastButton
 
     interactableToaster = InteractableWindowsToaster('Questionnaire')
-    newToast = ToastText1(['How are you?'])
+    newToast = Toast(['How are you?'])
 
     # Add two actions (buttons)
     newToast.AddAction(ToastButton('Decent', 'response=decent'))
@@ -40,10 +40,10 @@ Windows-Toasts also supports using text fields and selection boxes.
 
 .. code-block:: python
 
-    from windows_toasts import InteractableWindowsToaster, ToastInputTextBox, ToastInputSelectionBox, ToastSelection, ToastText1
+    from windows_toasts import InteractableWindowsToaster, Toast, ToastInputTextBox, ToastInputSelectionBox, ToastSelection
 
     interactableToaster = InteractableWindowsToaster('Questionnaire')
-    newToast = ToastText1(['Please enter your details'])
+    newToast = Toast(['Please enter your details'])
 
     # A text input field asking the user for their name
     newToast.AddInput(ToastInputTextBox('name', 'Your name', 'Barack Obama'))
@@ -69,10 +69,10 @@ We can combine the two and a submit button
 .. code-block:: python
     :emphasize-lines: 7,8
 
-    from windows_toasts import InteractableWindowsToaster, ToastText1
+    from windows_toasts import InteractableWindowsToaster, Toast
 
     interactableToaster = InteractableWindowsToaster('Questionnaire')
-    newToast = ToastText1()
+    newToast = Toast()
 
     newToast.text_fields = ['What\'s your name?']
     newToast.AddInput(ToastInputTextBox('name', 'Your name', 'Barack Obama'))

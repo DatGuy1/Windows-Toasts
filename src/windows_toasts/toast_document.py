@@ -177,9 +177,8 @@ class ToastDocument:
 
     def AddImage(self, displayImage: ToastDisplayImage) -> None:
         """
-        Add an image to display. Only works on ToastImageAndText toasts. `Inline image on Microsoft.com
-        <https://learn.microsoft.com/windows/apps/design/shell/tiles-and-notifications/adaptive-interactive
-        -toasts#inline-image>`_
+        Add an image to display. `Inline image on Microsoft.com <https://learn.microsoft.com/windows/
+        apps/design/shell/tiles-and-notifications/adaptive-interactive-toasts#inline-image>`_
 
         :type displayImage: ToastDisplayImage
         """
