@@ -66,6 +66,11 @@ Contents
    dev/toast_document
    dev/metadata
 
+.. toctree::
+   :maxdepth: 1
+   :caption: Migration
+
+   migration
 
 Indices and tables
 ==================
