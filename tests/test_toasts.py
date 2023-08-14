@@ -113,9 +113,6 @@ def test_errors_toast(example_image_path):
     with warns(UserWarning, match="Cannot add input 'Input 6', you've already reached"):
         newToast.AddInput(ToastInputTextBox("Input 6", str(6)))
 
-    with warns(UserWarning, match="The toast already has the maximum of two images"):
-        newToast.AddImage(displayImage)
-
     with raises(InvalidImageException, match="Online images are not supported"):
         ToastImage("https://www.python.org/static/community_logos/python-powered-h-140x182.png")
 

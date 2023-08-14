@@ -155,9 +155,6 @@ class Toast:
 
         :param image: :class:`ToastDisplayImage` to display in the toast
         """
-        if len(self.images) >= 2:
-            warnings.warn("The toast already has the maximum of two images.")
-
         self.images.append(image)
 
     def AddInput(self, toast_input: ToastInput) -> None:
