@@ -1,5 +1,5 @@
 1.0.0 (2023-08-14)
-=================
+==================
 Major
 -----
 - Replaced winsdk requirement with toasts-winrt (#78)
@@ -18,7 +18,7 @@ Minor
 See the `migration guide <https://windows-toasts.readthedocs.io/en/v1.0.0/migration>`_.
 
 0.4.1 (2023-04-20)
-===========
+==================
 - Recreated default Windows behaviour for progress bar. This allows it to be changed in the future while remaining faithful to the original implementation.
 - Fixed AttributeError on WindowsToaster.clear_toasts()
 - Bumped winsdk to 1.0.0b9
