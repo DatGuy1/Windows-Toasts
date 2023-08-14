@@ -27,7 +27,7 @@ Lets try out displaying an image
 Open a website on click
 -----------------------
 
-We use :meth:`windows_toasts.toast.Toast.launch_action` to open a website when the notification is pressed.
+We use :attr:`windows_toasts.toast.Toast.launch_action` to open a website when the notification is pressed.
 
 .. code-block:: python
 
@@ -125,7 +125,7 @@ Since Windows 10, you could always replace a notification by sending a new toast
       - Can completely change all content/layout of the toast
       - Can only change progress bar and top-level text
     * - **Reappearing as popup**
-      - Can reappear as a toast popup if you leave :meth:`~windows_toasts.toast.Toast.suppress_popup` set to false (or set to true to silently send it to Action Center)
+      - Can reappear as a toast popup if you leave :attr:`~windows_toasts.toast.Toast.suppress_popup` set to false (or set to true to silently send it to Action Center)
       - Won't reappear as a popup; the toast's data is silently updated within Action Center
     * - **User dismissed**
       - Regardless of whether user dismissed your previous notification, your replacement toast will always be sent
