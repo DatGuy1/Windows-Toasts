@@ -96,7 +96,7 @@ class BaseWindowsToaster:
         """
         Setup toast to send. Should generally be used internally
 
-        :return: XML built from a template of the supplied toast type
+        :return: XML built from the toast
         """
         # Should this be done in ToastDocument?
         toastContent = ToastDocument(toast)
