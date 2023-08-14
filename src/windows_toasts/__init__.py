@@ -16,6 +16,8 @@ from .wrappers import (
     ToastProgressBar,
     ToastScenario,
     ToastSelection,
+    ToastSystemButton,
+    ToastSystemButtonAction,
 )
 
 __all__ = [
@@ -53,4 +55,6 @@ __all__ = [
     "ToastProgressBar",
     "ToastScenario",
     "ToastSelection",
+    "ToastSystemButton",
+    "ToastSystemButtonAction",
 ]
