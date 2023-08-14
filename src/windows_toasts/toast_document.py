@@ -273,11 +273,8 @@ class ToastDocument:
         if actionNodes.length > 0:
             actionsNode = actionNodes.item(0)
         else:
-            toastNode = self.GetElementByTagName("toast")
-            self.SetAttribute(toastNode, "template", "ToastGeneric")
-
             actionsNode = self.xmlDocument.create_element("actions")
-            toastNode.append_child(actionsNode)
+            self.GetElementByTagName("toast").append_child(actionsNode)
 
         actionNode = self.xmlDocument.create_element("action")
         self.SetAttribute(actionNode, "content", action.content)
