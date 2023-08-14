@@ -148,6 +148,8 @@ You can also schedule a toast to display at a specified time
 
     toaster.schedule_toast(newToast, displayTime)
 
+.. _system-actions:
+
 Snoozing and dismissing
 -----------------------
 

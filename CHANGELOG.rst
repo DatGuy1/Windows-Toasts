@@ -1,5 +1,5 @@
-1.0.0
-=====
+1.0.0 (2023-08-14)
+=================
 Major
 -----
 - Replaced winsdk requirement with toasts-winrt (#78)
@@ -13,6 +13,8 @@ Minor
 - Added support for inline images (#77)
 - Added support for launching applications using their protocols (#80)
 - Implemented snoozing and dismissing toasts (#83)
+
+See the `migration guide <https://windows-toasts.readthedocs.io/en/v1.0.0/migration>`_.
 
 0.4.1 (2023-04-20)
 ===========
