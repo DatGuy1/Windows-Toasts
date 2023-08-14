@@ -286,7 +286,7 @@ def test_protocol_launch():
 
 
 def test_system_toast():
-    from src.windows_toasts import ToastSystemButton, ToastSystemButtonAction, ToastInputSelectionBox, ToastSelection
+    from src.windows_toasts import ToastInputSelectionBox, ToastSelection, ToastSystemButton, ToastSystemButtonAction
 
     newToast = Toast(["Reminder", "It's time to stretch!"])
 
