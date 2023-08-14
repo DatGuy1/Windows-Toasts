@@ -22,7 +22,7 @@ Lets try out displaying an image
     toaster.show_toast(newToast)
 
 .. note::
-    When not using InteractableWindowsToaster you can display up to two images, and one of them must be marked as 'large'.
+    When not using InteractableWindowsToaster you can display up to two images, and one of them must be marked as 'hero'.
 
 Open a website on click
 -----------------------

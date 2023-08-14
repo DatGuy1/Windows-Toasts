@@ -118,8 +118,8 @@ class ToastDisplayImage:
     """A description of the image, for users of assistive technologies"""
     position: ToastImagePosition = ToastImagePosition.Inline
     """
-    Whether to set the image as large and at the top/bottom, or small and to the left. \
-    Only works on :class:`InteractableWindowsToaster`
+    Whether to set the image as 'hero' and at the top, or as the 'logo'.
+    Only works on :class:`~windows_toasts.toasters.InteractableWindowsToaster`
     """
     circleCrop: bool = False
     """
