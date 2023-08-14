@@ -99,7 +99,7 @@ For applications that support protocols, you can now make your toasts and button
 
 .. note::
     Web browsers are not the only thing you can launch with protocols.
-    Set :attr:`windows_toasts.wrappers.ToastButton.launch` to ``spotify:playlist:37i9dQZEVXbMDoHDwVN2tF`` to launch the Spotify client, set it to ``steam://friends/status/offline`` to set yourself offline on the Steam client, et cetera.
+    Set :attr:`windows_toasts.wrappers.ToastButton.launch` to ``spotify:playlist:37i9dQZEVXbMDoHDwVN2tF`` to launch the Spotify client on the global Top 50, set it to ``steam://friends/status/offline`` to set yourself offline on the Steam client, et cetera.
 
 Inline images
 ^^^^^^^^^^^^^
