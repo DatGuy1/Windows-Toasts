@@ -4,6 +4,7 @@ Major
 -----
 - Replaced winsdk requirement with toasts-winrt (#78)
 - Removed toast templates in favour of ToastGeneric (#75)
+- Simplified configuration of toasts (#82)
 
 Minor
 -----
