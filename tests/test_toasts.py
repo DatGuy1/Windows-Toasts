@@ -283,3 +283,22 @@ def test_protocol_launch():
     newToast = Toast(["Click on me to open google.com"], launch_action="https://google.com")
     newToast.AddAction(ToastButton("Launch calculator", launch="calculator://"))
     InteractableWindowsToaster("Python").show_toast(newToast)
+
+
+def test_system_toast():
+    from src.windows_toasts import ToastSystemButton, ToastSystemButtonAction, ToastInputSelectionBox, ToastSelection
+
+    newToast = Toast(["Reminder", "It's time to stretch!"])
+
+    selections = (ToastSelection("1", "1 minute"), ToastSelection("2", "2 minutes"), ToastSelection("5", "5 minutes"))
+    selectionBox = ToastInputSelectionBox(
+        "snoozeBox", caption="Snooze duration", selections=selections, default_selection=selections[0]
+    )
+    newToast.AddInput(selectionBox)
+
+    snoozeButton = ToastSystemButton(ToastSystemButtonAction.Snooze, "Remind Me Later", relatedInput=selectionBox)
+    dismissBox = ToastSystemButton(ToastSystemButtonAction.Dismiss)
+    newToast.AddAction(snoozeButton)
+    newToast.AddAction(dismissBox)
+
+    InteractableWindowsToaster("Python").show_toast(newToast)
