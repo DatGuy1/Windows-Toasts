@@ -5,10 +5,11 @@ Classes
 -------
 
 .. autosummary::
-    windows_toasts.wrappers.ToastDuration
-    windows_toasts.wrappers.ToastScenario
     windows_toasts.wrappers.ToastButtonColour
+    windows_toasts.wrappers.ToastDuration
     windows_toasts.wrappers.ToastImagePosition
+    windows_toasts.wrappers.ToastScenario
+    windows_toasts.wrappers.ToastSystemButtonAction
     windows_toasts.wrappers.ToastImage
     windows_toasts.wrappers.ToastDisplayImage
     windows_toasts.wrappers.ToastProgressBar
@@ -16,6 +17,7 @@ Classes
     windows_toasts.wrappers.ToastSelection
     windows_toasts.wrappers.ToastInputSelectionBox
     windows_toasts.wrappers.ToastButton
+    windows_toasts.wrappers.ToastSystemButton
     windows_toasts.events.ToastActivatedEventArgs
 
 API

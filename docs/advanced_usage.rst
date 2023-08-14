@@ -148,6 +148,36 @@ You can also schedule a toast to display at a specified time
 
     toaster.schedule_toast(newToast, displayTime)
 
+Snoozing and dismissing
+-----------------------
+
+It is possible to snooze toasts and have them pop up later, as well as dismiss the toast entirely
+
+.. code-block:: python
+
+    from windows_toasts import InteractableWindowsToaster, Toast, ToastSystemButton, ToastSystemButtonAction, ToastInputSelectionBox, ToastSelection
+
+    newToast = Toast(['Reminder', 'It\'s time to stretch!'])
+
+    selections = (ToastSelection('1', '1 minute'), ToastSelection('2', '2 minutes'), ToastSelection('5', '5 minutes'))
+    selectionBox = ToastInputSelectionBox(
+        'snoozeBox', caption='Snooze duration', selections=selections, default_selection=selections[0]
+    )
+    newToast.AddInput(selectionBox)
+
+    snoozeButton = ToastSystemButton(ToastSystemButtonAction.Snooze, 'Remind Me Later', relatedInput=selectionBox)
+    dismissBox = ToastSystemButton(ToastSystemButtonAction.Dismiss)
+    newToast.AddAction(snoozeButton)
+    newToast.AddAction(dismissBox)
+
+    InteractableWindowsToaster('Python').show_toast(newToast)
+
+If you do not provide a caption, Windows will automatically use the appropriate localized strings.
+If the :attr:`~windows_toasts.wrappers.ToastSystemButton.relatedInput` is None, the notification will snooze only once for a system-defined time interval. Otherwise, specifying a :class:`~windows_toasts.wrappers.ToastInputSelectionBox` allows the user to select a predefined snooze interval.
+
+.. note::
+    Ensure the :attr:`~windows_toasts.wrappers.ToastSelection.selection_id` is a positive integer, which represents the interval in minutes.
+
 ...and much more
 ----------------
 
