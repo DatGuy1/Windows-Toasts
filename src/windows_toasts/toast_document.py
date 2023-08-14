@@ -15,6 +15,8 @@ from .wrappers import (
     ToastInputTextBox,
     ToastProgressBar,
     ToastScenario,
+    ToastSystemButton,
+    ToastSystemButtonAction,
 )
 
 IXmlType = TypeVar("IXmlType", IXmlNode, XmlElement)
@@ -263,11 +265,11 @@ class ToastDocument:
         toastNode = self.GetElementByTagName("toast")
         self.SetAttribute(toastNode, "duration", duration.value)
 
-    def AddAction(self, action: ToastButton) -> None:
+    def AddAction(self, action: Union[ToastButton, ToastSystemButton]) -> None:
         """
         Adds a button to the toast. Only works on :obj:`~windows_toasts.toasters.InteractableWindowsToaster`
 
-        :type action: ToastButton
+        :type action: Union[ToastButton, ToastSystemButton]
         """
         actionNodes = self.xmlDocument.get_elements_by_tag_name("actions")
         if actionNodes.length > 0:
@@ -278,20 +280,29 @@ class ToastDocument:
 
         actionNode = self.xmlDocument.create_element("action")
         self.SetAttribute(actionNode, "content", action.content)
-        if action.launch is None:
-            self.SetAttribute(actionNode, "arguments", action.arguments)
-        else:
-            self.SetAttribute(actionNode, "activationType", "protocol")
-            self.SetAttribute(actionNode, "arguments", action.launch)
+
+        if isinstance(action, ToastButton):
+            if action.launch is None:
+                self.SetAttribute(actionNode, "arguments", action.arguments)
+            else:
+                self.SetAttribute(actionNode, "activationType", "protocol")
+                self.SetAttribute(actionNode, "arguments", action.launch)
+
+            if action.inContextMenu:
+                self.SetAttribute(actionNode, "placement", "contextMenu")
+            if action.tooltip is not None:
+                self.SetAttribute(actionNode, "hint-tooltip", action.tooltip)
+        elif isinstance(action, ToastSystemButton):
+            self.SetAttribute(actionNode, "activationType", "system")
+            if action.action == ToastSystemButtonAction.Snooze:
+                self.SetAttribute(actionNode, "arguments", "snooze")
+            elif action.action == ToastSystemButtonAction.Dismiss:
+                self.SetAttribute(actionNode, "arguments", "dismiss")
 
         if action.image is not None:
             self.SetAttribute(actionNode, "imageUri", action.image.path)
         if action.relatedInput is not None:
             self.SetAttribute(actionNode, "hint-inputId", action.relatedInput.input_id)
-        if action.inContextMenu:
-            self.SetAttribute(actionNode, "placement", "contextMenu")
-        if action.tooltip is not None:
-            self.SetAttribute(actionNode, "hint-tooltip", action.tooltip)
         if action.colour is not ToastButtonColour.Default:
             self.SetAttribute(actionNode, "hint-buttonStyle", action.colour.value)
 

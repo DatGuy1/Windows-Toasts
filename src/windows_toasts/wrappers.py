@@ -68,6 +68,13 @@ class ToastScenario(Enum):
     """
 
 
+class ToastSystemButtonAction(Enum):
+    Snooze = 0
+    """Snooze for a time interval and then pop up again"""
+    Dismiss = 1
+    """Dismiss immediately, without going to the action center"""
+
+
 @dataclass(init=False)
 class ToastImage:
     """
@@ -217,6 +224,8 @@ class ToastInputSelectionBox(_ToastInput):
         self.default_selection = default_selection
 
 
+# I attempted to make ToastButton and ToastSystemButton inherit from the same class due to the number of
+# shared attributes, but encountered issues with default arguments
 @dataclass
 class ToastButton:
     """
@@ -239,3 +248,23 @@ class ToastButton:
     """An optional protocol to launch when the button is pressed"""
     colour: ToastButtonColour = ToastButtonColour.Default
     """:class:`ToastButtonColour` for the button"""
+
+
+@dataclass
+class ToastSystemButton:
+    """
+    Button used to perform a system action, snooze or dismiss
+    """
+
+    action: ToastSystemButtonAction
+    """Action the system button should perform"""
+    content: str = ""
+    """A custom content string. If you don't provide one, Windows will automatically use a localized string"""
+    relatedInput: Optional[ToastInputSelectionBox] = None
+    """If you want the user to select a snooze interval, set this to a ToastInputSelectionBox with the minutes as IDs"""
+    image: Optional[ToastImage] = None
+    """An image to be used as an icon for the button"""
+    tooltip: Optional[str] = None
+    """The tooltip for the button"""
+    colour: ToastButtonColour = ToastButtonColour.Default
+    """:class:`ToastButtonColour` to be displayed on the button"""

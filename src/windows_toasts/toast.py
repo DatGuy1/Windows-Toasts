@@ -20,6 +20,7 @@ from .wrappers import (
     ToastInputTextBox,
     ToastProgressBar,
     ToastScenario,
+    ToastSystemButton,
 )
 
 ToastInput = TypeVar("ToastInput", ToastInputTextBox, ToastInputSelectionBox)
@@ -48,7 +49,7 @@ class Toast:
     """Callable to execute when the toast is dismissed (X is clicked or times out) if interactable"""
     on_failed: Optional[Callable[[ToastFailedEventArgs], None]]
     """Callable to execute when the toast fails to display"""
-    actions: list[ToastButton]
+    actions: list[Union[ToastButton, ToastSystemButton]]
     """List of buttons to include. Implemented through :func:`AddAction`"""
     images: list[ToastDisplayImage]
     """See :func:`AddImage`"""
@@ -78,7 +79,7 @@ class Toast:
         on_activated: Optional[Callable[[ToastActivatedEventArgs], None]] = None,
         on_dismissed: Optional[Callable[[ToastDismissedEventArgs], None]] = None,
         on_failed: Optional[Callable[[ToastFailedEventArgs], None]] = None,
-        actions: Iterable[ToastButton] = (),
+        actions: Iterable[Union[ToastButton, ToastSystemButton]] = (),
         images: Iterable[ToastDisplayImage] = (),
         inputs: Iterable[ToastInput] = (),
     ) -> None:
@@ -86,7 +87,7 @@ class Toast:
         Initialise a toast
 
         :param actions: Iterable of actions to add; see :meth:`AddAction`
-        :type actions: Iterable[ToastButton]
+        :type actions: Iterable[Union[ToastButton, ToastSystemButton]]
         :param images: See :meth:`AddImage`
         :type images: Iterable[ToastDisplayImage]
         :param inputs: See :meth:`AddInput`
@@ -133,12 +134,12 @@ class Toast:
         kws = [f"{key}={value!r}" for key, value in self.__dict__.items()]
         return "{}({})".format(type(self).__name__, ", ".join(kws))
 
-    def AddAction(self, action: ToastButton) -> None:
+    def AddAction(self, action: Union[ToastButton, ToastSystemButton]) -> None:
         """
         Add an action to the action list. For example, if you're setting up a reminder,
         you would use 'action=remindlater&date=2020-01-20' as arguments. Maximum of five.
 
-        :type action: ToastButton
+        :type action: Union[ToastButton, ToastSystemButton]
         """
         if len(self.actions) + len(self.inputs) >= 5:
             warnings.warn(
