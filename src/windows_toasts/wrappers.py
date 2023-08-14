@@ -121,9 +121,9 @@ class ToastDisplayImage:
     Whether to set the image as large and at the top/bottom, or small and to the left. \
     Only works on :class:`InteractableWindowsToaster`
     """
-    circleCrop: bool = True
+    circleCrop: bool = False
     """
-    If the image is not marked as large, whether to crop the image as a circle, or leave it as a square
+    If the image is not positioned as 'hero', whether to crop the image as a circle, or leave it as is
     """
 
     @classmethod
@@ -132,7 +132,7 @@ class ToastDisplayImage:
         imagePath: Union[str, PathLike],
         altText: Optional[str] = None,
         position: ToastImagePosition = ToastImagePosition.Inline,
-        circleCrop: bool = True,
+        circleCrop: bool = False,
     ) -> ToastDisplayImage:
         """
         Create a :class:`ToastDisplayImage` object from path without having to create :class:`ToastImage`
