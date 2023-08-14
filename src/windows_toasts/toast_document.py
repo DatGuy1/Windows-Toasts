@@ -186,6 +186,7 @@ class ToastDocument:
         """
         imageNode = self.GetElementByTagName("image")
         if self.GetAttributeValue(imageNode, "src") != "":
+            # For WindowsToaster
             imageNode = imageNode.clone_node(True)
             self.SetAttribute(imageNode, "id", "2")
             self.bindingNode.append_child(imageNode)
@@ -195,8 +196,7 @@ class ToastDocument:
         if displayImage.altText is not None:
             self.SetAttribute(imageNode, "alt", displayImage.altText)
 
-        if displayImage.position != ToastImagePosition.Inline:
-            self.SetAttribute(imageNode, "placement", displayImage.position.value)
+        self.SetAttribute(imageNode, "placement", displayImage.position.value)
 
         if displayImage.circleCrop:
             self.SetAttribute(imageNode, "hint-crop", "circle")
