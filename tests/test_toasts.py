@@ -130,12 +130,12 @@ def test_image_toast(example_image_path):
     from src.windows_toasts import ToastDisplayImage, ToastImage, ToastImagePosition
 
     toastImage = ToastImage(example_image_path)
-    toastDP = ToastDisplayImage(toastImage, altText="Windows logo", position=ToastImagePosition.Hero)
+    toastDP = ToastDisplayImage(toastImage, altText="Python logo", position=ToastImagePosition.Hero)
     newToast = Toast(images=(toastDP,))
 
     newToast.text_fields = ["Hello, World!", "Foo", "Bar"]
 
-    newToast.AddImage(ToastDisplayImage.fromPath(str(example_image_path), circleCrop=False))
+    newToast.AddImage(ToastDisplayImage.fromPath(str(example_image_path), circleCrop=True))
 
     InteractableWindowsToaster("Python").show_toast(newToast)
 
