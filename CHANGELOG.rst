@@ -10,7 +10,7 @@ Minor
 -----
 - InvalidImageException is thrown when trying to add online images or images that do not exist
 - Body is now the first argument for toasts
--
+- Images no longer default to being circleCrop-ed
 - Added support for inline images (#77)
 - Added support for launching applications using their protocols (#80)
 - Implemented snoozing and dismissing toasts (#83)
