@@ -15,7 +15,7 @@ Minor
 - Added support for launching applications using their protocols (#80)
 - Implemented snoozing and dismissing toasts (#83)
 
-See the `migration guide <https://windows-toasts.readthedocs.io/en/v1.0.0/migration>`_.
+See the `migration guide <https://windows-toasts.readthedocs.io/en/latest/migration.html>`_.
 
 0.4.1 (2023-04-20)
 ==================
