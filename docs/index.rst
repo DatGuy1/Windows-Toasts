@@ -8,9 +8,9 @@ Windows-Toasts
 
 Release v\ |version|.
 
-.. image:: https://pepy.tech/badge/windows-toasts/month
+.. image:: https://static.pepy.tech/badge/windows-toasts/month
     :target: https://pepy.tech/project/windows-toasts
-    :alt: Requests Downloads Per Month Badge
+    :alt: Downloads Per Month Badge
 
 .. image:: https://img.shields.io/pypi/l/windows-toasts.svg
     :target: https://pypi.org/project/windows-toasts/
