@@ -222,7 +222,7 @@ class WindowsToaster(BaseWindowsToaster):
 
     def __init__(self, applicationText: str):
         super().__init__(applicationText)
-        self.notifierAUMI = None
+        self.notifierAUMID = None
         self.toastNotifier = ToastNotificationManager.create_toast_notifier(applicationText)
 
     def show_toast(self, toast: Toast) -> None:  # pragma: no cover
