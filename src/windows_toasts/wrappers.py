@@ -86,14 +86,14 @@ class ToastImage:
 
     def __init__(self, imagePath: Union[str, PathLike]):
         """
-        Initialise an :class:`ToastImage` class to use in certain classes
+        Initialise an :class:`ToastImage` class to use in certain classes.
         Online images are supported only in packaged apps that have the internet capability in their manifest.
         Unpackaged apps don't support http images; you must download the image to your local app data,
         and reference it locally.
 
         :param imagePath: The path to an image file
         :type imagePath: Union[str, PathLike]
-        :raises: ValueError: If the path to an online image is supplied
+        :raises: InvalidImageException: If the path to an online image is supplied
         """
         if isinstance(imagePath, str) and urlparse(imagePath).scheme in ("http", "https"):
             raise InvalidImageException("Online images are not supported")

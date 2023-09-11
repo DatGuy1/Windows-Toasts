@@ -58,6 +58,7 @@ Contents
    user/toast
    user/audio
    user/wrappers
+   user/exceptions
 
 .. toctree::
    :maxdepth: 1
