@@ -240,7 +240,7 @@ def test_progress_bar():
 def test_scheduled_toast(pytestconfig):
     from datetime import datetime, timedelta
 
-    from src.windows_toasts import ToastProgressBar
+    from src.windows_toasts import ToastNotFoundError, ToastProgressBar
 
     progressBar = ToastProgressBar(
         "Preparing...", "Python 4 release", progress=0.5, progress_override="? millenniums remaining"
@@ -257,9 +257,9 @@ def test_scheduled_toast(pytestconfig):
     toaster.schedule_toast(clonedToast, datetime.now() + timedelta(seconds=10))
 
     if pytestconfig.getoption("real_run"):
-        assert toaster.unschedule_toast(clonedToast)
+        toaster.unschedule_toast(clonedToast)
     else:
-        with warns(UserWarning, match="Toast unscheduling failed."):
+        with raises(ToastNotFoundError, match="Toast unscheduling failed."):
             toaster.unschedule_toast(clonedToast)
 
 

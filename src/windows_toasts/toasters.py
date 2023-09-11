@@ -13,6 +13,7 @@ from toasts_winrt.windows.ui.notifications import (
 )
 
 from .events import ToastActivatedEventArgs
+from .exceptions import ToastNotFoundError
 from .toast import Toast
 from .toast_document import ToastDocument
 from .wrappers import ToastDuration, ToastImagePosition, ToastScenario
@@ -174,22 +175,21 @@ class BaseWindowsToaster:
 
         self.toastNotifier.add_to_schedule(scheduledNotificationToSend)
 
-    def unschedule_toast(self, toast: Toast) -> bool:
+    def unschedule_toast(self, toast: Toast) -> None:
         """
         Unschedule the passed notification toast
 
         :return: Whether the unscheduling failed or succeeded
+        :raises: ToastNotFoundError: If the toast could not be found
         """
         scheduledToasts = self.toastNotifier.get_scheduled_toast_notifications()
         targetNotification = next(
             (scheduledToast for scheduledToast in scheduledToasts if scheduledToast.tag == toast.tag), None
         )
         if targetNotification is None:
-            warnings.warn(f"Toast unscheduling failed. Toast {toast} not found")
-            return False
+            raise ToastNotFoundError(f"Toast unscheduling failed. Toast {toast} not found")
 
         self.toastNotifier.remove_from_schedule(targetNotification)
-        return True
 
     def clear_toasts(self) -> None:
         """
