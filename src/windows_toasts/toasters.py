@@ -179,7 +179,6 @@ class BaseWindowsToaster:
         """
         Unschedule the passed notification toast
 
-        :return: Whether the unscheduling failed or succeeded
         :raises: ToastNotFoundError: If the toast could not be found
         """
         scheduledToasts = self.toastNotifier.get_scheduled_toast_notifications()
