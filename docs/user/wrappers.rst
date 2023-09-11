@@ -24,6 +24,11 @@ API
 ---
 
 .. automodule:: windows_toasts.wrappers
+    :exclude-members: ToastImage
+
+    .. autoclass:: windows_toasts.wrappers.ToastImage
+
+        .. automethod:: __init__
 
 ..
     This will probably go into another file soon
