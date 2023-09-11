@@ -1,6 +1,6 @@
 1.0.1 (2023-09-11)
 ==================
-- Fixed AttributeError when calling WindowsToaster.clear_toasts()
+- Fixed AttributeError when calling WindowsToaster.clear_toasts() (#96)
 - unschedule_toast() now raise a ToastNotFoundError exception if the toast could not be found instead of warning (#97)
 
 1.0.0 (2023-08-14)
