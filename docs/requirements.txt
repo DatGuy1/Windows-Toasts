@@ -2,6 +2,6 @@ sphinx==7.2.5
 
 sphinx-jinja2-compat>=0.1.1
 sphinx-toolbox>=2.16.0
-enum_tools==0.10.0
+enum_tools==0.11.0
 
 furo==2023.9.10
