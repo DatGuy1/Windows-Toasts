@@ -1,3 +1,7 @@
+1.0.2 (2023-12-31)
+===================
+- Unquote image paths when the path contains characters that were escaped (#111)
+
 1.0.1 (2023-09-11)
 ==================
 - Fixed AttributeError when calling WindowsToaster.clear_toasts() (#96)
