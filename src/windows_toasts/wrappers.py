@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import abc
+import urllib
 from dataclasses import dataclass
 from enum import Enum
 from os import PathLike
@@ -103,7 +104,7 @@ class ToastImage:
         if not imagePath.exists():
             raise InvalidImageException(f"Image with path '{imagePath}' could not be found")
 
-        self.path = imagePath.as_uri()
+        self.path = urllib.parse.unquote(imagePath.as_uri())
 
 
 @dataclass
