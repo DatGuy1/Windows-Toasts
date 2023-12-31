@@ -1,6 +1,7 @@
 1.0.2 (2023-12-31)
 ===================
 - Unquote image paths when the path contains characters that were escaped (#111)
+- Convert image paths to absolute before converting to URI (#112)
 
 1.0.1 (2023-09-11)
 ==================
