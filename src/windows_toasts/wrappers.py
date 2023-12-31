@@ -104,7 +104,7 @@ class ToastImage:
         if not imagePath.exists():
             raise InvalidImageException(f"Image with path '{imagePath}' could not be found")
 
-        self.path = urllib.parse.unquote(imagePath.as_uri())
+        self.path = urllib.parse.unquote(imagePath.absolute().as_uri())
 
 
 @dataclass
