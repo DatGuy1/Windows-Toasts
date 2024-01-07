@@ -1,7 +1,7 @@
 import datetime
 from typing import Optional, TypeVar, Union
 
-from toasts_winrt.windows.data.xml.dom import IXmlNode, XmlDocument, XmlElement
+from winrt.windows.data.xml.dom import IXmlNode, XmlDocument, XmlElement
 
 from .toast import Toast
 from .toast_audio import ToastAudio
