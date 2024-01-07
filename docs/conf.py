@@ -46,7 +46,7 @@ extensions = [
 templates_path = ["_templates"]
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
-autodoc_mock_imports = ["toasts_winrt"]
+autodoc_mock_imports = ["winrt"]
 autodoc_default_options = {"members": True, "member-order": "bysource", "undoc-members": True}
 
 # -- Options for HTML output -------------------------------------------------

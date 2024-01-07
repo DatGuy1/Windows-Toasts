@@ -182,7 +182,7 @@ def test_custom_duration_toast():
 
 
 def test_attribution_text_toast():
-    from toasts_winrt.windows.ui.notifications import ToastNotification
+    from winrt.windows.ui.notifications import ToastNotification
 
     newToast = Toast()
     newToast.text_fields = ["Hello, World!", "Foobar"]
