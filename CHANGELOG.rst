@@ -1,3 +1,7 @@
+Unversioned
+===========
+- Replaced toasts_winrt with winrt-Namespace packages (#113)
+
 1.0.2 (2023-12-31)
 ===================
 - Unquote image paths when the path contains characters that were escaped (#111)
