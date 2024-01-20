@@ -1,6 +1,7 @@
 Unversioned
 ===========
 - Replaced toasts_winrt with winrt-Namespace packages (#113)
+- Dropped Python 3.8 support (#113)
 
 1.0.2 (2023-12-31)
 ===================
