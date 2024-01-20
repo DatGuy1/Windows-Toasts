@@ -3,6 +3,7 @@ from setuptools import setup
 packages = ["windows_toasts", "scripts"]
 
 requires = [
+    "winrt-runtime<=2.0.0b2",
     "winrt-Windows.Data.Xml.Dom<=2.0.0b2",
     "winrt-Windows.Foundation<=2.0.0b2",
     "winrt-Windows.Foundation.Collections<=2.0.0b2",
@@ -30,14 +31,13 @@ setup(
     package_data={"": ["LICENSE"], "windows_toasts": ["py.typed"]},
     include_package_data=True,
     entry_points={"console_scripts": ["register_hkey_aumid = scripts.register_hkey_aumid:main"]},
-    python_requires=">=3.8",
+    python_requires=">=3.9",
     install_requires=requires,
     license=about["__license__"],
     zip_safe=False,
     classifiers=[
         "Development Status :: 4 - Beta",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
