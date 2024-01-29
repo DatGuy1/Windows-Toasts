@@ -4,3 +4,6 @@ class InvalidImageException(Exception):
 
 class ToastNotFoundError(Exception):
     """The toast could not be found"""
+
+class UnsupportedOSVersionException(ImportError):
+    """The operating system version is not supported"""
