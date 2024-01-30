@@ -15,4 +15,5 @@
 [flake8]
 max-line-length = 120
 per-file-ignores =
-  *.py: E203, E501
+  *.py: E501
+  src/windows_toasts/__init__.py: E402
