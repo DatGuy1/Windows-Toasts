@@ -1,4 +1,5 @@
 import platform
+
 from .exceptions import UnsupportedOSVersionException
 
 # We'll assume it's Windows since if it's on another OS it should be self-explanatory

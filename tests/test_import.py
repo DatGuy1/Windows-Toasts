@@ -1,5 +1,6 @@
-from pytest import raises
 from unittest.mock import patch
+
+from pytest import raises
 
 
 # noinspection PyUnresolvedReferences

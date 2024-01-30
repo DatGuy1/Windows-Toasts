@@ -149,6 +149,7 @@ def test_custom_timestamp_toast():
 
 def test_input_toast():
     import copy
+
     from src.windows_toasts import ToastInputSelectionBox, ToastInputTextBox, ToastSelection
 
     toastTextBoxInput = ToastInputTextBox("question", "How are you today?", "Enter here!")
