@@ -1,10 +1,12 @@
 import platform
+from .exceptions import UnsupportedOSVersionException
 
 # We'll assume it's Windows since if it's on another OS it should be self-explanatory
 MIN_VERSION = 10240
 if platform.system() == "Windows" and (osVersion := int(platform.version().split(".")[2])) < MIN_VERSION:
-    from .exceptions import UnsupportedOSVersionException
-    raise UnsupportedOSVersionException(f"Platform version {osVersion} is not supported. Required minimum is {MIN_VERSION}")
+    raise UnsupportedOSVersionException(
+        f"Platform version {osVersion} is not supported. Required minimum is {MIN_VERSION}"
+    )
 
 from ._version import __author__, __description__, __license__, __title__, __url__, __version__  # noqa: F401
 from .events import ToastActivatedEventArgs, ToastDismissalReason, ToastDismissedEventArgs, ToastFailedEventArgs
@@ -44,6 +46,7 @@ __all__ = [
     # exceptions.py
     "InvalidImageException",
     "ToastNotFoundError",
+    "UnsupportedOSVersionException",
     # toast_audio.py
     "AudioSource",
     "ToastAudio",

@@ -1,5 +1,3 @@
-import copy
-
 from pytest import raises, warns
 
 from src.windows_toasts import InteractableWindowsToaster, Toast, WindowsToaster
@@ -150,6 +148,7 @@ def test_custom_timestamp_toast():
 
 
 def test_input_toast():
+    import copy
     from src.windows_toasts import ToastInputSelectionBox, ToastInputTextBox, ToastSelection
 
     toastTextBoxInput = ToastInputTextBox("question", "How are you today?", "Enter here!")
