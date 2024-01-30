@@ -21,6 +21,7 @@ The script also requires ``pandoc`` to be previously installed in the system.
 
 Requires Python3.6+.
 """
+
 import os
 import re
 import sys
