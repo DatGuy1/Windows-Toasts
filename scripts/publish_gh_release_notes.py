@@ -80,7 +80,9 @@ def main(argv):
             print("tag_name not given and $GITHUB_REF not set", file=sys.stderr)
             return 1
         if tag_name.startswith("refs/tags/"):
-            tag_name = tag_name[len("refs/tags/") :]
+            # fmt: off
+            tag_name = tag_name[len("refs/tags/"):]
+            # fmt: on
 
     token = os.environ.get("GH_RELEASE_NOTES_TOKEN")
     if not token:
