@@ -1,5 +1,5 @@
-Unversioned
-===========
+1.1.0 (2024-02-13)
+==================
 - Importing the module now throws an exception if the Windows version is unsupported (#122)
 - Replaced toasts_winrt with winrt-Namespace packages (#113)
 - Dropped Python 3.8 support (#113)

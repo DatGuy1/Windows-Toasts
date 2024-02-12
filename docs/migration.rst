@@ -4,9 +4,9 @@ Migrating from v0.x to v1.0.0
 Version 1.0.0 comes with a large backend refactoring and simplification of existing features, along with a few new features.
 This guide will detail the changes and how to adapt to them.
 
-Replaced winsdk requirement with toasts-winrt
+Replaced winsdk requirement with modularisation
 ---------------------------------------------
-Instead of the 12 MB `winsdk <https://pypi.org/project/winsdk/>`_ release, Windows-Toasts now uses a streamlined 500 kB `toasts-winrt <https://pypi.org/project/toasts-winrt/>`_ package to lessen install times and storage requirements.
+Instead of the 12 MB `winsdk <https://pypi.org/project/winsdk/>`_ release, Windows-Toasts now uses a number of streamlined package to lessen install times and storage requirements.
 
 Toast class simplification
 --------------------------
