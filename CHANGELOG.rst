@@ -1,3 +1,7 @@
+1.1.1 (2024-05-19)
+==================
+- Added support for winrt v2.0.1 (#138)
+
 1.1.0 (2024-02-13)
 ==================
 - Importing the module now throws an exception if the Windows version is unsupported (#122)
