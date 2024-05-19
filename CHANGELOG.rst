@@ -1,6 +1,7 @@
 1.1.1 (2024-05-19)
 ==================
 - Allow setting attribution text (#140)
+- Added support for winrt v2.0.1 (#138)
 
 1.1.0 (2024-02-13)
 ==================
