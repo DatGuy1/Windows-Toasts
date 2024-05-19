@@ -1,3 +1,7 @@
+1.1.1 (2024-05-19)
+==================
+- Allow setting attribution text (#140)
+
 1.1.0 (2024-02-13)
 ==================
 - Importing the module now throws an exception if the Windows version is unsupported (#122)
