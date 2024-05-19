@@ -182,16 +182,10 @@ def test_custom_duration_toast():
 
 
 def test_attribution_text_toast():
-    from winrt.windows.ui.notifications import ToastNotification
+    newToast = Toast(["Incoming Message", "How are you?"])
+    newToast.attribution_text = "Via FakeMessenger"
 
-    newToast = Toast()
-    newToast.text_fields = ["Hello, World!", "Foobar"]
-
-    toaster = WindowsToaster("Python")
-    toastContent = toaster._setup_toast(newToast, False)
-    toastContent.SetAttributionText("Windows-Toasts")
-
-    toaster.toastNotifier.show(ToastNotification(toastContent.xmlDocument))
+    InteractableWindowsToaster("Python").show_toast(newToast)
 
 
 def test_scenario_toast():
