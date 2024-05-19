@@ -43,6 +43,8 @@ class Toast:
     """A custom timestamp. If you don't provide one, Windows uses the time that your notification was sent"""
     progress_bar: Optional[ToastProgressBar]
     """An adjustable progress bar for the toast"""
+    attribution_text: Optional[str]
+    """Text displayed below any text elements, but above inline images"""
     on_activated: Optional[Callable[[ToastActivatedEventArgs], None]]
     """Callable to execute when the toast is clicked if basic, or a button is clicked if interactable"""
     on_dismissed: Optional[Callable[[ToastDismissedEventArgs], None]]
@@ -73,6 +75,7 @@ class Toast:
         group: Optional[str] = None,
         launch_action: Optional[str] = None,
         progress_bar: Optional[ToastProgressBar] = None,
+        attribution_text: Optional[str] = None,
         scenario: ToastScenario = ToastScenario.Default,
         suppress_popup: bool = False,
         timestamp: Optional[datetime.datetime] = None,
@@ -97,6 +100,7 @@ class Toast:
         self.duration = duration
         self.scenario = scenario
         self.progress_bar = progress_bar
+        self.attribution_text = attribution_text
         self.timestamp = timestamp
         self.group = group
         self.expiration_time = expiration_time

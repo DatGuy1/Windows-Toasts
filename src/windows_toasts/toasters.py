@@ -113,6 +113,9 @@ class BaseWindowsToaster:
         if toast.audio is not None:
             toastContent.SetAudioAttributes(toast.audio)
 
+        if toast.attribution_text is not None:
+            toastContent.SetAttributionText(toast.attribution_text)
+
         if toast.scenario != ToastScenario.Default:
             toastContent.SetScenario(toast.scenario)
 
@@ -296,7 +299,7 @@ class InteractableWindowsToaster(BaseWindowsToaster):
         toastContent.SetAttribute(toastNode, "useButtonStyle", "true")
 
         # If we haven't set up our own AUMID, put our application text in the attribution field
-        if self.defaultAUMID:
+        if self.defaultAUMID and toast.attribution_text is None:
             toastContent.SetAttributionText(self.applicationText)
 
         for toastInput in toast.inputs:
