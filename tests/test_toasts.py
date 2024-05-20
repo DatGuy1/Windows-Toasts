@@ -313,6 +313,7 @@ def test_remove_toast():
 
 def test_remove_toast_group():
     import time
+
     from src.windows_toasts import ToastActivatedEventArgs
 
     toaster = WindowsToaster("Python")
