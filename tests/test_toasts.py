@@ -296,3 +296,22 @@ def test_system_toast():
     newToast.AddAction(dismissBox)
 
     InteractableWindowsToaster("Python").show_toast(newToast)
+
+def test_remove_toast():
+    toaster = WindowsToaster("Python")
+
+    newToast = Toast(["Disappearing act"])
+    newToast.on_dismissed = lambda _: toaster.remove_toast(newToast)
+
+    toaster.show_toast(newToast)
+
+def test_remove_toast_group():
+    toaster = WindowsToaster("Python")
+
+    toast1 = Toast(["A bigger disappearing act"], group="begone")
+    toast2 = Toast(["Click me to shazam!"], group="begone")
+
+    toast2.on_activated = lambda _: toaster.remove_toast_group("begone")
+
+    toaster.show_toast(toast1)
+    toaster.show_toast(toast2)
