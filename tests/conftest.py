@@ -13,7 +13,7 @@ def real_run_fixture(pytestconfig) -> Iterator[None]:
     else:
         with patch("winrt.windows.ui.notifications.ToastNotificationManager.create_toast_notifier"), patch(
             "winrt.windows.ui.notifications.ToastNotifier.show"
-        ), patch("winrt.windows.ui.notifications.ToastNotificationHistory.clear"):
+        ), patch("winrt.windows.ui.notifications.ToastNotificationHistory.clear"), patch("time.sleep"):
             yield
 
 
