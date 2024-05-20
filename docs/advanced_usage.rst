@@ -180,6 +180,27 @@ If the :attr:`~windows_toasts.wrappers.ToastSystemButton.relatedInput` is None, 
 .. note::
     Ensure the :attr:`~windows_toasts.wrappers.ToastSelection.selection_id` is a positive integer, which represents the interval in minutes.
 
+Removing toasts
+---------------
+
+You can remove toasts, which will (if on-screen first hide them) and then immediately dismiss them from the action center.
+
+In the following example, the toast is automatically removed when it is dismissed to the action center:
+
+.. code-block:: python
+
+    from windows_toasts import WindowsToaster, Toast
+
+    toaster = WindowsToaster("Python")
+
+    newToast = Toast(["Disappearing act"])
+    newToast.on_dismissed = lambda _: toaster.remove_toast(newToast)
+
+    toaster.show_toast(newToast)
+
+.. warning::
+    You can only remove toasts that were popped by a toaster with the same AUMID. Additionally, no exception will be thrown if the toast does not exist
+
 ...and much more
 ----------------
 
