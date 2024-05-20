@@ -1,5 +1,5 @@
 import datetime
-from typing import Optional, TypeVar, Union
+from typing import Union
 
 from winrt.windows.data.xml.dom import IXmlNode, XmlDocument, XmlElement
 
@@ -18,7 +18,7 @@ from .wrappers import (
     ToastSystemButtonAction,
 )
 
-IXmlType = TypeVar("IXmlType", IXmlNode, XmlElement)
+IXmlType = Union[IXmlNode, XmlElement]
 
 
 class ToastDocument:
@@ -69,7 +69,7 @@ class ToastDocument:
         """
         return nodeAttribute.attributes.get_named_item(attributeName).inner_text
 
-    def GetElementByTagName(self, tagName: str) -> Optional[IXmlType]:
+    def GetElementByTagName(self, tagName: str) -> IXmlType:
         """
         Helper function to get the first element by its tag name
 
@@ -220,18 +220,16 @@ class ToastDocument:
 
         :type toastInput: Union[ToastInputTextBox, ToastInputSelectionBox]
         """
-        isTextBox = isinstance(toastInput, ToastInputTextBox)
-
         self._inputFields += 1
         inputNode = self.xmlDocument.create_element("input")
         self.SetAttribute(inputNode, "id", toastInput.input_id)
         self.SetAttribute(inputNode, "title", toastInput.caption)
 
-        if isTextBox:
+        if isinstance(toastInput, ToastInputTextBox):
             self.SetAttribute(inputNode, "type", "text")
             # noinspection PyUnresolvedReferences
             self.SetAttribute(inputNode, "placeHolderContent", toastInput.placeholder)
-        else:
+        elif isinstance(toastInput, ToastInputSelectionBox):
             self.SetAttribute(inputNode, "type", "selection")
             if toastInput.default_selection is not None:
                 self.SetAttribute(inputNode, "defaultInput", toastInput.default_selection.selection_id)

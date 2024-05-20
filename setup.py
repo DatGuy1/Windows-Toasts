@@ -13,7 +13,7 @@ requires = [
 with open("README.md", "r", encoding="utf-8") as f:
     readme = f.read()
 
-about = {}
+about: dict[str, str] = {}
 with open("src/windows_toasts/_version.py", "r") as f:
     exec(f.read(), None, about)
 
