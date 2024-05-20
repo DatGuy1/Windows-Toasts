@@ -11,7 +11,7 @@ Classes
 Data
 ----
 
-.. autotypevar:: windows_toasts.toast_document.IXmlType
+.. autodata:: windows_toasts.toast_document.IXmlType
 
 API
 ---

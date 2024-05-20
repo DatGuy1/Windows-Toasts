@@ -12,7 +12,7 @@ Classes
 Data
 ----
 
-.. autotypevar:: windows_toasts.toast.ToastInput
+.. autodata:: windows_toasts.toast.ToastInput
 
 API
 ---
