@@ -64,7 +64,7 @@ def _build_toast_notification(toast: Toast, toastNotification: ToastNotification
     :rtype: ToastNotificationT
     """
     toastNotification.tag = toast.tag
-    # Group, a non-empty string, is required for some functionality. If none is provided, use the tag
+    # Group, a non-empty string, is required for some functionality. If one isn't provided, use the tag
     toastNotification.group = toast.group or toast.tag
 
     if toast.expiration_time is not None:
