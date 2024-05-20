@@ -5,7 +5,7 @@ Version 1.0.0 comes with a large backend refactoring and simplification of exist
 This guide will detail the changes and how to adapt to them.
 
 Replaced winsdk requirement with modularisation
----------------------------------------------
+-----------------------------------------------
 Instead of the 12 MB `winsdk <https://pypi.org/project/winsdk/>`_ release, Windows-Toasts now uses a number of streamlined package to lessen install times and storage requirements.
 
 Toast class simplification

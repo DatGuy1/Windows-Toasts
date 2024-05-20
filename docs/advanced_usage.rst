@@ -6,7 +6,7 @@ What else can Windows-Toasts be used for? Since you're here, you probably alread
 Display an image
 ----------------
 
-Lets try out displaying an image
+Let's try out displaying an image
 
 .. code-block:: python
 
@@ -47,7 +47,7 @@ We use :attr:`windows_toasts.toast.Toast.launch_action` to open a website when t
 Play different audio
 --------------------
 
-There is a list of available, out-of-the-box audio sources at :class:`windows_toasts.toast_audio.AudioSource`. Lets play the Windows IM sound looping until the notification is dismissed/expires.
+There is a list of available, out-of-the-box audio sources at :class:`windows_toasts.toast_audio.AudioSource`. Let's play the Windows IM sound looping until the notification is dismissed/expires.
 
 .. code-block:: python
 

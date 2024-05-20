@@ -1,7 +1,7 @@
 Interactable toasts
 ===================
 
-Interactable toasts are toast notifications that lets the user interact with them, be it through different buttons or input fields.
+Interactable toasts are toast notifications that let the user interact with them, be it through different buttons or input fields.
 
 Usage
 -----
@@ -31,7 +31,7 @@ And we have buttons! We can't do much with them though, at least until we use on
     newToast.on_activated = activated_callback
 
 .. note::
-    To make sure the activation of the toast triggeres the callback following its relegation to the action center, you must use a `custom AUMID <Creating a custom AUMID>`_.
+    To make sure the activation of the toast triggers the callback following its relegation to the action center, you must use a `custom AUMID <Creating a custom AUMID>`_.
 
 Input fields
 ~~~~~~~~~~~~
