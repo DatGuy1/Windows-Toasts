@@ -6,7 +6,7 @@ import urllib.parse
 import uuid
 import warnings
 from collections.abc import Iterable
-from typing import Callable, Literal, Optional, TypeVar, Union
+from typing import Callable, Literal, Optional, Union
 
 from winrt.windows.ui.notifications import ToastDismissedEventArgs, ToastFailedEventArgs
 
@@ -23,7 +23,7 @@ from .wrappers import (
     ToastSystemButton,
 )
 
-ToastInput = TypeVar("ToastInput", ToastInputTextBox, ToastInputSelectionBox)
+ToastInput = Union[ToastInputTextBox, ToastInputSelectionBox]
 
 
 class Toast:
@@ -68,7 +68,7 @@ class Toast:
 
     def __init__(
         self,
-        text_fields: Union[list[Optional[str]], tuple[Optional[str]], set[Optional[str]]] = None,
+        text_fields: Union[None, list[Optional[str]], tuple[Optional[str]], set[Optional[str]]] = None,
         audio: Optional[ToastAudio] = None,
         duration: ToastDuration = ToastDuration.Default,
         expiration_time: Optional[datetime.datetime] = None,
