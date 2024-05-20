@@ -34,7 +34,7 @@ class Toast:
     expiration_time: Optional[datetime.datetime]
     """The time for the toast to expire on in the action center. If it is on-screen, nothing will happen"""
     group: Optional[str]
-    """A generic identifier, where you can assign groups like "wallPosts", "messages", "friendRequests", etc."""
+    """An internal identifier, where you can assign groups like "wallPosts", "messages", "friendRequests", etc."""
     scenario: ToastScenario
     """Scenario for the toast"""
     suppress_popup: bool
@@ -60,7 +60,7 @@ class Toast:
     text_fields: list[Optional[str]]
     """Various text fields"""
     tag: str
-    """uuid of a tag for the toast"""
+    """Unique tag for the toast, automatically set as a UUID"""
     updates: int
     """Number of times the toast has been updated; mostly for internal use"""
     _launch_action: Optional[str]
