@@ -64,8 +64,8 @@ def _build_toast_notification(toast: Toast, toastNotification: ToastNotification
     :rtype: ToastNotificationT
     """
     toastNotification.tag = toast.tag
-    if toast.group is not None:
-        toastNotification.group = toast.group
+    # Group, a non-empty string, is required for some functionality. If none is provided, use the tag
+    toastNotification.group = toast.group or toast.tag
 
     if toast.expiration_time is not None:
         toastNotification.expiration_time = toast.expiration_time
@@ -207,6 +207,21 @@ class BaseWindowsToaster:
         scheduledToasts = self.toastNotifier.get_scheduled_toast_notifications()
         for toast in scheduledToasts:
             self.toastNotifier.remove_from_schedule(toast)
+
+    def remove_toast(self, toast: Toast) -> None:
+        """
+        Removes an individual popped toast
+        """
+        # Is fetching toastHistory expensive? Should this be stored in an instance variable?
+        toastHistory: ToastNotificationHistory = ToastNotificationManager.history
+        toastHistory.remove(toast.tag, toast.group or toast.tag, self._AUMID)
+
+    def remove_toast_group(self, toastGroup: str) -> None:
+        """
+        Removes a group of toast notifications, identified by the specified group ID
+        """
+        toastHistory: ToastNotificationHistory = ToastNotificationManager.history
+        toastHistory.remove_group(toastGroup, self._AUMID)
 
 
 class WindowsToaster(BaseWindowsToaster):
