@@ -1,7 +1,7 @@
 1.2.0 (TBD)
 ===========
 - Implement removing toasts and toast groups (#145)
-    - See `'removing toasts' <https://windows-toasts.readthedocs.io/en/latest/advanced_usage.html#removing-toasts>`_ for an example.
+  - See `'removing toasts' <https://windows-toasts.readthedocs.io/en/latest/advanced_usage.html#removing-toasts>`_ for an example.
 
 1.1.1 (2024-05-19)
 ==================
