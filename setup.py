@@ -4,7 +4,7 @@ packages = ["windows_toasts", "scripts"]
 
 requires = [
     "winrt-runtime<=2.0.1",
-    "winrt-Windows.Data.Xml.Dom<=2.0.1",
+    "winrt-Windows.Data.Xml.Dom<=2.1.0",
     "winrt-Windows.Foundation<=2.0.1",
     "winrt-Windows.Foundation.Collections<=2.0.1",
     "winrt-Windows.UI.Notifications<=2.0.1",
