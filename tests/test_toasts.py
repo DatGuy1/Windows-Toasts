@@ -71,11 +71,32 @@ def test_audio_toast():
     loopingToast = silentToast.clone()
     assert loopingToast != silentToast and loopingToast != originalToast
 
-    loopingToast.audio.sound = "Looping.Call7"
+    loopingToast.audio.sound = AudioSource.Call7
     loopingToast.audio.looping = True
     loopingToast.audio.silent = False
+    loopingToast.text_fields = ["Ring, ring"]
 
     toaster.show_toast(loopingToast)
+
+
+def test_custom_audio_toast(example_audio_path, example_image_path):
+    from src.windows_toasts import ToastAudio
+
+    toaster = WindowsToaster("Python")
+
+    nonExistantFile = example_audio_path.with_stem("nonexistant")
+    toast = Toast(["This should pop with the default sound"], audio=ToastAudio(nonExistantFile))
+    with warns(UserWarning, match=f"could not be found"):
+        toaster.show_toast(toast)
+
+    unsupportedFile = example_image_path
+    toast.audio = ToastAudio(unsupportedFile)
+    with warns(UserWarning, match=f"has unsupported extension '{example_image_path.suffix}'"):
+        toaster.show_toast(toast)
+
+    toast.audio = ToastAudio(example_audio_path)
+    toast.text_fields = ["This should pop with the Wikipedia sound logo"]
+    toaster.show_toast(toast)
 
 
 def test_errors_toast(example_image_path):
