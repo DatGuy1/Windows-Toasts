@@ -86,7 +86,7 @@ def test_custom_audio_toast(example_audio_path, example_image_path):
 
     nonExistantFile = example_audio_path.with_stem("nonexistant")
     toast = Toast(["This should pop with the default sound"], audio=ToastAudio(nonExistantFile))
-    with warns(UserWarning, match=f"could not be found"):
+    with warns(UserWarning, match="could not be found"):
         toaster.show_toast(toast)
 
     unsupportedFile = example_image_path
