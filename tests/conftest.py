@@ -23,7 +23,7 @@ def download_example_image():
     import urllib.request
     from pathlib import Path
 
-    # Save the image to pythong.png
+    # Save the image to python.png
     imageUrl = "https://www.python.org/static/community_logos/python-powered-h-140x182.png"
     imagePath = Path.cwd() / "python.png"
     urllib.request.urlretrieve(imageUrl, imagePath)
@@ -33,11 +33,34 @@ def download_example_image():
     imagePath.unlink()
 
 
+@fixture(scope="session", autouse=True)
+def download_example_audio():
+    # Download an example audio and delete it at the end
+    import urllib.request
+    from pathlib import Path
+
+    # Save the audio to audio.mp3
+    audioUrl = "https://upload.wikimedia.org/wikipedia/commons/transcoded/9/91/Wikimedia_Sonic_Logo_-_4-seconds.wav/Wikimedia_Sonic_Logo_-_4-seconds.wav.mp3"
+    audioPath = Path.cwd() / "audio.mp3"
+    urllib.request.urlretrieve(audioUrl, audioPath)
+
+    yield
+
+    audioPath.unlink()
+
+
 @fixture
 def example_image_path():
     from pathlib import Path
 
     return Path.cwd() / "python.png"
+
+
+@fixture
+def example_audio_path():
+    from pathlib import Path
+
+    return Path.cwd() / "audio.mp3"
 
 
 @fixture(scope="function", autouse=True)

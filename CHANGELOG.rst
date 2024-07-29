@@ -1,3 +1,7 @@
+1.3.0 (TBD)
+===========
+- Implemented custom audio file support (#154)
+
 1.2.0 (2024-06-30)
 ===========
 - Implement removing toasts and toast groups (#145)

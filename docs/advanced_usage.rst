@@ -47,6 +47,8 @@ We use :attr:`windows_toasts.toast.Toast.launch_action` to open a website when t
 Play different audio
 --------------------
 
+Out-of-the-box
+^^^^^^^^^^^^^^
 There is a list of available, out-of-the-box audio sources at :class:`windows_toasts.toast_audio.AudioSource`. Let's play the Windows IM sound looping until the notification is dismissed/expires.
 
 .. code-block:: python
@@ -60,6 +62,36 @@ There is a list of available, out-of-the-box audio sources at :class:`windows_to
     newToast.audio = ToastAudio(AudioSource.IM, looping=True)
 
     toaster.show_toast(newToast)
+
+Custom files
+^^^^^^^^^^^^
+You can also play local audio files, with the following extensions:
+
+* .aac
+* .flac
+* .m4a
+* .mp3
+* .wav
+* .wma
+
+.. code-block:: python
+
+    from windows_toasts import Toast, ToastAudio, WindowsToaster
+    from pathlib import Path
+
+    toaster = WindowsToaster('Blooper')
+
+    newToast = Toast()
+    newToast.text_fields = ['Incoming bloop from', 'Steve']
+    newToast.audio = ToastAudio(Path('incoming_bloop.wav'))
+
+    toaster.show_toast(newToast)
+
+.. warning::
+    A warning will arise if local file does not exist, or if it uses an unsupported extension.
+    This will make Windows play the default sound. There is no magic check for the file type – just its suffix.
+
+    Additionally, some audio files will not work for seemingly no discernible reason. If this happens, the toast will be silent.
 
 Progress bars
 -------------

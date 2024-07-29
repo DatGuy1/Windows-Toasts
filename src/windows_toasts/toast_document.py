@@ -135,7 +135,7 @@ class ToastDocument:
             self.SetAttribute(audioNode, "silent", str(audioConfiguration.silent).lower())
             return
 
-        self.SetAttribute(audioNode, "src", f"ms-winsoundevent:Notification.{audioConfiguration.sound_value}")
+        self.SetAttribute(audioNode, "src", audioConfiguration.sound_value)
         if audioConfiguration.looping:
             self.SetAttribute(audioNode, "loop", str(audioConfiguration.looping).lower())
             # Looping audio requires the duration attribute in the audio element's parent toast element to be "long"
