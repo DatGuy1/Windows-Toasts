@@ -162,7 +162,7 @@ class BaseWindowsToaster:
         :return: Whether the update succeeded
         """
         newData = _build_adaptable_data(toast)
-        return self.toastNotifier.update(newData, toast.tag) == NotificationUpdateResult.SUCCEEDED
+        return self.toastNotifier.update(newData, toast.tag, toast.group or toast.tag) == NotificationUpdateResult.SUCCEEDED
 
     def schedule_toast(self, toast: Toast, displayTime: datetime) -> None:
         """
