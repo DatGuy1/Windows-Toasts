@@ -1,4 +1,4 @@
-1.3.0 (TBD)
+1.3.0 (2024-09-01)
 ===========
 - Implemented custom audio file support (#154)
 
