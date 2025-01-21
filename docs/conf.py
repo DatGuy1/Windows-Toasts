@@ -19,7 +19,7 @@ with open("../src/windows_toasts/_version.py", "r") as f:
     exec(f.read(), None, windows_toasts)
 
 project = windows_toasts["__title__"]
-copyright = "2023, DatGuy"
+copyright = "2025, DatGuy"
 author = windows_toasts["__author__"]
 
 
@@ -37,6 +37,7 @@ release = windows_toasts["__version__"]
 
 extensions = [
     "sphinx.ext.autodoc",
+    "sphinx.ext.autosectionlabel",
     "sphinx.ext.autosummary",
     "sphinx.ext.viewcode",
     "sphinx_toolbox.more_autodoc.typevars",
@@ -45,6 +46,8 @@ extensions = [
 
 templates_path = ["_templates"]
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
+
+autosectionlabel_prefix_document = True
 
 autodoc_mock_imports = ["winrt"]
 autodoc_default_options = {"members": True, "member-order": "bysource", "undoc-members": True}

@@ -31,7 +31,7 @@ And we have buttons! We can't do much with them though, at least until we use on
     newToast.on_activated = activated_callback
 
 .. note::
-    To make sure the activation of the toast triggers the callback following its relegation to the action center, you must use a `custom AUMID <Creating a custom AUMID>`_.
+    To make sure the activation of the toast triggers the callback following its relegation to the action center, you must use a :doc:`custom AUMID <custom_aumid>`.
 
 Input fields
 ~~~~~~~~~~~~
@@ -88,4 +88,4 @@ You may have noticed something weird when testing the above code. Why, when we d
 InteractableWindowsToaster requires an Application User Model ID (AUMID) to function properly.
 The package provides the command prompt as the default, and the applicationText becomes the :meth:`attribution text <windows_toasts.toast_document.ToastDocument.SetAttributionText>`.
 
-You can choose between staying with the default command prompt AUMID, `finding another one <Using an installed AUMID>`_, or `creating your own <Creating a custom AUMID>`_.
+You can choose between staying with the default command prompt AUMID, :ref:`finding another one <custom_aumid:Using an installed AUMID>`, or :ref:`creating your own <custom_aumid:Installing a custom AUMID>`.

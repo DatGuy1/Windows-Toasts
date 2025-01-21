@@ -22,7 +22,8 @@ Let's try out displaying an image
     toaster.show_toast(newToast)
 
 .. note::
-    When not using InteractableWindowsToaster you can display up to two images, and one of them must be marked as 'hero'.
+    | When not using InteractableWindowsToaster you can display up to two images, and one of them must be marked as 'hero'.
+    | A `hero image <https://learn.microsoft.com/windows/apps/design/shell/tiles-and-notifications/adaptive-interactive-toasts#hero-image>`_ is an image that is prominently displayed at the top of the notification.
 
 Open a website on click
 -----------------------
@@ -232,6 +233,15 @@ In the following example, the toast is automatically removed when it is dismisse
 
 .. warning::
     You can only remove toasts that were popped by a toaster with the same AUMID. Additionally, no exception will be thrown if the toast does not exist
+
+Placing images
+------------------
+
+Images can be placed in three different positions, as included in :attr:`windows_toasts.wrappers.ToastImagePosition`: Inline, hero, and AppLogo. Creating the :class:`~windows_toasts.wrappers.ToastDisplayImage` with:
+
+* Inline – the image will be displayed inline, after any text elements, filling the full width of the visual area
+* Hero – the image will be displayed prominently at the top of the notification
+* AppLogo – the image will be displayed in a square on the left side of the visual area
 
 ...and much more
 ----------------
