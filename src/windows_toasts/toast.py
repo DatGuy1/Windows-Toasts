@@ -6,7 +6,7 @@ import urllib.parse
 import uuid
 import warnings
 from collections.abc import Iterable
-from typing import Callable, Literal, Optional, Union
+from typing import Callable, Optional, Union
 
 from winrt.windows.ui.notifications import ToastDismissedEventArgs, ToastFailedEventArgs
 
@@ -29,7 +29,7 @@ ToastInput = Union[ToastInputTextBox, ToastInputSelectionBox]
 class Toast:
     audio: Optional[ToastAudio]
     """The custom audio configuration for the toast"""
-    duration: Literal[ToastDuration.Default, ToastDuration.Long, ToastDuration.Short]
+    duration: ToastDuration
     """:class:`~windows_toasts.wrappers.ToastDuration`, be it the default, short, or long"""
     expiration_time: Optional[datetime.datetime]
     """The time for the toast to expire on in the action center. If it is on-screen, nothing will happen"""

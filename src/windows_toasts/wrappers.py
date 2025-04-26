@@ -27,9 +27,9 @@ class ToastDuration(Enum):
     Possible values for duration to display toast for
     """
 
-    Default: str = "Default"
-    Short: str = "short"
-    Long: str = "long"
+    Default = "Default"
+    Short = "short"
+    Long = "long"
 
 
 class ToastImagePosition(Enum):
@@ -50,18 +50,18 @@ class ToastScenario(Enum):
     Possible scenarios for the toast
     """
 
-    Default: str = ""
+    Default = ""
     """The default; nothing special"""
-    Alarm: str = "alarm"
+    Alarm = "alarm"
     """Causes the toast to stay on-screen and expanded until the user takes action as well as a default looping sound"""
-    Reminder: str = "reminder"
+    Reminder = "reminder"
     """The toast will stay on-screen and expanded until the user takes action"""
-    IncomingCall: str = "incomingCall"
+    IncomingCall = "incomingCall"
     """
     The Toast will stay on-screen and expanded until the user takes action (on Mobile this expands to full screen). \
     Also causes a looping incoming call sound to be selected by default.
     """
-    Important: str = "urgent"
+    Important = "urgent"
     """
     Important notifications allow users to have more control over what 1st party and 3rd party apps can send them \
     high-priority app notifications that can break through Focus Assist (Do not Disturb). \

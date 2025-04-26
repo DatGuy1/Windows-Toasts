@@ -160,10 +160,10 @@ def test_image_toast(example_image_path):
 
 
 def test_custom_timestamp_toast():
-    from datetime import datetime, timedelta
+    from datetime import datetime, timedelta, timezone
 
     newToast = Toast(["This should display as being sent an hour ago"])
-    newToast.timestamp = datetime.utcnow() - timedelta(hours=1)
+    newToast.timestamp = datetime.now(timezone.utc) - timedelta(hours=1)
 
     WindowsToaster("Python").show_toast(newToast)
 

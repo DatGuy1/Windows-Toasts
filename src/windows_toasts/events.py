@@ -4,7 +4,6 @@ from dataclasses import dataclass
 from typing import Dict, Optional
 
 from winrt import system
-from winrt.windows.foundation import IPropertyValue
 from winrt.windows.ui.notifications import (  # noqa: F401
     ToastActivatedEventArgs as WinRtToastActivatedEventArgs,
     ToastDismissalReason,
@@ -27,10 +26,10 @@ class ToastActivatedEventArgs:
     # noinspection PyProtectedMember
     @classmethod
     def fromWinRt(cls, eventArgs: system.Object) -> ToastActivatedEventArgs:
-        activatedEventArgs = WinRtToastActivatedEventArgs._from(eventArgs)
+        activatedEventArgs = eventArgs.as_(WinRtToastActivatedEventArgs)
         receivedInputs: Optional[Dict[str, str]] = None
         try:
-            receivedInputs = {k: IPropertyValue._from(v).get_string() for k, v in activatedEventArgs.user_input.items()}
+            receivedInputs = {k: system.unbox_string(v) for k, v in activatedEventArgs.user_input.items()}
         except OSError:
             pass
 

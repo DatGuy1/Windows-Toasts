@@ -162,7 +162,7 @@ class BaseWindowsToaster:
         :return: Whether the update succeeded
         """
         newData = _build_adaptable_data(toast)
-        updateResult = self.toastNotifier.update(newData, toast.tag, toast.group or toast.tag)
+        updateResult = self.toastNotifier.update_with_tag_and_group(newData, toast.tag, toast.group or toast.tag)
         return updateResult == NotificationUpdateResult.SUCCEEDED
 
     def schedule_toast(self, toast: Toast, displayTime: datetime) -> None:
@@ -199,7 +199,7 @@ class BaseWindowsToaster:
         Clear toasts popped by this toaster
         """
         toastHistory: ToastNotificationHistory = ToastNotificationManager.history
-        toastHistory.clear(self._AUMID)
+        toastHistory.clear_with_id(self._AUMID)
 
     def clear_scheduled_toasts(self) -> None:
         """
@@ -215,14 +215,14 @@ class BaseWindowsToaster:
         """
         # Is fetching toastHistory expensive? Should this be stored in an instance variable?
         toastHistory: ToastNotificationHistory = ToastNotificationManager.history
-        toastHistory.remove(toast.tag, toast.group or toast.tag, self._AUMID)
+        toastHistory.remove_grouped_tag_with_id(toast.tag, toast.group or toast.tag, self._AUMID)
 
     def remove_toast_group(self, toastGroup: str) -> None:
         """
         Removes a group of toast notifications, identified by the specified group ID
         """
         toastHistory: ToastNotificationHistory = ToastNotificationManager.history
-        toastHistory.remove_group(toastGroup, self._AUMID)
+        toastHistory.remove_group_with_id(toastGroup, self._AUMID)
 
 
 class WindowsToaster(BaseWindowsToaster):
@@ -241,7 +241,8 @@ class WindowsToaster(BaseWindowsToaster):
     def __init__(self, applicationText: str):
         super().__init__(applicationText)
         self.notifierAUMID = None
-        self.toastNotifier = ToastNotificationManager.create_toast_notifier(applicationText)
+        # .create_toast_notifier() fails with "Element not found"
+        self.toastNotifier = ToastNotificationManager.create_toast_notifier_with_id(applicationText)
 
     def show_toast(self, toast: Toast) -> None:  # pragma: no cover
         if len(toast.inputs) > 0:
@@ -296,7 +297,7 @@ class InteractableWindowsToaster(BaseWindowsToaster):
             self.defaultAUMID = False
             self.notifierAUMID = notifierAUMID
 
-        self.toastNotifier = ToastNotificationManager.create_toast_notifier(self.notifierAUMID)
+        self.toastNotifier = ToastNotificationManager.create_toast_notifier_with_id(self.notifierAUMID)
 
     def _setup_toast(self, toast, dynamic):
         toastContent = super()._setup_toast(toast, dynamic)

@@ -3,11 +3,11 @@ from setuptools import setup
 packages = ["windows_toasts", "scripts"]
 
 requires = [
-    "winrt-runtime~=2.0",
-    "winrt-Windows.Data.Xml.Dom~=2.0",
-    "winrt-Windows.Foundation~=2.0",
-    "winrt-Windows.Foundation.Collections~=2.0",
-    "winrt-Windows.UI.Notifications~=2.0",
+    "winrt-runtime~=3.0",
+    "winrt-Windows.Data.Xml.Dom~=3.0",
+    "winrt-Windows.Foundation~=3.0",
+    "winrt-Windows.Foundation.Collections~=3.0",
+    "winrt-Windows.UI.Notifications~=3.0",
 ]
 
 with open("README.md", "r", encoding="utf-8") as f:
