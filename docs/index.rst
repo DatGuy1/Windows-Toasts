@@ -73,6 +73,12 @@ Contents
 
    migration
 
+.. toctree::
+   :maxdepth: 1
+   :caption: Other
+
+   solving
+
 Indices and tables
 ==================
 
