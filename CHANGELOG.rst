@@ -1,9 +1,13 @@
+1.3.1 (2025-05-06)
+==================
+- Support pywinrt>=3 (#184)
+
 1.3.0 (2024-09-01)
-===========
+==================
 - Implemented custom audio file support (#154)
 
 1.2.0 (2024-06-30)
-===========
+==================
 - Implement removing toasts and toast groups (#145)
   - See `'removing toasts' <https://windows-toasts.readthedocs.io/en/latest/advanced_usage.html#removing-toasts>`_ for an example.
 - Relax winrt package versioning requirements to support 2.x (#153)

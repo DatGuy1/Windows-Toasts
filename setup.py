@@ -33,7 +33,7 @@ setup(
     entry_points={"console_scripts": ["register_hkey_aumid = scripts.register_hkey_aumid:main"]},
     python_requires=">=3.9",
     install_requires=requires,
-    license=about["__license__"],
+    license_files=["LICENSE"],
     zip_safe=False,
     classifiers=[
         "Development Status :: 4 - Beta",
@@ -42,7 +42,6 @@ setup(
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
-        "License :: OSI Approved :: Apache Software License",
         "Operating System :: Microsoft :: Windows :: Windows 10",
         "Operating System :: Microsoft :: Windows :: Windows 11",
     ],
