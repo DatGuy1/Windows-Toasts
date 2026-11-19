@@ -1,9 +1,57 @@
 [build-system]
-requires = [
-    "setuptools>=42",
-    "wheel"
-]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "Windows-Toasts"
+dynamic = ["version"]
+description = "Python library used to send toast notifications on Windows machines"
+readme = "README.md"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+keywords = ["windows", "toast", "notifications", "winrt"]
+authors = [{ name = "DatGuy" }]
+requires-python = ">=3.9"
+dependencies = [
+    "winrt-runtime~=3.0",
+    "winrt-Windows.Data.Xml.Dom~=3.0",
+    "winrt-Windows.Foundation~=3.0",
+    "winrt-Windows.Foundation.Collections~=3.0",
+    "winrt-Windows.UI.Notifications~=3.0",
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Operating System :: Microsoft :: Windows :: Windows 10",
+    "Operating System :: Microsoft :: Windows :: Windows 11",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
+]
+
+[project.urls]
+Documentation = "https://windows-toasts.readthedocs.io"
+Source = "https://github.com/DatGuy1/Windows-Toasts"
+Issues = "https://github.com/DatGuy1/Windows-Toasts/issues"
+Changelog = "https://github.com/DatGuy1/Windows-Toasts/blob/main/CHANGELOG.rst"
+
+[project.scripts]
+register_hkey_aumid = "windows_toasts.register_hkey_aumid:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+windows_toasts = ["py.typed"]
+
+[tool.setuptools.dynamic]
+version = { attr = "windows_toasts._version.__version__" }
 
 [tool.black]
 line_length = 120
