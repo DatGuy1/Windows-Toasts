@@ -252,6 +252,16 @@ def test_progress_bar():
     toaster.show_toast(newToast)
 
 
+def test_indeterminate_progress_bar_without_override():
+    from src.windows_toasts import ToastProgressBar
+    from src.windows_toasts.toasters import _build_adaptable_data
+
+    newToast = Toast(progress_bar=ToastProgressBar("Preparing...", progress=None))
+    values = _build_adaptable_data(newToast).values
+    assert values["progress"] == "indeterminate"
+    assert values["progress_override"] == ""
+
+
 def test_scheduled_toast(pytestconfig):
     from datetime import datetime, timedelta
 

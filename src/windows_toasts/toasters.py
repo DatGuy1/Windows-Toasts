@@ -50,7 +50,8 @@ def _build_adaptable_data(toast: Toast) -> NotificationData:
             # Recreate default Windows behaviour while still allowing it to be changed in the future
             progressOverride = f"{round(progressBar.progress * 100)}%"
 
-        notificationData.values["progress_override"] = progressOverride
+        # The map only takes strings, so an indeterminate bar without an override gets an empty one
+        notificationData.values["progress_override"] = progressOverride or ""
         notificationData.values["caption"] = progressBar.caption or ""
 
     return notificationData

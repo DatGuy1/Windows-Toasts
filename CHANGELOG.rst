@@ -1,3 +1,7 @@
+Unreleased
+==========
+- Fixed a TypeError when showing an indeterminate progress bar without a ``progress_override``
+
 1.3.1 (2025-05-06)
 ==================
 - Support pywinrt>=3 (#184)
