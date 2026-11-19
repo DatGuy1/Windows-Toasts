@@ -1,7 +1,5 @@
-# Formatting
-black[colorama]==25.1.0
-flake8==7.2.0
-isort==6.0.1
+# Formatting and linting
+ruff==0.17.6
 
 # Testing
 pytest==8.3.5
