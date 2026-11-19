@@ -1,5 +1,6 @@
 Unreleased
 ==========
+- Dropped support for EOL Python 3.9 and 3.10
 - Moved package metadata from ``setup.py`` to ``pyproject.toml`` (#165)
 - Moved ``register_hkey_aumid`` into ``windows_toasts``
 - Fixed a TypeError when showing an indeterminate progress bar without a ``progress_override``

@@ -4,7 +4,7 @@ Getting started
 Installing Windows-Toasts
 -------------------------
 
-The latest version of Windows-Toasts requires Python 3.9 or later, and supports Windows 10 and 11.
+The latest version of Windows-Toasts requires Python 3.11 or later, and supports Windows 10 and 11.
 
 It can be installed using pip:
 
