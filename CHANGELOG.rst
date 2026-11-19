@@ -1,6 +1,7 @@
 Unreleased
 ==========
 - Fixed a TypeError when showing an indeterminate progress bar without a ``progress_override``
+- A context menu ``ToastButton`` without content now raises a ``ValueError``
 
 1.3.1 (2025-05-06)
 ==================

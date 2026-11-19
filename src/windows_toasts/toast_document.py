@@ -267,7 +267,11 @@ class ToastDocument:
         Adds a button to the toast. Only works on :obj:`~windows_toasts.toasters.InteractableWindowsToaster`
 
         :type action: Union[ToastButton, ToastSystemButton]
+        :raises: ValueError: If a context menu button has no content
         """
+        if isinstance(action, ToastButton) and action.inContextMenu and not action.content:
+            raise ValueError("A ToastButton in the context menu must have content")
+
         actionNodes = self.xmlDocument.get_elements_by_tag_name("actions")
         if actionNodes.length > 0:
             actionsNode = actionNodes.item(0)

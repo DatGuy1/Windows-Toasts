@@ -43,10 +43,19 @@ def test_interactable_toast(example_image_path):
     newToast.AddInput(newInput)
 
     newToast.AddAction(ToastButton("Second", "clicked=second", colour=ToastButtonColour.Green))
-    newToast.AddAction(ToastButton("", "clicked=context", tooltip="Tooltip", inContextMenu=True))
+    newToast.AddAction(ToastButton("Context", "clicked=context", tooltip="Tooltip", inContextMenu=True))
 
     newToast.on_activated = notificationActivated
     InteractableWindowsToaster("Python").show_toast(newToast)
+
+
+def test_context_menu_button_without_content():
+    from src.windows_toasts import ToastButton
+
+    newToast = Toast(["Hello, context menu!"])
+    newToast.AddAction(ToastButton("", "clicked=context", tooltip="Tooltip", inContextMenu=True))
+    with raises(ValueError, match="context menu"):
+        InteractableWindowsToaster("Python").show_toast(newToast)
 
 
 def test_audio_toast():
