@@ -1,7 +1,7 @@
 Unreleased
 ==========
 - Require pywinrt>=4
-- Dropped support for EOL Python 3.9 and 3.10
+- Dropped support for EOL Python 3.9 and 3.10, and added support for 3.13, 3.14, and 3.15
 - Moved package metadata from ``setup.py`` to ``pyproject.toml`` (#165)
 - Moved ``register_hkey_aumid`` into ``windows_toasts``
 - Fixed a TypeError when showing an indeterminate progress bar without a ``progress_override``
