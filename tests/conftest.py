@@ -84,7 +84,7 @@ def example_audio_path(example_files_dir) -> Path:
 def slow_down_tests(pytestconfig):
     yield
     if pytestconfig.getoption("real_run"):
-        time.sleep(10)
+        time.sleep(2)
 
 
 def pytest_addoption(parser):
