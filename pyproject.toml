@@ -13,11 +13,11 @@ keywords = ["windows", "toast", "notifications", "winrt"]
 authors = [{ name = "DatGuy" }]
 requires-python = ">=3.11"
 dependencies = [
-    "winrt-runtime~=3.0",
-    "winrt-Windows.Data.Xml.Dom~=3.0",
-    "winrt-Windows.Foundation~=3.0",
-    "winrt-Windows.Foundation.Collections~=3.0",
-    "winrt-Windows.UI.Notifications~=3.0",
+    "winrt-runtime>=4.0",
+    "winrt-Windows.Data.Xml.Dom>=4!0",
+    "winrt-Windows.Foundation>=4!0",
+    "winrt-Windows.Foundation.Collections>=4!0",
+    "winrt-Windows.UI.Notifications>=4!0",
 ]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
