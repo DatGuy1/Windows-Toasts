@@ -1,6 +1,0 @@
-# Formatting and linting
-ruff==0.17.6
-
-# Testing
-pytest==8.3.5
-pytest-cov==6.0.0

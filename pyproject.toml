@@ -45,6 +45,13 @@ Changelog = "https://github.com/DatGuy1/Windows-Toasts/blob/main/CHANGELOG.rst"
 [project.scripts]
 register_hkey_aumid = "windows_toasts.register_hkey_aumid:main"
 
+[dependency-groups]
+dev = [
+    "pytest>=9.2.0",
+    "pytest-cov>=7.1.0",
+    "ruff>=0.17.6",
+]
+
 [tool.setuptools.packages.find]
 where = ["src"]
 
