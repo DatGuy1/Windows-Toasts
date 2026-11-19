@@ -4,7 +4,7 @@ from pytest import raises
 
 
 def test_register_hkey_icon(example_image_path):
-    from scripts.register_hkey_aumid import register_hkey
+    from src.windows_toasts.register_hkey_aumid import register_hkey
 
     appId = "Test.Notification"
     appName = "Notification Test"
@@ -50,7 +50,7 @@ def test_register_hkey_icon(example_image_path):
 
 
 def test_register_hkey_no_icon():
-    from scripts.register_hkey_aumid import register_hkey
+    from src.windows_toasts.register_hkey_aumid import register_hkey
 
     appId = "Test.Notification"
     appName = "Notification Test"

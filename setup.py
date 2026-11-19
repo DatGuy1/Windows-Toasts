@@ -1,6 +1,6 @@
 from setuptools import setup
 
-packages = ["windows_toasts", "scripts"]
+packages = ["windows_toasts"]
 
 requires = [
     "winrt-runtime~=3.0",
@@ -30,7 +30,7 @@ setup(
     package_dir={"windows_toasts": "src/windows_toasts"},
     package_data={"": ["LICENSE"], "windows_toasts": ["py.typed"]},
     include_package_data=True,
-    entry_points={"console_scripts": ["register_hkey_aumid = scripts.register_hkey_aumid:main"]},
+    entry_points={"console_scripts": ["register_hkey_aumid = windows_toasts.register_hkey_aumid:main"]},
     python_requires=">=3.9",
     install_requires=requires,
     license_files=["LICENSE"],

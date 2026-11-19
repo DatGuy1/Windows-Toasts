@@ -1,7 +1,5 @@
 [run]
 branch = True
-omit =
-    scripts/publish_gh_release_notes.py
 
 [report]
 exclude_lines =

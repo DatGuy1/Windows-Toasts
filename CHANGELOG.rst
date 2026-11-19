@@ -1,5 +1,6 @@
 Unreleased
 ==========
+- Moved ``register_hkey_aumid`` into ``windows_toasts``
 - Fixed a TypeError when showing an indeterminate progress bar without a ``progress_override``
 - A context menu ``ToastButton`` without content now raises a ``ValueError``
 
