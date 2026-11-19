@@ -54,3 +54,17 @@ jobs:
         run: uv run --locked --only-group dev ruff format --check --diff .
       - name: Lint
         run: uv run --locked --only-group dev ruff check --output-format=github .
+
+  typecheck:
+    # Needs the winrt type hints, which only install on Windows
+    runs-on: windows-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v7
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v10.3.3
+        with:
+          python-version: "3.14"
+      - name: Type check
+        run: uv run --locked ty check --output-format github

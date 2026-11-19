@@ -50,6 +50,7 @@ dev = [
     "pytest>=9.2.0",
     "pytest-cov>=7.1.0",
     "ruff>=0.17.6",
+    "ty>=0.0.107",
 ]
 
 [tool.setuptools.packages.find]
@@ -83,5 +84,8 @@ split-on-trailing-comma = false
 pythonpath = ["src"]
 filterwarnings = ["error"]
 
-[tool.mypy]
-exclude = ["build/", "main.py"]
+[tool.ty.environment]
+python-platform = "win32"
+
+[tool.ty.src]
+include = ["src"]

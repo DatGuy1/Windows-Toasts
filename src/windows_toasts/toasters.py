@@ -138,17 +138,19 @@ class BaseWindowsToaster:
         toastNotification = ToastNotification(self._setup_toast(toast, True).xmlDocument)
         toastNotification.data = _build_adaptable_data(toast)
 
-        if toast.on_activated is not None:  # pragma: no cover
-            # For some reason on_activated's type is generic, so cast it
+        # Copied to locals so the type checker knows they aren't None inside the lambdas
+        onActivated, onDismissed, onFailed = toast.on_activated, toast.on_dismissed, toast.on_failed
+
+        if onActivated is not None:  # pragma: no cover
             toastNotification.add_activated(
-                lambda _, eventArgs: toast.on_activated(ToastActivatedEventArgs.fromWinRt(eventArgs))
+                lambda _, eventArgs: onActivated(ToastActivatedEventArgs.fromWinRt(eventArgs))
             )
 
-        if toast.on_dismissed is not None:  # pragma: no cover
-            toastNotification.add_dismissed(lambda _, eventArgs: toast.on_dismissed(eventArgs))
+        if onDismissed is not None:  # pragma: no cover
+            toastNotification.add_dismissed(lambda _, eventArgs: onDismissed(eventArgs))
 
-        if toast.on_failed is not None:  # pragma: no cover
-            toastNotification.add_failed(lambda _, eventArgs: toast.on_failed(eventArgs))
+        if onFailed is not None:  # pragma: no cover
+            toastNotification.add_failed(lambda _, eventArgs: onFailed(eventArgs))
 
         notificationToSend = _build_toast_notification(toast, toastNotification)
 
