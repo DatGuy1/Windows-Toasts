@@ -95,7 +95,7 @@ def test_custom_audio_toast(example_audio_path, example_image_path):
         toaster.show_toast(toast)
 
     toast.audio = ToastAudio(example_audio_path)
-    toast.text_fields = ["This should pop with the Wikipedia sound logo"]
+    toast.text_fields = ["This should pop with a soft chime"]
     toaster.show_toast(toast)
 
 

@@ -1,5 +1,11 @@
+import io
+import math
+import struct
 import time
-from typing import Iterator
+import wave
+import zlib
+from collections.abc import Iterator
+from pathlib import Path
 from unittest.mock import patch
 
 from pytest import fixture
@@ -21,50 +27,57 @@ def real_run_fixture(pytestconfig) -> Iterator[None]:
             yield
 
 
-@fixture(scope="session", autouse=True)
-def download_example_image():
-    # Download an example image and delete it at the end
-    import urllib.request
-    from pathlib import Path
+def _make_png(width: int = 64, height: int = 64) -> bytes:
+    """Build a small gradient PNG"""
 
-    # Save the image to python.png
-    imageUrl = "https://www.python.org/static/community_logos/python-powered-h-140x182.png"
-    imagePath = Path.cwd() / "python.png"
-    urllib.request.urlretrieve(imageUrl, imagePath)
+    def chunk(chunkType: bytes, data: bytes) -> bytes:
+        return struct.pack(">I", len(data)) + chunkType + data + struct.pack(">I", zlib.crc32(chunkType + data))
 
-    yield
-
-    imagePath.unlink()
+    rows = b"".join(
+        b"\x00" + b"".join(bytes((x * 255 // width, y * 255 // height, 160)) for x in range(width))
+        for y in range(height)
+    )
+    header = struct.pack(">IIBBBBB", width, height, 8, 2, 0, 0, 0)
+    return b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", header) + chunk(b"IDAT", zlib.compress(rows)) + chunk(b"IEND", b"")
 
 
-@fixture(scope="session", autouse=True)
-def download_example_audio():
-    # Download an example audio and delete it at the end
-    import urllib.request
-    from pathlib import Path
+def _make_wav(seconds: float = 1.0, frequency: int = 523, sampleRate: int = 22050) -> bytes:
+    """Build a short, fading chime WAV"""
 
-    # Save the audio to audio.mp3
-    audioUrl = "https://upload.wikimedia.org/wikipedia/commons/transcoded/9/91/Wikimedia_Sonic_Logo_-_4-seconds.wav/Wikimedia_Sonic_Logo_-_4-seconds.wav.mp3"
-    audioPath = Path.cwd() / "audio.mp3"
-    urllib.request.urlretrieve(audioUrl, audioPath)
+    def sample(index: int) -> int:
+        elapsed = index / sampleRate
+        # Fade in then decay
+        envelope = min(1.0, elapsed / 0.01) * math.exp(-4 * elapsed)
+        return int(6000 * envelope * math.sin(2 * math.pi * frequency * elapsed))
 
-    yield
+    frames = b"".join(struct.pack("<h", sample(index)) for index in range(int(seconds * sampleRate)))
+    buffer = io.BytesIO()
+    with wave.open(buffer, "wb") as wavFile:
+        wavFile.setnchannels(1)
+        wavFile.setsampwidth(2)
+        wavFile.setframerate(sampleRate)
+        wavFile.writeframes(frames)
 
-    audioPath.unlink()
-
-
-@fixture
-def example_image_path():
-    from pathlib import Path
-
-    return Path.cwd() / "python.png"
+    return buffer.getvalue()
 
 
-@fixture
-def example_audio_path():
-    from pathlib import Path
+@fixture(scope="session")
+def example_files_dir(tmp_path_factory) -> Path:
+    return tmp_path_factory.mktemp("example_files")
 
-    return Path.cwd() / "audio.mp3"
+
+@fixture(scope="session")
+def example_image_path(example_files_dir) -> Path:
+    imagePath = example_files_dir / "image.png"
+    imagePath.write_bytes(_make_png())
+    return imagePath
+
+
+@fixture(scope="session")
+def example_audio_path(example_files_dir) -> Path:
+    audioPath = example_files_dir / "audio.wav"
+    audioPath.write_bytes(_make_wav())
+    return audioPath
 
 
 @fixture(scope="function", autouse=True)
