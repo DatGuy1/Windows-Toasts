@@ -66,6 +66,7 @@ line_length = 120
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]
+filterwarnings = ["error"]
 
 [tool.mypy]
 exclude = ["build/", "main.py"]
