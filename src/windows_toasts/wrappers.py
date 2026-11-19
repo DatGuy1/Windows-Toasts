@@ -1,13 +1,12 @@
 from __future__ import annotations
 
 import abc
-import urllib
 from dataclasses import dataclass
 from enum import Enum
 from os import PathLike
 from pathlib import Path
 from typing import Optional, Sequence, Union
-from urllib.parse import urlparse
+from urllib.parse import unquote, urlparse
 
 from .exceptions import InvalidImageException
 
@@ -104,7 +103,7 @@ class ToastImage:
         if not imagePath.exists():
             raise InvalidImageException(f"Image with path '{imagePath}' could not be found")
 
-        self.path = urllib.parse.unquote(imagePath.absolute().as_uri())
+        self.path = unquote(imagePath.absolute().as_uri())
 
 
 @dataclass
