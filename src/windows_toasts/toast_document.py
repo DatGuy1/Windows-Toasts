@@ -3,6 +3,7 @@ from typing import Union
 
 from winrt.windows.data.xml.dom import IXmlNode, XmlDocument, XmlElement
 
+from .adaptive import ToastGroup, ToastGroupImage, ToastText
 from .toast import Toast
 from .toast_audio import ToastAudio
 from .wrappers import (
@@ -364,3 +365,59 @@ class ToastDocument:
             self.SetAttribute(progressBarNode, "title", progressBar.caption)
 
         self.bindingNode.append_child(progressBarNode)
+
+    def AddGroup(self, group: ToastGroup) -> None:
+        """
+        Add a row of columns with styled text and images. `Adaptive content on Microsoft.com
+        <https://learn.microsoft.com/windows/apps/develop/notifications/app-notifications/app-notifications-content
+        #adaptive-content>`_
+
+        :type group: ToastGroup
+        """
+        groupNode = self.xmlDocument.create_element("group")
+        for subgroup in group.subgroups:
+            subgroupNode = self.xmlDocument.create_element("subgroup")
+            if subgroup.weight is not None:
+                self.SetAttribute(subgroupNode, "hint-weight", str(subgroup.weight))
+            if subgroup.text_stacking.value:
+                self.SetAttribute(subgroupNode, "hint-textStacking", subgroup.text_stacking.value)
+
+            for content in subgroup.content:
+                if isinstance(content, ToastText):
+                    subgroupNode.append_child(self._CreateGroupText(content))
+                elif isinstance(content, ToastGroupImage):
+                    subgroupNode.append_child(self._CreateGroupImage(content))
+
+            groupNode.append_child(subgroupNode)
+
+        self.bindingNode.append_child(groupNode)
+
+    def _CreateGroupText(self, text: ToastText) -> XmlElement:
+        textNode = self.xmlDocument.create_element("text")
+        self.SetNodeStringValue(textNode, text.text)
+        if text.style.value:
+            self.SetAttribute(textNode, "hint-style", text.style.value)
+        if text.align.value:
+            self.SetAttribute(textNode, "hint-align", text.align.value)
+        if text.wrap:
+            self.SetAttribute(textNode, "hint-wrap", "true")
+        if text.max_lines is not None:
+            self.SetAttribute(textNode, "hint-maxLines", str(text.max_lines))
+        if text.min_lines is not None:
+            self.SetAttribute(textNode, "hint-minLines", str(text.min_lines))
+
+        return textNode
+
+    def _CreateGroupImage(self, image: ToastGroupImage) -> XmlElement:
+        imageNode = self.xmlDocument.create_element("image")
+        self.SetAttribute(imageNode, "src", image.image.path)
+        if image.alt_text is not None:
+            self.SetAttribute(imageNode, "alt", image.alt_text)
+        if image.circle_crop:
+            self.SetAttribute(imageNode, "hint-crop", "circle")
+        if image.remove_margin:
+            self.SetAttribute(imageNode, "hint-removeMargin", "true")
+        if image.align.value:
+            self.SetAttribute(imageNode, "hint-align", image.align.value)
+
+        return imageNode

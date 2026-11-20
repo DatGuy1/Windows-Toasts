@@ -12,6 +12,7 @@ Unreleased
 - Added ``notification_setting`` and ``notification_mode`` to toasters, to check whether Windows will show their
   notifications (#208)
 - Added ``Toast.header`` and ``ToastHeader`` to group toasts under a header in Action Center (#206)
+- Added ``Toast.groups`` and ``ToastGroup`` for columns of styled text and images (#207)
 - Deprecated passing ``Toast`` arguments other than ``text_fields`` positionally
 - ``on_dismissed`` and ``on_failed`` now receive the library's own ``ToastDismissedEventArgs`` and
   ``ToastFailedEventArgs`` instead of Windows', and ``ToastDismissalReason`` is now the library's own enum

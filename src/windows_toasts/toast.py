@@ -9,6 +9,7 @@ import warnings
 from collections.abc import Callable, Iterable
 from typing import Any, TypeVar, cast
 
+from .adaptive import ToastGroup
 from .events import ToastActivatedEventArgs, ToastDismissedEventArgs, ToastFailedEventArgs
 from .toast_audio import ToastAudio
 from .wrappers import (
@@ -88,6 +89,8 @@ class Toast:
     """Various text fields"""
     images: list[ToastDisplayImage]
     """See :func:`AddImage`"""
+    groups: list[ToastGroup]
+    """Rows of styled text and images, shown below the text fields. Unlike the text fields, they can't be updated"""
     inputs: list[ToastInput]
     """Text/selection input boxes"""
     actions: list[ToastButton | ToastSystemButton]
@@ -133,6 +136,7 @@ class Toast:
         text_fields: list[str | None] | tuple[str | None] | set[str | None] | None = None,
         *,
         images: Iterable[ToastDisplayImage] = (),
+        groups: Iterable[ToastGroup] = (),
         inputs: Iterable[ToastInput] = (),
         actions: Iterable[ToastButton | ToastSystemButton] = (),
         progress_bar: ToastProgressBar | None = None,
@@ -163,6 +167,7 @@ class Toast:
         """
         self.text_fields = [] if text_fields is None else list(text_fields)
         self.images = []
+        self.groups = list(groups)
         self.inputs = []
         self.actions = []
 

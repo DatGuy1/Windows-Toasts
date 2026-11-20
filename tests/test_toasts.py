@@ -328,6 +328,53 @@ def test_header():
     assert "<header" not in toaster._setup_toast(Toast(["No header"]), True).xmlDocument.get_xml()
 
 
+def test_groups(example_image_path):
+    from datetime import datetime, timedelta
+
+    from src.windows_toasts import (
+        ToastGroup,
+        ToastGroupImage,
+        ToastImage,
+        ToastImageAlign,
+        ToastSubgroup,
+        ToastText,
+        ToastTextAlign,
+        ToastTextStacking,
+        ToastTextStyle,
+    )
+
+    styledText = ToastText(
+        "Styled", ToastTextStyle.TitleSubtle, ToastTextAlign.Center, wrap=True, max_lines=2, min_lines=1
+    )
+    image = ToastGroupImage(
+        ToastImage(example_image_path), "Alt", circle_crop=True, remove_margin=True, align=ToastImageAlign.Right
+    )
+    group = ToastGroup(
+        [
+            ToastSubgroup([ToastText("Plain"), styledText]),
+            ToastSubgroup([image], weight=2, text_stacking=ToastTextStacking.Bottom),
+        ]
+    )
+    newToast = Toast(["Groups"], groups=[group])
+
+    toaster = InteractableWindowsToaster("Python")
+    toaster.show_toast(newToast)
+    toaster.schedule_toast(newToast, datetime.now() + timedelta(seconds=10))
+
+    xml = toaster._setup_toast(newToast, True).xmlDocument.get_xml()
+    assert (
+        "<group><subgroup><text>Plain</text>"
+        '<text hint-style="titleSubtle" hint-align="center" hint-wrap="true" hint-maxLines="2" hint-minLines="1">'
+        "Styled</text></subgroup>"
+        f'<subgroup hint-weight="2" hint-textStacking="bottom"><image src="{image.image.path}" alt="Alt" '
+        'hint-crop="circle" hint-removeMargin="true" hint-align="right"/></subgroup></group>'
+    ) in xml
+
+    with warns(UserWarning, match="groups are not supported"):
+        WindowsToaster("Python").show_toast(newToast)
+    assert "<group" not in WindowsToaster("Python")._setup_toast(newToast, True).xmlDocument.get_xml()
+
+
 def test_positional_arguments_deprecated():
     from src.windows_toasts import AudioSource, ToastAudio, ToastDuration
 

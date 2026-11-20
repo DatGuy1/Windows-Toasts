@@ -264,6 +264,42 @@ Images can be placed in three different positions, as included in :attr:`windows
 * Hero – the image will be displayed prominently at the top of the notification
 * AppLogo – the image will be displayed in a square on the left side of the visual area
 
+Columns of styled text and images
+---------------------------------
+
+A :class:`~windows_toasts.adaptive.ToastGroup` adds a row of columns below the toast's text, each a :class:`~windows_toasts.adaptive.ToastSubgroup` of text and images. Unlike the text fields, :class:`~windows_toasts.adaptive.ToastText` can be styled, aligned and wrapped.
+
+.. code-block:: python
+
+    from windows_toasts import (
+        InteractableWindowsToaster,
+        Toast,
+        ToastGroup,
+        ToastSubgroup,
+        ToastText,
+        ToastTextAlign,
+        ToastTextStyle,
+    )
+
+    toaster = InteractableWindowsToaster('Python')
+
+    forecast = [('Mon', '18°'), ('Tue', '21°'), ('Wed', '16°')]
+    columns = [
+        ToastSubgroup(
+            [
+                ToastText(day, align=ToastTextAlign.Center),
+                ToastText(temperature, ToastTextStyle.Subtitle, align=ToastTextAlign.Center),
+            ],
+            weight=1,
+        )
+        for day, temperature in forecast
+    ]
+
+    toaster.show_toast(Toast(['Weather', 'The next three days'], groups=[ToastGroup(columns)]))
+
+.. note::
+    Groups only show on :class:`~windows_toasts.toasters.InteractableWindowsToaster`. Their text can't be changed with :meth:`~windows_toasts.toasters.BaseWindowsToaster.update_toast`; show the toast again to change it. Windows also stops showing a group's content past a certain height, so keep each group to a few lines.
+
 ...and much more
 ----------------
 

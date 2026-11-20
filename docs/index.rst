@@ -64,6 +64,7 @@ Contents
    user/toast
    user/audio
    user/wrappers
+   user/adaptive
    user/events
    user/exceptions
 

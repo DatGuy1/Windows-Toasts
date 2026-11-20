@@ -10,6 +10,16 @@ if platform.system() == "Windows" and (osVersion := int(platform.version().split
     )
 
 from ._version import __author__, __description__, __license__, __title__, __url__, __version__  # noqa: F401
+from .adaptive import (
+    ToastGroup,
+    ToastGroupImage,
+    ToastImageAlign,
+    ToastSubgroup,
+    ToastText,
+    ToastTextAlign,
+    ToastTextStacking,
+    ToastTextStyle,
+)
 from .events import ToastActivatedEventArgs, ToastDismissalReason, ToastDismissedEventArgs, ToastFailedEventArgs
 from .exceptions import InvalidImageException, ToastNotFoundError
 from .toast import Toast
@@ -42,6 +52,15 @@ __all__ = [
     "__title__",
     "__url__",
     "__version__",
+    # adaptive.py
+    "ToastGroup",
+    "ToastGroupImage",
+    "ToastImageAlign",
+    "ToastSubgroup",
+    "ToastText",
+    "ToastTextAlign",
+    "ToastTextStacking",
+    "ToastTextStyle",
     # events.py
     "ToastActivatedEventArgs",
     "ToastDismissalReason",

@@ -297,6 +297,9 @@ class WindowsToaster(BaseWindowsToaster):
         if toast.progress_bar is not None:
             warnings.warn(self.__InteractableWarningMessage.format("progress bars"), stacklevel=2)
 
+        if len(toast.groups) > 0:
+            warnings.warn(self.__InteractableWarningMessage.format("groups"), stacklevel=2)
+
         if any(toast_image.position == ToastImagePosition.Hero for toast_image in toast.images):
             warnings.warn(self.__InteractableWarningMessage.format("hero placements"), stacklevel=2)
 
@@ -356,6 +359,9 @@ class InteractableWindowsToaster(BaseWindowsToaster):
         # If we haven't set up our own AUMID, put our application text in the attribution field
         if self.defaultAUMID and toast.attribution_text is None:
             toastContent.SetAttributionText(self.applicationText)
+
+        for group in toast.groups:
+            toastContent.AddGroup(group)
 
         for toastInput in toast.inputs:
             toastContent.AddInput(toastInput)
