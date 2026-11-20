@@ -371,6 +371,46 @@ def test_notification_mode():
     assert isinstance(WindowsToaster("Python").notification_mode, ToastNotificationMode)
 
 
+def test_dismissal_reason():
+    from winrt.windows.ui.notifications import ToastDismissalReason as WinRtToastDismissalReason
+
+    from src.windows_toasts import ToastDismissalReason
+
+    assert [(member.name.lower(), member.value) for member in ToastDismissalReason] == [
+        (member.name.replace("_", "").lower(), int(member)) for member in WinRtToastDismissalReason
+    ]
+    assert ToastDismissalReason.UserCanceled == WinRtToastDismissalReason.USER_CANCELED == 0
+
+    for old, new in (
+        ("USER_CANCELED", ToastDismissalReason.UserCanceled),
+        ("APPLICATION_HIDDEN", ToastDismissalReason.ApplicationHidden),
+        ("TIMED_OUT", ToastDismissalReason.TimedOut),
+    ):
+        with warns(DeprecationWarning, match=f"ToastDismissalReason.{old} is deprecated") as record:
+            assert getattr(ToastDismissalReason, old) is new
+        assert record[0].filename == __file__
+        assert old not in ToastDismissalReason.__members__
+
+    unknown = ToastDismissalReason(7)
+    assert unknown == 7 and unknown.name == "7"
+    assert ToastDismissalReason(7) is unknown
+
+
+def test_event_args_from_winrt():
+    from unittest.mock import Mock
+
+    from winrt.windows.foundation import HResult
+    from winrt.windows.ui.notifications import ToastDismissalReason as WinRtToastDismissalReason
+
+    from src.windows_toasts import ToastDismissalReason, ToastDismissedEventArgs, ToastFailedEventArgs
+
+    dismissed = ToastDismissedEventArgs.fromWinRt(Mock(reason=WinRtToastDismissalReason.TIMED_OUT))
+    assert dismissed.reason is ToastDismissalReason.TimedOut
+
+    failed = ToastFailedEventArgs.fromWinRt(Mock(error_code=HResult(-2147024891)))
+    assert failed.error_code == -2147024891
+
+
 def test_scheduled_toast(pytestconfig):
     from datetime import datetime, timedelta
 

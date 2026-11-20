@@ -1,6 +1,7 @@
 Unreleased
 ==========
 - Require pywinrt>=4
+  - ``ToastFailedEventArgs.error_code`` is now an ``int``, and its ``.value`` is deprecated
 - Dropped support for EOL Python 3.9 and 3.10, and added support for 3.13, 3.14, and 3.15
 - Moved package metadata from ``setup.py`` to ``pyproject.toml`` (#165)
 - Moved ``register_hkey_aumid`` into ``windows_toasts``
@@ -11,6 +12,10 @@ Unreleased
 - Added ``notification_setting`` and ``notification_mode`` to toasters, to check whether Windows will show their
   notifications (#208)
 - Deprecated passing ``Toast`` arguments other than ``text_fields`` positionally
+- ``on_dismissed`` and ``on_failed`` now receive the library's own ``ToastDismissedEventArgs`` and
+  ``ToastFailedEventArgs`` instead of Windows', and ``ToastDismissalReason`` is now the library's own enum
+  - Its members are now named ``UserCanceled``, ``ApplicationHidden`` and ``TimedOut``. The old ``USER_CANCELED``-style
+    names are deprecated
 
 1.3.1 (2025-05-06)
 ==================

@@ -9,9 +9,7 @@ import warnings
 from collections.abc import Callable, Iterable
 from typing import Any, TypeVar, cast
 
-from winrt.windows.ui.notifications import ToastDismissedEventArgs, ToastFailedEventArgs
-
-from .events import ToastActivatedEventArgs
+from .events import ToastActivatedEventArgs, ToastDismissedEventArgs, ToastFailedEventArgs
 from .toast_audio import ToastAudio
 from .wrappers import (
     ToastButton,

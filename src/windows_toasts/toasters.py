@@ -12,7 +12,7 @@ from winrt.windows.ui.notifications import (
     ToastNotifier,
 )
 
-from .events import ToastActivatedEventArgs
+from .events import ToastActivatedEventArgs, ToastDismissedEventArgs, ToastFailedEventArgs
 from .exceptions import ToastNotFoundError
 from .toast import Toast
 from .toast_document import ToastDocument
@@ -179,10 +179,12 @@ class BaseWindowsToaster:
             )
 
         if onDismissed is not None:  # pragma: no cover
-            toastNotification.add_dismissed(lambda _, eventArgs: onDismissed(eventArgs))
+            toastNotification.add_dismissed(
+                lambda _, eventArgs: onDismissed(ToastDismissedEventArgs.fromWinRt(eventArgs))
+            )
 
         if onFailed is not None:  # pragma: no cover
-            toastNotification.add_failed(lambda _, eventArgs: onFailed(eventArgs))
+            toastNotification.add_failed(lambda _, eventArgs: onFailed(ToastFailedEventArgs.fromWinRt(eventArgs)))
 
         notificationToSend = _build_toast_notification(toast, toastNotification)
 

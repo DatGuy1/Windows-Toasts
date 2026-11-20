@@ -6,7 +6,7 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
-from typing import Self
+from typing import Any, Self
 from urllib.parse import unquote, urlparse
 
 from .exceptions import InvalidImageException
@@ -24,7 +24,10 @@ class _WindowsEnum(Enum):
             return None
 
         number = int(value)
-        member = object.__new__(cls)
+        # An IntEnum's members are ints, so they need int.__new__. It's typed as Any because type checkers can't apply
+        # int.__new__ to an enum's Self
+        new: Any = int.__new__ if issubclass(cls, int) else object.__new__
+        member: Self = new(cls, number) if issubclass(cls, int) else new(cls)
         member._name_ = str(number)
         member._value_ = number
         # Cached like Flag's pseudo-members, so the same value always gives the same, equal member
