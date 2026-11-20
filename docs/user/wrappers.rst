@@ -14,6 +14,7 @@ Classes
     windows_toasts.wrappers.ToastNotificationMode
     windows_toasts.wrappers.ToastImage
     windows_toasts.wrappers.ToastDisplayImage
+    windows_toasts.wrappers.ToastHeader
     windows_toasts.wrappers.ToastProgressBar
     windows_toasts.wrappers.ToastInputTextBox
     windows_toasts.wrappers.ToastSelection

@@ -15,6 +15,7 @@ from .wrappers import (
     ToastButton,
     ToastDisplayImage,
     ToastDuration,
+    ToastHeader,
     ToastInputSelectionBox,
     ToastInputTextBox,
     ToastProgressBar,
@@ -107,6 +108,8 @@ class Toast:
     """A custom timestamp. If you don't provide one, Windows uses the time that your notification was sent"""
     group: str | None
     """An internal identifier, where you can assign groups like "wallPosts", "messages", "friendRequests", etc."""
+    header: ToastHeader | None
+    """A header to show the toast under in Action Center. Unlike group, this is visible to the user"""
     expiration_time: datetime.datetime | None
     """The time for the toast to expire on in the action center. If it is on-screen, nothing will happen"""
     expires_on_reboot: bool
@@ -140,6 +143,7 @@ class Toast:
         suppress_popup: bool = False,
         timestamp: datetime.datetime | None = None,
         group: str | None = None,
+        header: ToastHeader | None = None,
         expiration_time: datetime.datetime | None = None,
         expires_on_reboot: bool = False,
         launch_action: str | None = None,
@@ -180,6 +184,7 @@ class Toast:
         self.suppress_popup = suppress_popup
         self.timestamp = timestamp
         self.group = group
+        self.header = header
         self.expiration_time = expiration_time
         self.expires_on_reboot = expires_on_reboot
         self.launch_action = launch_action

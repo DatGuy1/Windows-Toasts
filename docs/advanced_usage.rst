@@ -234,6 +234,27 @@ In the following example, the toast is automatically removed when it is dismisse
 .. warning::
     You can only remove toasts that were popped by a toaster with the same AUMID. Additionally, no exception will be thrown if the toast does not exist
 
+Grouping toasts under a header
+------------------------------
+
+A :class:`~windows_toasts.wrappers.ToastHeader` shows related toasts together under one title in the Action Center.
+
+.. code-block:: python
+
+    from windows_toasts import InteractableWindowsToaster, Toast, ToastHeader
+
+    toaster = InteractableWindowsToaster('Python')
+
+    header = ToastHeader('Reminders', launch='https://example.com/reminders')
+    toaster.show_toast(Toast(['Drink some water'], header=header))
+    toaster.show_toast(Toast(['Stretch your legs'], header=header))
+
+Toasts are grouped by :attr:`~windows_toasts.wrappers.ToastHeader.header_id` alone, which defaults to the title, so toasts sent with the same title share a header even when they come from different runs of your script. If toasts with the same ``header_id`` have different titles, the header shows the most recent one's.
+
+Clicking the header launches its :attr:`~windows_toasts.wrappers.ToastHeader.launch` protocol. Without one, clicking the header does nothing, and it doesn't trigger :attr:`~windows_toasts.toast.Toast.on_activated`.
+
+To remove a header's toasts together, give them the same :attr:`~windows_toasts.toast.Toast.group` and use :meth:`~windows_toasts.toasters.BaseWindowsToaster.remove_toast_group`.
+
 Placing images
 ------------------
 

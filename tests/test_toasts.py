@@ -301,6 +301,33 @@ def test_text_box_default_input():
     assert "defaultInput" not in toaster._setup_toast(emptyToast, True).xmlDocument.get_xml()
 
 
+def test_header():
+    from src.windows_toasts import ToastHeader
+
+    header = ToastHeader("Reminders")
+    assert header.header_id == "Reminders"
+    firstToast = Toast(["Drink some water"], header=header)
+    secondToast = Toast(["Stretch your legs"], header=header)
+
+    toaster = InteractableWindowsToaster("Python")
+    toaster.show_toast(firstToast)
+    toaster.show_toast(secondToast)
+    WindowsToaster("Python").show_toast(Toast(["Legacy template"], header=header))
+
+    xmlDocument = toaster._setup_toast(firstToast, True).xmlDocument
+    headerNode = xmlDocument.get_elements_by_tag_name("toast").item(0).first_child
+    assert headerNode.node_name == "header"
+    assert headerNode.get_xml() == '<header id="Reminders" title="Reminders" arguments=""/>'
+
+    launchHeader = ToastHeader("Today's reminders", "reminders", launch="https://example.com/reminders")
+    launchToast = Toast(["Water the plants"], header=launchHeader)
+    assert (
+        '<header id="reminders" title="Today\'s reminders" activationType="protocol" '
+        'arguments="https://example.com/reminders"/>'
+    ) in toaster._setup_toast(launchToast, True).xmlDocument.get_xml()
+    assert "<header" not in toaster._setup_toast(Toast(["No header"]), True).xmlDocument.get_xml()
+
+
 def test_positional_arguments_deprecated():
     from src.windows_toasts import AudioSource, ToastAudio, ToastDuration
 

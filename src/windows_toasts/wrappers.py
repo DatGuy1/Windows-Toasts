@@ -195,6 +195,28 @@ class ToastDisplayImage:
         return cls(image, altText, position, circleCrop)
 
 
+@dataclass(init=False)
+class ToastHeader:
+    """
+    A heading that groups toasts in Action Center. Toasts with the same header_id are shown together under it.
+    """
+
+    title: str
+    """The title displayed for the header. If toasts with the same header_id differ, the most recent one's is shown"""
+    header_id: str
+    """
+    Identifier for the header, which toasts are grouped by. Defaults to the title, so toasts with the same title share
+    a header, even across runs. Set it to keep toasts grouped while changing the title
+    """
+    launch: str | None = None
+    """An optional protocol to launch when the header is clicked. Without one, clicking the header does nothing"""
+
+    def __init__(self, title: str, header_id: str | None = None, launch: str | None = None):
+        self.title = title
+        self.header_id = title if header_id is None else header_id
+        self.launch = launch
+
+
 @dataclass
 class ToastProgressBar:
     """

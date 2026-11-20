@@ -150,6 +150,9 @@ class BaseWindowsToaster:
         if toast.scenario != ToastScenario.Default:
             toastContent.SetScenario(toast.scenario)
 
+        if toast.header is not None:
+            toastContent.SetHeader(toast.header)
+
         toastNode = toastContent.GetElementByTagName("toast")
         launchAction = toast.launch_action
         if launchAction is not None:

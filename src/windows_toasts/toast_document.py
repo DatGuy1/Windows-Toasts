@@ -10,6 +10,7 @@ from .wrappers import (
     ToastButtonColour,
     ToastDisplayImage,
     ToastDuration,
+    ToastHeader,
     ToastInputSelectionBox,
     ToastInputTextBox,
     ToastProgressBar,
@@ -120,6 +121,26 @@ class ToastDocument:
         self.bindingNode.append_child(newElement)
         self.SetAttribute(newElement, "placement", "attribution")
         self.SetNodeStringValue(newElement, attributionText)
+
+    def SetHeader(self, header: ToastHeader) -> None:
+        """
+        Group the toast under a header in Action Center. `Toast headers on Microsoft.com
+        <https://learn.microsoft.com/windows/apps/design/shell/tiles-and-notifications/toast-headers>`_
+
+        :type header: ToastHeader
+        """
+        headerNode = self.xmlDocument.create_element("header")
+        self.SetAttribute(headerNode, "id", header.header_id)
+        self.SetAttribute(headerNode, "title", header.title)
+        if header.launch is None:
+            # Windows requires the attribute. Without an activator, foreground activation does nothing anyway
+            self.SetAttribute(headerNode, "arguments", "")
+        else:
+            self.SetAttribute(headerNode, "activationType", "protocol")
+            self.SetAttribute(headerNode, "arguments", header.launch)
+
+        toastNode = self.GetElementByTagName("toast")
+        toastNode.insert_before(headerNode, toastNode.first_child)
 
     def SetAudioAttributes(self, audioConfiguration: ToastAudio) -> None:
         """
