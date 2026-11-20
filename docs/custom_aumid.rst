@@ -14,7 +14,7 @@ Otherwise, run it through Python with :code:`python -m windows_toasts.register_h
 
 Using an installed AUMID
 ------------------------
-Microsoft.com has a page on `finding the Application User Model ID of an installed app <https://learn.microsoft.com/windows/configuration/find-the-application-user-model-id-of-an-installed-app>`_.
+Microsoft.com has a page on `finding the Application User Model ID of an installed app <https://learn.microsoft.com/windows/configuration/store/find-aumid>`_.
 Below are the ways I recommend
 
 Using Powershell

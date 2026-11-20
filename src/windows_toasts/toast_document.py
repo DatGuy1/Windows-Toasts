@@ -113,8 +113,8 @@ class ToastDocument:
         """
         Set attribution text for the toast. This is used if we're using
         :class:`~windows_toasts.toasters.InteractableWindowsToaster` but haven't set up our own AUMID.
-        `AttributionText on Microsoft.com <https://learn.microsoft.com/windows/apps/design/shell/tiles-and
-        -notifications/adaptive-interactive-toasts#attribution-text>`_
+        `AttributionText on Microsoft.com
+        <https://learn.microsoft.com/windows/apps/develop/notifications/app-notifications/app-notifications-content#attribution-text>`_
 
         :param attributionText: Attribution text to set
         """
@@ -126,7 +126,7 @@ class ToastDocument:
     def SetHeader(self, header: ToastHeader) -> None:
         """
         Group the toast under a header in Action Center. `Toast headers on Microsoft.com
-        <https://learn.microsoft.com/windows/apps/design/shell/tiles-and-notifications/toast-headers>`_
+        <https://learn.microsoft.com/windows/apps/develop/notifications/app-notifications/app-notifications-headers>`_
 
         :type header: ToastHeader
         """
@@ -146,8 +146,7 @@ class ToastDocument:
     def SetAudioAttributes(self, audioConfiguration: ToastAudio) -> None:
         """
         Apply audio attributes for the toast. If a loop is requested, the toast duration has to be set to long. `Audio
-        on Microsoft.com <https://learn.microsoft.com/windows/apps/design/shell/tiles-and-notifications/adaptive
-        -interactive-toasts#audio>`_
+        on Microsoft.com <https://learn.microsoft.com/windows/apps/develop/notifications/app-notifications/app-notifications-content#audio>`_
         """
         audioNode = self.GetElementByTagName("audio")
         if audioNode is None:
@@ -167,7 +166,7 @@ class ToastDocument:
     def SetTextField(self, nodePosition: int) -> None:
         """
         Set a simple text field. `Text elements on Microsoft.com
-        <https://learn.microsoft.com/windows/apps/design/shell/tiles-and-notifications/adaptive-interactive-toasts#text-elements>`_
+        <https://learn.microsoft.com/windows/apps/develop/notifications/app-notifications/app-notifications-content#text-elements>`_
 
         :param nodePosition: Index of the text fields of the toast type for the text to be written in
         """
@@ -190,8 +189,7 @@ class ToastDocument:
     def SetCustomTimestamp(self, customTimestamp: datetime.datetime) -> None:
         """
         Apply a custom timestamp to display on the toast and in Action Center. `Custom timestamp on
-        Microsoft.com <https://learn.microsoft.com/windows/apps/design/shell/tiles-and-notifications/adaptive
-        -interactive-toasts?tabs=xml#custom-timestamp>`_
+        Microsoft.com <https://learn.microsoft.com/windows/apps/develop/notifications/app-notifications/app-notifications-content?tabs=xml#custom-timestamp>`_
 
         :param customTimestamp: The target datetime
         :type customTimestamp: datetime.datetime
@@ -201,8 +199,8 @@ class ToastDocument:
 
     def AddImage(self, displayImage: ToastDisplayImage) -> None:
         """
-        Add an image to display. `Inline image on Microsoft.com <https://learn.microsoft.com/windows/
-        apps/design/shell/tiles-and-notifications/adaptive-interactive-toasts#inline-image>`_
+        Add an image to display. `Inline image on Microsoft.com
+        <https://learn.microsoft.com/windows/apps/develop/notifications/app-notifications/app-notifications-content#inline-image>`_
 
         :type displayImage: ToastDisplayImage
         """
@@ -226,8 +224,7 @@ class ToastDocument:
     def SetScenario(self, scenario: ToastScenario) -> None:
         """
         Set whether the notification should be marked as important. `Important Notifications on Microsoft.com
-        <https://learn.microsoft.com/windows/apps/design/shell/tiles-and-notifications/adaptive-interactive-toasts
-        #important-notifications>`_
+        <https://learn.microsoft.com/windows/apps/develop/notifications/app-notifications/app-notifications-content#important-notifications>`_
 
         :param scenario: Scenario to mark the toast as
         :type scenario: ToastScenario
@@ -238,8 +235,7 @@ class ToastDocument:
     def AddInput(self, toastInput: ToastInputTextBox | ToastInputSelectionBox) -> None:
         """
         Add a field for the user to input. `Inputs with button bar on Microsoft.com
-        <https://learn.microsoft.com/windows/apps/design/shell/tiles-and-notifications/adaptive-interactive
-        -toasts#quick-reply-text-box>`_
+        <https://learn.microsoft.com/windows/apps/develop/notifications/app-notifications/app-notifications-content#quick-reply-text-box>`_
 
         :type toastInput: Union[ToastInputTextBox, ToastInputSelectionBox]
         """
@@ -337,8 +333,8 @@ class ToastDocument:
     def AddProgressBar(self) -> None:
         """
         Add a progress bar on your app notification to keep the user informed of the progress of operations.
-        `Progress bar on Microsoft.com <https://learn.microsoft.com/windows/apps/design/shell/tiles-and-notifications
-        /adaptive-interactive-toasts#progress-bar>`_
+        `Progress bar on Microsoft.com
+        <https://learn.microsoft.com/windows/apps/develop/notifications/app-notifications/app-notifications-content#progress-bar>`_
         """
         progressBarNode = self.xmlDocument.create_element("progress")
         self.SetAttribute(progressBarNode, "status", "{status}")

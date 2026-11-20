@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
 
-# According to https://learn.microsoft.com/windows/apps/design/shell/tiles-and-notifications/custom-audio-on-toasts
+# According to https://learn.microsoft.com/windows/apps/develop/notifications/app-notifications/app-notifications-custom-audio
 SUPPORTED_FILE_TYPES = [".aac", ".flac", ".m4a", ".mp3", ".wav", ".wma"]
 
 

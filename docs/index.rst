@@ -23,7 +23,7 @@ Release v\ |version|.
         :alt: License Badge
 
     .. image:: https://static.pepy.tech/badge/windows-toasts/month
-        :target: https://pepy.tech/project/windows-toasts
+        :target: https://pepy.tech/projects/windows-toasts
         :alt: Downloads Per Month Badge
 
     .. image:: https://codecov.io/gh/DatGuy1/Windows-Toasts/branch/main/graph/badge.svg?token=ZD8OF2SF61
@@ -34,12 +34,12 @@ Release v\ |version|.
         :target: https://github.com/astral-sh/ruff
         :alt: Ruff Badge
 
-Windows-Toasts is a Python library used to send `toast notifications <https://docs.microsoft.com/windows/apps/design/shell/tiles-and-notifications/adaptive-interactive-toasts>`_ on Windows machines.
+Windows-Toasts is a Python library used to send `toast notifications <https://learn.microsoft.com/windows/apps/develop/notifications/app-notifications/app-notifications-content>`_ on Windows machines.
 
 Why Windows-Toasts?
 -------------------
 
-As opposed to other toast notification libraries, Windows-Toasts uses `Windows SDK <https://learn.microsoft.com/en-gb/windows/apps/windows-app-sdk/>`_ bindings to create and deliver notifications.
+As opposed to other toast notification libraries, Windows-Toasts uses `Windows SDK <https://learn.microsoft.com/windows/apps/windows-app-sdk/>`_ bindings to create and deliver notifications.
 This means no less-than-pretty Powershell hackyness and the like, and is in turn scalable, maintainable, and easy to use.
 
 The other packages I've seen also don't use tests or have no active maintainers, while Windows-Toasts has decent test coverage, is fully typed and documented, and has additional features.
