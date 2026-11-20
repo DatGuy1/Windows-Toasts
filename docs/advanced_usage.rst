@@ -22,7 +22,8 @@ Let's try out displaying an image
     toaster.show_toast(newToast)
 
 .. note::
-    | When not using InteractableWindowsToaster you can display up to two images, and one of them must be marked as 'hero'.
+    | When not using InteractableWindowsToaster, only the first image is shown, as a small image beside the text. Its
+      position is ignored, so it can't be a hero image.
     | A `hero image <https://learn.microsoft.com/windows/apps/develop/notifications/app-notifications/app-notifications-content#hero-image>`_ is an image that is prominently displayed at the top of the notification.
 
 Open a website on click

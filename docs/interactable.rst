@@ -5,7 +5,7 @@ Interactable toasts are toast notifications that let the user interact with them
 
 Usage
 -----
-We import :class:`~windows_toasts.toasters.InteractableWindowsToaster` instead of :class:`~windows_toasts.windows_toasts.WindowsToaster`, but the rest is mostly the same. Here's a basic example:
+We import :class:`~windows_toasts.toasters.InteractableWindowsToaster` instead of :class:`~windows_toasts.toasters.WindowsToaster`, but the rest is mostly the same. Here's a basic example:
 
 .. code-block:: python
 
@@ -21,14 +21,22 @@ We import :class:`~windows_toasts.toasters.InteractableWindowsToaster` instead o
     # Display it like usual
     interactableToaster.show_toast(newToast)
 
-And we have buttons! We can't do much with them though, at least until we use on_activated.
+And we have buttons! We can't do much with them though, at least until we use on_activated. Set it before calling
+:meth:`~windows_toasts.toasters.BaseWindowsToaster.show_toast`, since changing it afterwards doesn't affect a toast
+that is already shown.
 
 .. code-block:: python
+    :emphasize-lines: 4,6
 
     def activated_callback(activatedEventArgs: ToastActivatedEventArgs):
         print(activatedEventArgs.arguments) # response=decent/response=bad
 
     newToast.on_activated = activated_callback
+    interactableToaster.show_toast(newToast)
+    input('Press Enter to exit\n')
+
+The callback can only run while your script is running, so the script has to stay open until the user clicks the toast.
+Here it waits for Enter.
 
 .. note::
     To make sure the activation of the toast triggers the callback following its relegation to Action Center, you must use a :doc:`custom AUMID <custom_aumid>`.
@@ -58,6 +66,7 @@ Windows-Toasts also supports using text fields and selection boxes.
     newToast.on_activated = lambda activatedEventArgs: print(activatedEventArgs.inputs)
 
     interactableToaster.show_toast(newToast)
+    input('Press Enter to exit\n')
 
 In this case, the on_activated callback will be executed when the user presses on the notification.
 
@@ -69,7 +78,7 @@ We can combine the two and a submit button
 .. code-block:: python
     :emphasize-lines: 7,8
 
-    from windows_toasts import InteractableWindowsToaster, Toast
+    from windows_toasts import InteractableWindowsToaster, Toast, ToastButton, ToastInputTextBox
 
     interactableToaster = InteractableWindowsToaster('Questionnaire')
     newToast = Toast()
@@ -77,9 +86,10 @@ We can combine the two and a submit button
     newToast.text_fields = ['What\'s your name?']
     newToast.AddInput(ToastInputTextBox('name', 'Your name', 'Barack Obama'))
     newToast.AddAction(ToastButton('Submit', 'submit'))
-    newToast.on_activated = lambda activatedEventArgs: print(activatedEventArgs.input)
+    newToast.on_activated = lambda activatedEventArgs: print(activatedEventArgs.inputs)
 
     interactableToaster.show_toast(newToast)
+    input('Press Enter to exit\n')
 
 Caveats
 -------

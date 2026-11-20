@@ -240,7 +240,8 @@ class ToastDocument:
         <https://learn.microsoft.com/windows/apps/develop/notifications/app-notifications/app-notifications-content#quick-reply-text-box>`_
 
         :type toastInput: Union[ToastInputTextBox, ToastInputSelectionBox]
-        :raises: AssertionError: If the input isn't a :class:`ToastInputTextBox` or :class:`ToastInputSelectionBox`
+        :raises: AssertionError: If the input isn't a :class:`~windows_toasts.wrappers.ToastInputTextBox` or
+            :class:`~windows_toasts.wrappers.ToastInputSelectionBox`
         """
         self._inputFields += 1
         inputNode = self.xmlDocument.create_element("input")
@@ -295,8 +296,10 @@ class ToastDocument:
 
         :type action: Union[ToastButton, ToastSystemButton]
         :raises: ValueError: If a context menu button has no content
-        :raises: AssertionError: If the action isn't a :class:`ToastButton` or :class:`ToastSystemButton`, or a
-            :class:`ToastSystemButton`'s action isn't a :class:`ToastSystemButtonAction`
+        :raises: AssertionError: If the action isn't a :class:`~windows_toasts.wrappers.ToastButton` or
+            :class:`~windows_toasts.wrappers.ToastSystemButton`, or a
+            :class:`~windows_toasts.wrappers.ToastSystemButton`'s action isn't a
+            :class:`~windows_toasts.wrappers.ToastSystemButtonAction`
         """
         if isinstance(action, ToastButton) and action.inContextMenu and not action.content:
             raise ValueError("A ToastButton in the context menu must have content")
@@ -384,7 +387,8 @@ class ToastDocument:
         #adaptive-content>`_
 
         :type group: ToastGroup
-        :raises: AssertionError: If a column's content isn't a :class:`ToastText` or :class:`ToastGroupImage`
+        :raises: AssertionError: If a column's content isn't a :class:`~windows_toasts.adaptive.ToastText` or
+            :class:`~windows_toasts.adaptive.ToastGroupImage`
         """
         groupNode = self.xmlDocument.create_element("group")
         for subgroup in group.subgroups:

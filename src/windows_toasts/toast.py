@@ -245,9 +245,9 @@ class Toast:
     def AddImage(self, image: ToastDisplayImage) -> None:
         """
         Adds an the image that will be displayed on the toast.
-        If using WindowsToaster, a maximum of two (one as the logo and one hero) images will work.
+        If using WindowsToaster, only the first image is shown, as a small image beside the text.
 
-        :param image: :class:`ToastDisplayImage` to display in the toast
+        :param image: :class:`~windows_toasts.wrappers.ToastDisplayImage` to display in the toast
         """
         self.images.append(image)
 

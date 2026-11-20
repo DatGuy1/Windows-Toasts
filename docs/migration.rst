@@ -47,7 +47,7 @@ Here's how you would do it now:
     toast.text_fields = ['Hello', 'World!']
     # Or, directly, toast = Toast(['Hello', 'World!'])
 
-    toast.duration = ToastDuration.short
+    toast.duration = ToastDuration.Short
 
     WindowsToaster('Python').show_toast(toast)
 
@@ -68,7 +68,7 @@ and here's the highlighted difference between the two:
     + toast.text_fields = ['Hello', 'World!']
 
     - toast.SetDuration(ToastDuration.Short)
-    + toast.duration = ToastDuration.short
+    + toast.duration = ToastDuration.Short
 
     WindowsToaster('Python').show_toast(toast)
 

@@ -38,7 +38,7 @@ To display a toast notification:
 
 .. code-block:: python
 
-    # We import WindowsToaster and a toast format we want
+    # We import WindowsToaster and Toast
     from windows_toasts import WindowsToaster, Toast
     # Prepare the toaster for bread (or your notification)
     toaster = WindowsToaster('Python')

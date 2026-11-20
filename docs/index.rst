@@ -39,7 +39,7 @@ Windows-Toasts is a Python library used to send `toast notifications <https://le
 Why Windows-Toasts?
 -------------------
 
-As opposed to other toast notification libraries, Windows-Toasts uses `Windows SDK <https://learn.microsoft.com/windows/apps/windows-app-sdk/>`_ bindings to create and deliver notifications.
+As opposed to other toast notification libraries, Windows-Toasts uses `Windows SDK <https://learn.microsoft.com/windows/apps/windows-sdk/>`_ bindings to create and deliver notifications.
 This means no less-than-pretty Powershell hackyness and the like, and is in turn scalable, maintainable, and easy to use.
 
 The other packages I've seen also don't use tests or have no active maintainers, while Windows-Toasts has decent test coverage, is fully typed and documented, and has additional features.
