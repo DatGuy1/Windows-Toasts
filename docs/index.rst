@@ -8,25 +8,27 @@ Windows-Toasts
 
 Release v\ |version|.
 
-.. image:: https://static.pepy.tech/badge/windows-toasts/month
-    :target: https://pepy.tech/project/windows-toasts
-    :alt: Downloads Per Month Badge
+.. only:: html
 
-.. image:: https://img.shields.io/pypi/l/windows-toasts.svg
-    :target: https://pypi.org/project/windows-toasts/
-    :alt: License Badge
+    .. image:: https://static.pepy.tech/badge/windows-toasts/month
+        :target: https://pepy.tech/project/windows-toasts
+        :alt: Downloads Per Month Badge
 
-.. image:: https://img.shields.io/pypi/wheel/windows-toasts.svg
-    :target: https://pypi.org/project/windows-toasts/
-    :alt: Wheel Support Badge
+    .. image:: https://img.shields.io/pypi/l/windows-toasts.svg
+        :target: https://pypi.org/project/windows-toasts/
+        :alt: License Badge
 
-.. image:: https://img.shields.io/pypi/pyversions/windows-toasts.svg
-    :target: https://pypi.org/project/windows-toasts/
-    :alt: Python Version Support Badge
+    .. image:: https://img.shields.io/pypi/wheel/windows-toasts.svg
+        :target: https://pypi.org/project/windows-toasts/
+        :alt: Wheel Support Badge
 
-.. image:: https://codecov.io/gh/DatGuy1/Windows-Toasts/branch/master/graph/badge.svg?token=ZD8OF2SF61)
-    :target: https://codecov.io/gh/DatGuy1/Windows-Toasts
-    :alt: Test Coverage Badge
+    .. image:: https://img.shields.io/pypi/pyversions/windows-toasts.svg
+        :target: https://pypi.org/project/windows-toasts/
+        :alt: Python Version Support Badge
+
+    .. image:: https://codecov.io/gh/DatGuy1/Windows-Toasts/branch/master/graph/badge.svg?token=ZD8OF2SF61
+        :target: https://codecov.io/gh/DatGuy1/Windows-Toasts
+        :alt: Test Coverage Badge
 
 Windows-Toasts is a Python library used to send `toast notifications <https://docs.microsoft.com/windows/apps/design/shell/tiles-and-notifications/adaptive-interactive-toasts>`_ on Windows machines.
 

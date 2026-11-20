@@ -56,4 +56,3 @@ autodoc_default_options = {"members": True, "member-order": "bysource", "undoc-m
 
 html_theme = "furo"
 html_logo = "images/logo.png"
-html_static_path = ["_static"]
