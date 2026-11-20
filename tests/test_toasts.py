@@ -378,6 +378,12 @@ def test_groups(example_image_path):
         'hint-crop="circle" hint-removeMargin="true" hint-align="right"/></subgroup></group>'
     ) in xml
 
+    plainImage = ToastGroupImage(ToastImage(example_image_path))
+    plainImageToast = Toast(["Plain image"], groups=[ToastGroup([ToastSubgroup([plainImage])])])
+    assert f'<subgroup><image src="{plainImage.image.path}"/></subgroup>' in (
+        toaster._setup_toast(plainImageToast, True).xmlDocument.get_xml()
+    )
+
     with warns(UserWarning, match="groups are not supported"):
         WindowsToaster("Python").show_toast(newToast)
     assert "<group" not in WindowsToaster("Python")._setup_toast(newToast, True).xmlDocument.get_xml()
@@ -423,6 +429,8 @@ def test_notification_enums_match_winrt():
     assert unknown.value == 99 and unknown.name == "99"
     assert NotificationSetting(99) is unknown
     assert unknown not in list(NotificationSetting)
+    with raises(ValueError):
+        NotificationSetting("Enabled")
 
 
 def test_notification_setting():
@@ -495,6 +503,9 @@ def test_event_args_from_winrt():
 
 def test_scheduled_toast(pytestconfig):
     from datetime import datetime, timedelta
+    from unittest.mock import patch
+
+    from winrt.windows.ui.notifications import ToastNotifier
 
     from src.windows_toasts import ToastNotFoundError, ToastProgressBar
 
@@ -518,11 +529,50 @@ def test_scheduled_toast(pytestconfig):
         with raises(ToastNotFoundError, match="Toast unscheduling failed."):
             toaster.unschedule_toast(clonedToast)
 
+        scheduledToasts = [call.args[0] for call in ToastNotifier.add_to_schedule.call_args_list]
+        with (
+            patch(
+                "winrt.windows.ui.notifications.ToastNotifier.get_scheduled_toast_notifications",
+                return_value=scheduledToasts,
+            ),
+            patch("winrt.windows.ui.notifications.ToastNotifier.remove_from_schedule") as removeFromSchedule,
+        ):
+            toaster.unschedule_toast(clonedToast)
+
+        removeFromSchedule.assert_called_once()
+        assert removeFromSchedule.call_args.args[0].tag == clonedToast.tag
+
+
+def test_legacy_scheduled_toast():
+    from datetime import datetime, timedelta
+
+    toaster = WindowsToaster("Python")
+    newToast = Toast(["Later", None])
+    toaster.schedule_toast(newToast, datetime.now() + timedelta(seconds=10))
+
+    # Scheduled toasts can't be bound to data, so their text is written in directly
+    xml = toaster._setup_toast(newToast, False).xmlDocument.get_xml()
+    assert '<text id="1">Later</text><text id="2"></text>' in xml
+
 
 def test_clear_toasts():
+    from unittest.mock import Mock, patch
+
     toaster = InteractableWindowsToaster("Python")
     toaster.clear_scheduled_toasts()
     toaster.clear_toasts()
+
+    scheduledToasts = [Mock(), Mock()]
+    with (
+        patch(
+            "winrt.windows.ui.notifications.ToastNotifier.get_scheduled_toast_notifications",
+            return_value=scheduledToasts,
+        ),
+        patch("winrt.windows.ui.notifications.ToastNotifier.remove_from_schedule") as removeFromSchedule,
+    ):
+        toaster.clear_scheduled_toasts()
+
+    assert [call.args[0] for call in removeFromSchedule.call_args_list] == scheduledToasts
 
 
 def test_expiration_toasts():
@@ -660,6 +710,15 @@ def test_action_center_toasts(pytestconfig):
     if realRun:
         time.sleep(0.5)
         assert not {first.tag, second.tag} & {toast.tag for toast in toaster.get_action_center_toasts()}
+
+
+def test_action_center_toasts_unreadable():
+    from unittest.mock import Mock, PropertyMock, patch
+
+    unreadableToast = Mock()
+    type(unreadableToast).tag = PropertyMock(side_effect=OSError)
+    with patch("winrt.windows.ui.notifications.ToastNotificationHistory.get_history", return_value=[unreadableToast]):
+        assert InteractableWindowsToaster("Python").get_action_center_toasts() == []
 
 
 def test_remove_toast_group():
