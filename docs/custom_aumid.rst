@@ -6,7 +6,7 @@ When initialising :class:`~windows_toasts.toasters.InteractableWindowsToaster`, 
 
 Installing a custom AUMID
 -------------------------
-Installing a custom AUMID allows you to use your own title, icon, and listen to activation after the notification was relegated to the action center.
+Installing a custom AUMID allows you to use your own title, icon, and listen to activation after the notification was relegated to Action Center.
 
 The library comes with a command to implement it, :code:`register_hkey_aumid`.
 The arguments can be understood using the --help argument. If you have the Python Scripts directory in your path, you should be able to execute it by opening the command console and simply executing :code:`register_hkey_aumid`.

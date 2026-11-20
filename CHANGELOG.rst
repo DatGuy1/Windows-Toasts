@@ -13,6 +13,9 @@ Unreleased
   notifications (#208)
 - Added ``Toast.header`` and ``ToastHeader`` to group toasts under a header in Action Center (#206)
 - Added ``Toast.groups`` and ``ToastGroup`` for columns of styled text and images (#207)
+- Added a ``tag`` argument to ``Toast``, and ``get_action_center_toasts()`` to toasters to list their toasts in
+  Action Center (#209)
+- ``Toast.tag`` and ``Toast.group`` now raise a ``ValueError`` if they aren't 1 to 63 characters long
 - Deprecated passing ``Toast`` arguments other than ``text_fields`` positionally
 - ``on_dismissed`` and ``on_failed`` now receive the library's own ``ToastDismissedEventArgs`` and
   ``ToastFailedEventArgs`` instead of Windows', and ``ToastDismissalReason`` is now the library's own enum

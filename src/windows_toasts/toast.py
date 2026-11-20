@@ -7,6 +7,7 @@ import urllib.parse
 import uuid
 import warnings
 from collections.abc import Callable, Iterable
+from dataclasses import dataclass
 from typing import Any, TypeVar, cast
 
 from .adaptive import ToastGroup
@@ -28,6 +29,9 @@ ToastInput = ToastInputTextBox | ToastInputSelectionBox
 
 InitT = TypeVar("InitT", bound=Callable[..., None])
 
+# Windows accepts tags and groups of up to 64 characters, but can't read one that long back from Action Center
+_MAX_IDENTIFIER_LENGTH = 63
+
 # The order Toast.__init__ used to accept these positionally in, after text_fields
 _LEGACY_POSITIONAL_PARAMETERS = (
     "audio",
@@ -47,6 +51,16 @@ _LEGACY_POSITIONAL_PARAMETERS = (
     "images",
     "inputs",
 )
+
+
+def _validate_identifier(name: str, value: str) -> None:
+    """
+    Raise a ValueError if a tag or group is a length Windows can't use
+    """
+    # Windows counts UTF-16 code units, so characters outside the BMP count twice
+    length = len(value.encode("utf-16-le")) // 2
+    if not 0 < length <= _MAX_IDENTIFIER_LENGTH:
+        raise ValueError(f"Toast {name}s must be 1 to {_MAX_IDENTIFIER_LENGTH} characters long, got {length}")
 
 
 def _deprecate_positional_parameters(init: InitT) -> InitT:
@@ -106,29 +120,29 @@ class Toast:
     scenario: ToastScenario
     """Scenario for the toast"""
     suppress_popup: bool
-    """Whether to suppress the toast popup and relegate it immediately to the action center"""
+    """Whether to suppress the toast popup and relegate it immediately to Action Center"""
     timestamp: datetime.datetime | None
     """A custom timestamp. If you don't provide one, Windows uses the time that your notification was sent"""
-    group: str | None
-    """An internal identifier, where you can assign groups like "wallPosts", "messages", "friendRequests", etc."""
     header: ToastHeader | None
     """A header to show the toast under in Action Center. Unlike group, this is visible to the user"""
     expiration_time: datetime.datetime | None
-    """The time for the toast to expire on in the action center. If it is on-screen, nothing will happen"""
+    """The time for the toast to expire on in Action Center. If it is on-screen, nothing will happen"""
     expires_on_reboot: bool
-    """Whether to remove the toast from the action center when the device restarts. Ignored for scheduled toasts"""
+    """Whether to remove the toast from Action Center when the device restarts. Ignored for scheduled toasts"""
     on_activated: Callable[[ToastActivatedEventArgs], None] | None
     """Callable to execute when the toast is clicked if basic, or a button is clicked if interactable"""
     on_dismissed: Callable[[ToastDismissedEventArgs], None] | None
     """Callable to execute when the toast is dismissed (X is clicked or times out) if interactable"""
     on_failed: Callable[[ToastFailedEventArgs], None] | None
     """Callable to execute when the toast fails to display"""
-    tag: str
-    """Unique tag for the toast, automatically set as a UUID"""
     updates: int
     """Number of times the toast has been updated; mostly for internal use"""
+    _tag: str
+    """See :attr:`tag`"""
+    _group: str | None
+    """See :attr:`group`"""
     _launch_action: str | None
-    """Protocol to launch when the toast is clicked"""
+    """See :attr:`launch_action`"""
 
     @_deprecate_positional_parameters
     def __init__(
@@ -146,6 +160,7 @@ class Toast:
         scenario: ToastScenario = ToastScenario.Default,
         suppress_popup: bool = False,
         timestamp: datetime.datetime | None = None,
+        tag: str | None = None,
         group: str | None = None,
         header: ToastHeader | None = None,
         expiration_time: datetime.datetime | None = None,
@@ -197,12 +212,13 @@ class Toast:
         self.on_dismissed = on_dismissed
         self.on_failed = on_failed
 
-        self.tag = str(uuid.uuid4())
+        self.tag = str(uuid.uuid4()) if tag is None else tag
         self.updates = 0
 
     def __eq__(self, other):
         if isinstance(other, Toast):
-            return other.tag == self.tag
+            # Windows identifies a toast by its tag and group, using the tag as the group when there's none
+            return (other.tag, other.group or other.tag) == (self.tag, self.group or self.tag)
 
         return False
 
@@ -252,6 +268,36 @@ class Toast:
         self.inputs.append(toast_input)
 
     @property
+    def tag(self) -> str:
+        """
+        Identifies the toast, together with :attr:`group`. 1 to 63 characters long, and a random UUID by default.
+        Choose your own to update or remove the toast from a later run of your script. Showing a toast with the same
+        tag and group as one in Action Center replaces it
+        """
+        return self._tag
+
+    @tag.setter
+    def tag(self, value: str):
+        _validate_identifier("tag", value)
+        self._tag = value
+
+    @property
+    def group(self) -> str | None:
+        """
+        Identifies the toast, together with :attr:`tag`, and lets you remove related toasts at once with
+        :meth:`~windows_toasts.toasters.BaseWindowsToaster.remove_toast_group`. 1 to 63 characters long. Unlike
+        :attr:`header`, it isn't shown to the user. Without one, the toast uses its tag as its group
+        """
+        return self._group
+
+    @group.setter
+    def group(self, value: str | None):
+        if value is not None:
+            _validate_identifier("group", value)
+
+        self._group = value
+
+    @property
     def launch_action(self) -> str | None:
         """Protocol to launch when the toast is clicked"""
         return self._launch_action
@@ -277,3 +323,24 @@ class Toast:
         newToast.tag = str(uuid.uuid4())
 
         return newToast
+
+
+@dataclass(frozen=True)
+class ActionCenterToast:
+    """
+    A toast in Action Center, as returned by
+    :meth:`~windows_toasts.toasters.BaseWindowsToaster.get_action_center_toasts`. Its content is what the toast was
+    shown with, so changes from :meth:`~windows_toasts.toasters.BaseWindowsToaster.update_toast` aren't reflected.
+    To update or remove it, create a :class:`Toast` with the same :attr:`tag` and :attr:`group`
+    """
+
+    tag: str
+    """The toast's :attr:`Toast.tag`"""
+    group: str | None
+    """The toast's :attr:`Toast.group`"""
+    text_fields: tuple[str | None, ...]
+    """The toast's text fields when it was shown"""
+    progress_bar: ToastProgressBar | None
+    """The toast's progress bar when it was shown"""
+    expiration_time: datetime.datetime | None
+    """When Windows removes the toast from Action Center. Windows defaults to 3 days"""

@@ -1,7 +1,8 @@
 import warnings
 from datetime import datetime
-from typing import TypeVar
+from typing import TypeVar, cast
 
+from winrt.windows.data.xml.dom import IXmlNode
 from winrt.windows.ui.notifications import (
     NotificationData,
     NotificationUpdateResult,
@@ -14,15 +15,29 @@ from winrt.windows.ui.notifications import (
 
 from .events import ToastActivatedEventArgs, ToastDismissedEventArgs, ToastFailedEventArgs
 from .exceptions import ToastNotFoundError
-from .toast import Toast
+from .toast import ActionCenterToast, Toast
 from .toast_document import ToastDocument
-from .wrappers import NotificationSetting, ToastDuration, ToastImagePosition, ToastNotificationMode, ToastScenario
+from .wrappers import (
+    NotificationSetting,
+    ToastDuration,
+    ToastImagePosition,
+    ToastNotificationMode,
+    ToastProgressBar,
+    ToastScenario,
+)
 
 #: A ToastNotification or ScheduledToastNotification, for code that builds either
 ToastNotificationT = TypeVar("ToastNotificationT", ToastNotification, ScheduledToastNotification)
 
 # HRESULT_FROM_WIN32(ERROR_NOT_FOUND), raised for an AUMID Windows has no notification settings for yet
 _E_ELEMENT_NOT_FOUND = 0x80070490
+
+
+def _default_progress_override(progress: float) -> str:
+    """
+    The text Windows shows next to a progress bar by default
+    """
+    return f"{round(progress * 100)}%"
 
 
 def _build_adaptable_data(toast: Toast) -> NotificationData:
@@ -52,13 +67,71 @@ def _build_adaptable_data(toast: Toast) -> NotificationData:
         progressOverride = progressBar.progress_override
         if progressOverride is None and progressBar.progress is not None:
             # Recreate default Windows behaviour while still allowing it to be changed in the future
-            progressOverride = f"{round(progressBar.progress * 100)}%"
+            progressOverride = _default_progress_override(progressBar.progress)
 
         # The map only takes strings, so an indeterminate bar without an override gets an empty one
         notificationData.values["progress_override"] = progressOverride or ""
         notificationData.values["caption"] = progressBar.caption or ""
 
     return notificationData
+
+
+def _read_action_center_toast(notification: ToastNotification) -> ActionCenterToast | None:
+    """
+    Read a toast from Action Center, filling in the values :func:`_build_adaptable_data` bound to it
+
+    :return: None if Windows can't read the toast's tag or group
+    """
+    try:
+        tag, group = notification.tag, notification.group
+    except OSError:
+        return None
+
+    # pywinrt's stubs don't say so, but these are None for a toast shown without data or an attribute that's missing
+    data = cast(NotificationData | None, notification.data)
+    values = {} if data is None else dict(data.values.items())
+
+    def resolve(value: str | None) -> str | None:
+        # A data binding placeholder, such as {text1}, rather than text shown as-is
+        if value is not None and value.startswith("{") and value.endswith("}"):
+            value = values.get(value[1:-1])
+
+        return value or None
+
+    content = notification.content
+    textFields = tuple(
+        resolve(node.inner_text) for node in content.select_nodes("/toast/visual/binding/text[not(@placement)]")
+    )
+
+    progressBar = None
+    progressNode = content.select_single_node("/toast/visual/binding/progress")
+    if progressNode is not None:
+
+        def attribute(name: str) -> str | None:
+            node = cast(IXmlNode | None, progressNode.attributes.get_named_item(name))
+            return resolve(None if node is None else node.inner_text)
+
+        try:
+            progress = float(attribute("value") or "")
+        except ValueError:
+            # "indeterminate"
+            progress = None
+
+        progressOverride = attribute("valueStringOverride")
+        # _build_adaptable_data fills in the default when there's no override, which would otherwise stick
+        if progress is not None and progressOverride == _default_progress_override(progress):
+            progressOverride = None
+
+        progressBar = ToastProgressBar(attribute("status") or "", attribute("title"), progress, progressOverride)
+
+    return ActionCenterToast(
+        tag=tag,
+        # _build_toast_notification uses the tag when the toast has no group
+        group=None if group in ("", tag) else group,
+        text_fields=textFields,
+        progress_bar=progressBar,
+        expiration_time=notification.expiration_time,
+    )
 
 
 def _build_toast_notification(toast: Toast, toastNotification: ToastNotificationT) -> ToastNotificationT:
@@ -166,7 +239,7 @@ class BaseWindowsToaster:
     def show_toast(self, toast: Toast) -> None:
         """
         Displays the specified toast notification.
-        If `toast` has already been shown, it will pop up again, but make no new sections in the action center
+        If `toast` has already been shown, it will pop up again, but make no new sections in Action Center
 
         :param toast: Toast to display
         """
@@ -227,7 +300,12 @@ class BaseWindowsToaster:
         """
         scheduledToasts = self.toastNotifier.get_scheduled_toast_notifications()
         targetNotification = next(
-            (scheduledToast for scheduledToast in scheduledToasts if scheduledToast.tag == toast.tag), None
+            (
+                scheduledToast
+                for scheduledToast in scheduledToasts
+                if (scheduledToast.tag, scheduledToast.group) == (toast.tag, toast.group or toast.tag)
+            ),
+            None,
         )
         if targetNotification is None:
             raise ToastNotFoundError(f"Toast unscheduling failed. Toast {toast} not found")
@@ -240,6 +318,18 @@ class BaseWindowsToaster:
         """
         toastHistory: ToastNotificationHistory = ToastNotificationManager.history
         toastHistory.clear(self._AUMID)
+
+    def get_action_center_toasts(self) -> list[ActionCenterToast]:
+        """
+        Get the toasts in Action Center that were shown under this toaster's AUMID. Their content is what they were
+        shown with, so changes from :meth:`update_toast` aren't reflected.
+        :class:`InteractableWindowsToaster`'s default AUMID is shared, so it includes other programs' toasts too
+
+        :return: The toasts, which you can find yours in by :attr:`~windows_toasts.toast.Toast.tag`
+        """
+        toastHistory: ToastNotificationHistory = ToastNotificationManager.history
+        toasts = (_read_action_center_toast(notification) for notification in toastHistory.get_history(self._AUMID))
+        return [toast for toast in toasts if toast is not None]
 
     def clear_scheduled_toasts(self) -> None:
         """

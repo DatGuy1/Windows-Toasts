@@ -565,6 +565,74 @@ def test_remove_toast():
     toaster.remove_toast(newToast)
 
 
+def test_toast_tag():
+    defaultToast = Toast()
+    assert len(defaultToast.tag) == 36
+    assert Toast(tag="reminder").tag == "reminder"
+    assert Toast(tag="a" * 63, group="b" * 63).group == "b" * 63
+
+    # Windows uses the tag as the group when there's none
+    assert Toast(tag="reminder") == Toast(tag="reminder", group="reminder")
+    assert Toast(tag="reminder", group="a") != Toast(tag="reminder", group="b")
+    assert Toast(tag="reminder") != Toast(tag="reminder", group="a")
+
+    for invalid in ("", "a" * 64, "🐍" * 32):
+        with raises(ValueError, match="1 to 63 characters"):
+            Toast(tag=invalid)
+        with raises(ValueError, match="1 to 63 characters"):
+            defaultToast.group = invalid
+
+
+def test_action_center_toasts(pytestconfig):
+    import time
+    from unittest.mock import patch
+
+    from winrt.windows.ui.notifications import ToastNotifier
+
+    from src.windows_toasts import ToastProgressBar
+
+    toaster = InteractableWindowsToaster("Python")
+    progressBar = ToastProgressBar("Downloading", "Python 4", progress=0.25)
+    toaster.show_toast(
+        Toast(["Hello", None, "World"], tag="action-center-test", progress_bar=progressBar, suppress_popup=True)
+    )
+    toaster.show_toast(
+        Toast(
+            ["Grouped"],
+            tag="action-center-test-2",
+            group="action-center-group",
+            progress_bar=ToastProgressBar("Waiting", progress=None),
+            suppress_popup=True,
+        )
+    )
+
+    realRun = pytestconfig.getoption("real_run")
+    if realRun:
+        time.sleep(0.5)
+        listedToasts = toaster.get_action_center_toasts()
+    else:
+        # show is mocked, so hand what it was given to the history instead
+        shownToasts = [call.args[0] for call in ToastNotifier.show.call_args_list]
+        with patch("winrt.windows.ui.notifications.ToastNotificationHistory.get_history", return_value=shownToasts):
+            listedToasts = toaster.get_action_center_toasts()
+
+    toasts = {toast.tag: toast for toast in listedToasts}
+    first, second = toasts["action-center-test"], toasts["action-center-test-2"]
+    assert first.group is None
+    assert first.text_fields == ("Hello", None, "World")
+    assert first.progress_bar == progressBar
+    # Windows sets a default expiration time when it shows the toast
+    assert (first.expiration_time is not None) == realRun
+    assert second.group == "action-center-group"
+    assert second.progress_bar == ToastProgressBar("Waiting", progress=None)
+
+    toaster.remove_toast(Toast(tag=first.tag, group=first.group))
+    toaster.remove_toast(Toast(tag=second.tag, group=second.group))
+    if realRun:
+        time.sleep(0.5)
+        assert not {first.tag, second.tag} & {toast.tag for toast in toaster.get_action_center_toasts()}
+
+
 def test_remove_toast_group():
     import time
 

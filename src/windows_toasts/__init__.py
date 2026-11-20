@@ -22,7 +22,7 @@ from .adaptive import (
 )
 from .events import ToastActivatedEventArgs, ToastDismissalReason, ToastDismissedEventArgs, ToastFailedEventArgs
 from .exceptions import InvalidImageException, ToastNotFoundError
-from .toast import Toast
+from .toast import ActionCenterToast, Toast
 from .toast_audio import AudioSource, ToastAudio
 from .toasters import InteractableWindowsToaster, WindowsToaster
 from .wrappers import (
@@ -74,6 +74,7 @@ __all__ = [
     "AudioSource",
     "ToastAudio",
     # toast.py
+    "ActionCenterToast",
     "Toast",
     # toasters.py
     "InteractableWindowsToaster",

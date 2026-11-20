@@ -63,7 +63,7 @@ class ToastImagePosition(Enum):
     Inline = ""
     """Inline, after any text elements, filling the full width of the visual area"""
     Hero = "hero"
-    """Displayed prominently within the toast banner and while inside Notification Center"""
+    """Displayed prominently within the toast banner and while inside Action Center"""
     AppLogo = "appLogoOverride"
     """Displayed in a square on the left side of the visual area"""
 
@@ -126,7 +126,7 @@ class ToastSystemButtonAction(Enum):
     Snooze = 0
     """Snooze for a time interval and then pop up again"""
     Dismiss = 1
-    """Dismiss immediately, without going to the action center"""
+    """Dismiss immediately, without going to Action Center"""
 
 
 @dataclass(init=False)

@@ -8,6 +8,7 @@ Classes
 .. autosummary::
     windows_toasts.toast.ToastInput
     windows_toasts.toast.Toast
+    windows_toasts.toast.ActionCenterToast
 
 Data
 ----

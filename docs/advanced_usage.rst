@@ -216,9 +216,9 @@ If the :attr:`~windows_toasts.wrappers.ToastSystemButton.relatedInput` is None, 
 Removing toasts
 ---------------
 
-You can remove toasts, which will (if on-screen first hide them) and then immediately dismiss them from the action center.
+You can remove toasts, which will (if on-screen first hide them) and then immediately dismiss them from Action Center.
 
-In the following example, the toast is automatically removed when it is dismissed to the action center:
+In the following example, the toast is automatically removed when it is dismissed to Action Center:
 
 .. code-block:: python
 
@@ -234,10 +234,34 @@ In the following example, the toast is automatically removed when it is dismisse
 .. warning::
     You can only remove toasts that were popped by a toaster with the same AUMID. Additionally, no exception will be thrown if the toast does not exist
 
+Finding toasts in Action Center
+-------------------------------
+
+If you still have the :class:`~windows_toasts.toast.Toast` you showed, update or remove it directly. To reach a toast from a later run of your script, give it your own :attr:`~windows_toasts.toast.Toast.tag`, then create a :class:`~windows_toasts.toast.Toast` with the same tag and :attr:`~windows_toasts.toast.Toast.group` to update or remove it. An update can only change the text fields and progress bar the toast was shown with, and showing a toast with the same tag and group replaces the one in Action Center.
+
+:meth:`~windows_toasts.toasters.BaseWindowsToaster.get_action_center_toasts` is only needed to check whether a toast is still in Action Center, or to read what it showed. For example, to avoid showing a reminder again while the last one is still there:
+
+.. code-block:: python
+
+    from windows_toasts import Toast, WindowsToaster
+
+    toaster = WindowsToaster('Python')
+
+    if not any(toast.tag == 'backup-failed' for toast in toaster.get_action_center_toasts()):
+        toaster.show_toast(Toast(['Your backup failed'], tag='backup-failed'))
+
+    # In a later run, once the backup succeeds
+    toaster.remove_toast(Toast(tag='backup-failed'))
+
+Each result is an :class:`~windows_toasts.toast.ActionCenterToast` rather than a :class:`~windows_toasts.toast.Toast`, since Windows only keeps part of the toast: its text fields and progress bar as it was shown, without changes from :meth:`~windows_toasts.toasters.BaseWindowsToaster.update_toast`. :class:`~windows_toasts.toasters.InteractableWindowsToaster`'s default AUMID is shared, so its list includes other programs' toasts too, which is why it's best to look for your own tags.
+
+.. warning::
+    Closing a toast's popup, even with its X, moves the toast into Action Center rather than deleting it. A toast is listed until the user clears it from Action Center, you remove it, or it expires, so being listed doesn't mean the user hasn't seen it.
+
 Grouping toasts under a header
 ------------------------------
 
-A :class:`~windows_toasts.wrappers.ToastHeader` shows related toasts together under one title in the Action Center.
+A :class:`~windows_toasts.wrappers.ToastHeader` shows related toasts together under one title in Action Center.
 
 .. code-block:: python
 

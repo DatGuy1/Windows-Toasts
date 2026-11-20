@@ -189,7 +189,7 @@ class ToastDocument:
 
     def SetCustomTimestamp(self, customTimestamp: datetime.datetime) -> None:
         """
-        Apply a custom timestamp to display on the toast and in the notification center. `Custom timestamp on
+        Apply a custom timestamp to display on the toast and in Action Center. `Custom timestamp on
         Microsoft.com <https://learn.microsoft.com/windows/apps/design/shell/tiles-and-notifications/adaptive
         -interactive-toasts?tabs=xml#custom-timestamp>`_
 
