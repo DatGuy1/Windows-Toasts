@@ -32,6 +32,8 @@ class Toast:
     """:class:`~windows_toasts.wrappers.ToastDuration`, be it the default, short, or long"""
     expiration_time: datetime.datetime | None
     """The time for the toast to expire on in the action center. If it is on-screen, nothing will happen"""
+    expires_on_reboot: bool
+    """Whether to remove the toast from the action center when the device restarts. Ignored for scheduled toasts"""
     group: str | None
     """An internal identifier, where you can assign groups like "wallPosts", "messages", "friendRequests", etc."""
     scenario: ToastScenario
@@ -84,6 +86,7 @@ class Toast:
         actions: Iterable[ToastButton | ToastSystemButton] = (),
         images: Iterable[ToastDisplayImage] = (),
         inputs: Iterable[ToastInput] = (),
+        expires_on_reboot: bool = False,
     ) -> None:
         """
         Initialise a toast
@@ -103,6 +106,7 @@ class Toast:
         self.timestamp = timestamp
         self.group = group
         self.expiration_time = expiration_time
+        self.expires_on_reboot = expires_on_reboot
         self.suppress_popup = suppress_popup
         self.launch_action = launch_action
 

@@ -229,6 +229,9 @@ class ToastDocument:
         if isinstance(toastInput, ToastInputTextBox):
             self.SetAttribute(inputNode, "type", "text")
             self.SetAttribute(inputNode, "placeHolderContent", toastInput.placeholder)
+            # Undocumented for text boxes, but Windows prefills the box with it
+            if toastInput.default_input is not None:
+                self.SetAttribute(inputNode, "defaultInput", toastInput.default_input)
         elif isinstance(toastInput, ToastInputSelectionBox):
             self.SetAttribute(inputNode, "type", "selection")
             if toastInput.default_selection is not None:

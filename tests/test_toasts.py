@@ -268,6 +268,39 @@ def test_indeterminate_progress_bar_without_override():
     assert values["progress_override"] == ""
 
 
+def test_expires_on_reboot():
+    from datetime import datetime, timedelta
+
+    from winrt.windows.ui.notifications import ScheduledToastNotification, ToastNotification
+
+    from src.windows_toasts.toasters import _build_toast_notification
+
+    newToast = Toast(["Gone after a restart"], expires_on_reboot=True)
+    toaster = InteractableWindowsToaster("Python")
+    toaster.show_toast(newToast)
+
+    xmlDocument = toaster._setup_toast(newToast, True).xmlDocument
+    assert _build_toast_notification(newToast, ToastNotification(xmlDocument)).expires_on_reboot
+    assert not _build_toast_notification(Toast(), ToastNotification(xmlDocument)).expires_on_reboot
+
+    # Scheduled toasts don't have the property, so building one must not try to set it
+    scheduled = ScheduledToastNotification(xmlDocument, datetime.now() + timedelta(minutes=1))
+    _build_toast_notification(newToast, scheduled)
+
+
+def test_text_box_default_input():
+    from src.windows_toasts import ToastInputTextBox
+
+    toaster = InteractableWindowsToaster("Python")
+
+    prefilledToast = Toast(["Prefilled"], inputs=[ToastInputTextBox("reply", "Reply", "Placeholder", "Prefilled")])
+    toaster.show_toast(prefilledToast)
+    assert 'defaultInput="Prefilled"' in toaster._setup_toast(prefilledToast, True).xmlDocument.get_xml()
+
+    emptyToast = Toast(["Empty"], inputs=[ToastInputTextBox("reply", "Reply", "Placeholder")])
+    assert "defaultInput" not in toaster._setup_toast(emptyToast, True).xmlDocument.get_xml()
+
+
 def test_scheduled_toast(pytestconfig):
     from datetime import datetime, timedelta
 

@@ -73,6 +73,10 @@ def _build_toast_notification(toast: Toast, toastNotification: ToastNotification
 
     toastNotification.suppress_popup = toast.suppress_popup
 
+    # ScheduledToastNotification doesn't have this property
+    if isinstance(toastNotification, ToastNotification):
+        toastNotification.expires_on_reboot = toast.expires_on_reboot
+
     return toastNotification
 
 

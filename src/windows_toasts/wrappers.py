@@ -183,10 +183,13 @@ class ToastInputTextBox(_ToastInput):
 
     placeholder: str = ""
     """Optional placeholder for a text input box"""
+    default_input: str | None = None
+    """Text to prefill the box with. If None, the box starts empty and shows the placeholder"""
 
-    def __init__(self, input_id: str, caption: str = "", placeholder: str = ""):
+    def __init__(self, input_id: str, caption: str = "", placeholder: str = "", default_input: str | None = None):
         super().__init__(input_id, caption)
         self.placeholder = placeholder
+        self.default_input = default_input
 
 
 @dataclass
