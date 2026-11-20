@@ -1,11 +1,12 @@
-# .readthedocs.yaml
-# Read the Docs configuration file
-# See https://docs.readthedocs.io/en/stable/config-file/v2.html for details
+# Read the Docs configuration file for Sphinx projects
+# See https://docs.readthedocs.com/platform/stable/config-file/v2.html for details
 
+# Required
 version: 2
 
+# Set the OS, Python version and other tools you might need
 build:
-  os: ubuntu-24.04
+  os: ubuntu-26.04
   tools:
     python: "3.14"
   jobs:
@@ -19,10 +20,12 @@ build:
       # --only-group skips installing the project itself, whose winrt dependencies are Windows-only
       - UV_PROJECT_ENVIRONMENT="${READTHEDOCS_VIRTUALENV_PATH}" uv sync --locked --only-group docs
 
-# Build documentation in the docs/ directory with Sphinx
+# Build documentation in the "docs/" directory with Sphinx
 sphinx:
-   configuration: docs/conf.py
-   fail_on_warning: true
+  configuration: docs/conf.py
+  # Fail on all warnings to avoid broken references
+  fail_on_warning: true
 
+# Optionally build your docs in additional formats such as PDF and ePub
 formats:
-   - pdf
+  - pdf
