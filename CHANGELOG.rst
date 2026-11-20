@@ -6,6 +6,8 @@ Unreleased
 - Moved package metadata from ``setup.py`` to ``pyproject.toml`` (#165)
 - Moved ``register_hkey_aumid`` into ``windows_toasts``
 - Fixed a TypeError when showing an indeterminate progress bar without a ``progress_override``
+- Fixed ``ToastDocument.SetAudioAttributes`` keeping the previous call's attributes, such as ``silent``, when called
+  again
 - A context menu ``ToastButton`` without content now raises a ``ValueError``
 - Documented that Windows plays the default sound instead of a custom audio file that sandboxed apps can't read (#185)
 - Added ``Toast.expires_on_reboot`` (#210)

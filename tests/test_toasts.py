@@ -87,6 +87,14 @@ def test_audio_toast():
 
     toaster.show_toast(loopingToast)
 
+    # Setting the audio again replaces the previous audio instead of keeping its attributes
+    from src.windows_toasts.toast_document import ToastDocument
+
+    toastDocument = ToastDocument(originalToast)
+    toastDocument.SetAudioAttributes(ToastAudio(silent=True))
+    toastDocument.SetAudioAttributes(ToastAudio(AudioSource.IM))
+    assert toastDocument.xmlDocument.get_xml().endswith('<audio src="ms-winsoundevent:Notification.IM"/></toast>')
+
 
 def test_custom_audio_toast(example_audio_path, example_image_path):
     from src.windows_toasts import ToastAudio

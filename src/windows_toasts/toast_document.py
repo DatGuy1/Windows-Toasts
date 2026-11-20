@@ -148,10 +148,12 @@ class ToastDocument:
         Apply audio attributes for the toast. If a loop is requested, the toast duration has to be set to long. `Audio
         on Microsoft.com <https://learn.microsoft.com/windows/apps/develop/notifications/app-notifications/app-notifications-content#audio>`_
         """
-        audioNode = self.GetElementByTagName("audio")
-        if audioNode is None:
-            audioNode = self.xmlDocument.create_element("audio")
-            self.GetElementByTagName("toast").append_child(audioNode)
+        previousAudioNode = self.GetElementByTagName("audio")
+        if previousAudioNode is not None:
+            previousAudioNode.parent_node.remove_child(previousAudioNode)
+
+        audioNode = self.xmlDocument.create_element("audio")
+        self.GetElementByTagName("toast").append_child(audioNode)
 
         if audioConfiguration.silent:
             self.SetAttribute(audioNode, "silent", str(audioConfiguration.silent).lower())
