@@ -77,7 +77,7 @@ skip-magic-trailing-comma = true
 line-ending = "lf"
 
 [tool.ruff.lint]
-select = ["E", "W", "F", "I"]
+select = ["E", "W", "F", "I", "UP", "B"]
 ignore = ["E501"]
 
 [tool.ruff.lint.per-file-ignores]

@@ -2,7 +2,6 @@ import warnings
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
-from typing import Union
 
 # According to https://learn.microsoft.com/windows/apps/design/shell/tiles-and-notifications/custom-audio-on-toasts
 SUPPORTED_FILE_TYPES = [".aac", ".flac", ".m4a", ".mp3", ".wav", ".wma"]
@@ -53,7 +52,7 @@ class ToastAudio:
     :type silent: bool
     """
 
-    sound: Union[AudioSource, Path] = AudioSource.Default
+    sound: AudioSource | Path = AudioSource.Default
     looping: bool = False
     silent: bool = False
 
@@ -68,8 +67,10 @@ class ToastAudio:
         else:
             # We warn instead of erroring out because that's what Windows does, but I'm open to changing it
             if not self.sound.exists():
-                warnings.warn(f"Custom audio file '{self.sound}' could not be found")
+                warnings.warn(f"Custom audio file '{self.sound}' could not be found", stacklevel=2)
             if self.sound.suffix not in SUPPORTED_FILE_TYPES:
-                warnings.warn(f"Custom audio file '{self.sound}' has unsupported extension '{self.sound.suffix}'")
+                warnings.warn(
+                    f"Custom audio file '{self.sound}' has unsupported extension '{self.sound.suffix}'", stacklevel=2
+                )
 
             return self.sound.absolute().as_uri()

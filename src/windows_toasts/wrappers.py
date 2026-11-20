@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 import abc
+from collections.abc import Sequence
 from dataclasses import dataclass
 from enum import Enum
 from os import PathLike
 from pathlib import Path
-from typing import Optional, Sequence, Union
 from urllib.parse import unquote, urlparse
 
 from .exceptions import InvalidImageException
@@ -84,7 +84,7 @@ class ToastImage:
     path: str
     """The URI of the image source"""
 
-    def __init__(self, imagePath: Union[str, PathLike]):
+    def __init__(self, imagePath: str | PathLike):
         """
         Initialise an :class:`ToastImage` class to use in certain classes.
         Online images are supported only in packaged apps that have the internet capability in their manifest.
@@ -114,7 +114,7 @@ class ToastDisplayImage:
 
     image: ToastImage
     """An image file"""
-    altText: Optional[str] = None
+    altText: str | None = None
     """A description of the image, for users of assistive technologies"""
     position: ToastImagePosition = ToastImagePosition.Inline
     """
@@ -129,8 +129,8 @@ class ToastDisplayImage:
     @classmethod
     def fromPath(
         cls,
-        imagePath: Union[str, PathLike],
-        altText: Optional[str] = None,
+        imagePath: str | PathLike,
+        altText: str | None = None,
         position: ToastImagePosition = ToastImagePosition.Inline,
         circleCrop: bool = False,
     ) -> ToastDisplayImage:
@@ -152,14 +152,14 @@ class ToastProgressBar:
     Status string, which is displayed underneath the progress bar on the left. \
     This string should reflect the status of the operation, like "Downloading..." or "Installing..."
     """
-    caption: Optional[str] = None
+    caption: str | None = None
     """An optional title string"""
-    progress: Optional[float] = 0
+    progress: float | None = 0
     """
     The percentage value of the progress bar, {0..1}. Defaults to zero.
     If set to None, it will use an indeterminate bar
     """
-    progress_override: Optional[str] = None
+    progress_override: str | None = None
     """Optional string to be displayed instead of the default percentage string"""
 
 
@@ -209,7 +209,7 @@ class ToastInputSelectionBox(_ToastInput):
 
     selections: Sequence[ToastSelection] = ()
     """Sequence of selections to include in the box"""
-    default_selection: Optional[ToastSelection] = None
+    default_selection: ToastSelection | None = None
     """Selection to default to. If None, the default selection will be empty"""
 
     def __init__(
@@ -217,7 +217,7 @@ class ToastInputSelectionBox(_ToastInput):
         input_id: str,
         caption: str = "",
         selections: Sequence[ToastSelection] = (),
-        default_selection: Optional[ToastSelection] = None,
+        default_selection: ToastSelection | None = None,
     ):
         super().__init__(input_id, caption)
         self.selections = selections
@@ -236,15 +236,15 @@ class ToastButton:
     """The content displayed on the button"""
     arguments: str = ""
     """String of arguments that the app will later receive if the user clicks this button"""
-    image: Optional[ToastImage] = None
+    image: ToastImage | None = None
     """An image to be used as an icon for the button"""
-    relatedInput: Optional[Union[ToastInputTextBox, ToastInputSelectionBox]] = None
+    relatedInput: ToastInputTextBox | ToastInputSelectionBox | None = None
     """An input to position the button besides"""
     inContextMenu: bool = False
     """Whether to place the button in the context menu rather than the actual toast"""
-    tooltip: Optional[str] = None
+    tooltip: str | None = None
     """The tooltip for a button, if the button has an empty content string"""
-    launch: Optional[str] = None
+    launch: str | None = None
     """An optional protocol to launch when the button is pressed"""
     colour: ToastButtonColour = ToastButtonColour.Default
     """:class:`ToastButtonColour` for the button"""
@@ -260,11 +260,11 @@ class ToastSystemButton:
     """Action the system button should perform"""
     content: str = ""
     """A custom content string. If you don't provide one, Windows will automatically use a localized string"""
-    relatedInput: Optional[ToastInputSelectionBox] = None
+    relatedInput: ToastInputSelectionBox | None = None
     """If you want the user to select a snooze interval, set this to a ToastInputSelectionBox with the minutes as IDs"""
-    image: Optional[ToastImage] = None
+    image: ToastImage | None = None
     """An image to be used as an icon for the button"""
-    tooltip: Optional[str] = None
+    tooltip: str | None = None
     """The tooltip for the button"""
     colour: ToastButtonColour = ToastButtonColour.Default
     """:class:`ToastButtonColour` to be displayed on the button"""

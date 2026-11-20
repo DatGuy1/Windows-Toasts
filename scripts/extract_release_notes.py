@@ -17,7 +17,8 @@ def parse_sections(changelog: str) -> dict[str, str]:
     lines = changelog.splitlines()
     starts = [i for i in range(len(lines) - 1) if lines[i] and re.fullmatch(r"=+", lines[i + 1])]
     return {
-        lines[start]: "\n".join(lines[start + 2 : end]).strip() for start, end in zip(starts, starts[1:] + [len(lines)])
+        lines[start]: "\n".join(lines[start + 2 : end]).strip()
+        for start, end in zip(starts, starts[1:] + [len(lines)], strict=True)
     }
 
 

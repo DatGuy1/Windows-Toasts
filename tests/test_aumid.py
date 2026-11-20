@@ -33,18 +33,12 @@ def test_register_hkey_icon(example_image_path):
             assert iconUri[1] == winreg.REG_SZ
             assert iconUri[0] == str(exampleIcoPath)
         else:
-            try:
+            with raises(FileNotFoundError):
                 winreg.QueryValueEx(masterKey, "IconUri")
-                assert False
-            except FileNotFoundError:
-                pass
 
         winreg.DeleteKeyEx(winreg.HKEY_CURRENT_USER, keyPath)
-        try:
+        with raises(OSError):
             winreg.QueryInfoKey(masterKey)
-            assert False
-        except (FileNotFoundError, OSError):
-            pass
 
     exampleIcoPath.unlink()
 
@@ -66,15 +60,9 @@ def test_register_hkey_no_icon():
         assert displayValue[1] == winreg.REG_SZ
         assert displayValue[0] == appName
 
-        try:
+        with raises(FileNotFoundError):
             winreg.QueryValueEx(masterKey, "IconUri")
-            assert False
-        except FileNotFoundError:
-            pass
 
         winreg.DeleteKeyEx(winreg.HKEY_CURRENT_USER, keyPath)
-        try:
+        with raises(OSError):
             winreg.QueryInfoKey(masterKey)
-            assert False
-        except (FileNotFoundError, OSError):
-            pass

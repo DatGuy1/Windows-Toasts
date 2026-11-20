@@ -18,7 +18,8 @@ from .wrappers import (
     ToastSystemButtonAction,
 )
 
-IXmlType = Union[IXmlNode, XmlElement]
+# winrt is mocked in the docs build, and the mocks don't support |
+IXmlType = Union[IXmlNode, XmlElement]  # noqa: UP007
 
 
 class ToastDocument:
@@ -212,7 +213,7 @@ class ToastDocument:
         toastNode = self.GetElementByTagName("toast")
         self.SetAttribute(toastNode, "scenario", scenario.value)
 
-    def AddInput(self, toastInput: Union[ToastInputTextBox, ToastInputSelectionBox]) -> None:
+    def AddInput(self, toastInput: ToastInputTextBox | ToastInputSelectionBox) -> None:
         """
         Add a field for the user to input. `Inputs with button bar on Microsoft.com
         <https://learn.microsoft.com/windows/apps/design/shell/tiles-and-notifications/adaptive-interactive
@@ -262,7 +263,7 @@ class ToastDocument:
         toastNode = self.GetElementByTagName("toast")
         self.SetAttribute(toastNode, "duration", duration.value)
 
-    def AddAction(self, action: Union[ToastButton, ToastSystemButton]) -> None:
+    def AddAction(self, action: ToastButton | ToastSystemButton) -> None:
         """
         Adds a button to the toast. Only works on :obj:`~windows_toasts.toasters.InteractableWindowsToaster`
 

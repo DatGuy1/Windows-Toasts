@@ -145,11 +145,8 @@ def test_errors_toast(example_image_path):
         ToastImage("https://www.python.org/static/community_logos/python-powered-h-140x182.png")
 
     assert len(newToast.actions) + len(newToast.inputs) == 5
-    for i, toastAction in enumerate(newToast.actions):
-        if i < 3:
-            assert newToast.actions[i] == ToastButton(f"Button #{i + 1}", str(i + 1))
-        else:
-            assert newToast.inputs[i] == ToastInputTextBox(f"Input #{i + 1}", str(i + 1))
+    assert newToast.actions == [ToastButton(f"Button #{i}", str(i)) for i in range(1, 4)]
+    assert newToast.inputs == [ToastInputTextBox(f"Input #{i}", str(i)) for i in range(4, 6)]
 
     InteractableWindowsToaster("Python").show_toast(newToast)
 
@@ -169,10 +166,10 @@ def test_image_toast(example_image_path):
 
 
 def test_custom_timestamp_toast():
-    from datetime import datetime, timedelta, timezone
+    from datetime import UTC, datetime, timedelta
 
     newToast = Toast(["This should display as being sent an hour ago"])
-    newToast.timestamp = datetime.now(timezone.utc) - timedelta(hours=1)
+    newToast.timestamp = datetime.now(UTC) - timedelta(hours=1)
 
     WindowsToaster("Python").show_toast(newToast)
 

@@ -3,10 +3,9 @@ import pathlib
 
 # noinspection PyCompatibility
 import winreg
-from typing import Optional
 
 
-def register_hkey(appId: str, appName: str, iconPath: Optional[pathlib.Path]):
+def register_hkey(appId: str, appName: str, iconPath: pathlib.Path | None):
     if iconPath is not None:
         if not iconPath.exists():
             raise ValueError(f"Could not register the application: File {iconPath} does not exist")

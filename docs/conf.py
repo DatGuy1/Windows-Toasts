@@ -5,7 +5,6 @@
 
 import os
 import sys
-from typing import Dict
 
 sys.path.insert(0, os.path.abspath("../src"))
 
@@ -14,8 +13,8 @@ sys.path.insert(0, os.path.abspath("../src"))
 
 # I'd love to simply import the project (so I could also use sphinx.ext.doctest), but RTD builds on Ubuntu
 # Get version.py without importing project
-windows_toasts: Dict[str, str] = {}
-with open("../src/windows_toasts/_version.py", "r") as f:
+windows_toasts: dict[str, str] = {}
+with open("../src/windows_toasts/_version.py") as f:
     exec(f.read(), None, windows_toasts)
 
 project = windows_toasts["__title__"]

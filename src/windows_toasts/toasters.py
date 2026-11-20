@@ -1,6 +1,6 @@
 import warnings
 from datetime import datetime
-from typing import Optional, TypeVar
+from typing import TypeVar
 
 from winrt.windows.ui.notifications import (
     NotificationData,
@@ -84,7 +84,7 @@ class BaseWindowsToaster:
     """
 
     applicationText: str
-    notifierAUMID: Optional[str]
+    notifierAUMID: str | None
     toastNotifier: ToastNotifier
 
     def __init__(self, applicationText: str):
@@ -249,19 +249,19 @@ class WindowsToaster(BaseWindowsToaster):
 
     def show_toast(self, toast: Toast) -> None:  # pragma: no cover
         if len(toast.inputs) > 0:
-            warnings.warn(self.__InteractableWarningMessage.format("input fields"))
+            warnings.warn(self.__InteractableWarningMessage.format("input fields"), stacklevel=2)
 
         if len(toast.actions) > 0:
-            warnings.warn(self.__InteractableWarningMessage.format("actions"))
+            warnings.warn(self.__InteractableWarningMessage.format("actions"), stacklevel=2)
 
         if len(toast.images) > 2:
-            warnings.warn(self.__InteractableWarningMessage.format("more than two images"))
+            warnings.warn(self.__InteractableWarningMessage.format("more than two images"), stacklevel=2)
 
         if toast.progress_bar is not None:
-            warnings.warn(self.__InteractableWarningMessage.format("progress bars"))
+            warnings.warn(self.__InteractableWarningMessage.format("progress bars"), stacklevel=2)
 
         if any(toast_image.position == ToastImagePosition.Hero for toast_image in toast.images):
-            warnings.warn(self.__InteractableWarningMessage.format("hero placements"))
+            warnings.warn(self.__InteractableWarningMessage.format("hero placements"), stacklevel=2)
 
         super().show_toast(toast)
 
@@ -291,7 +291,7 @@ class InteractableWindowsToaster(BaseWindowsToaster):
     :param notifierAUMID: AUMID to use. Defaults to Command Prompt. To use a custom AUMID, see one of the scripts
     """
 
-    def __init__(self, applicationText: str, notifierAUMID: Optional[str] = None):
+    def __init__(self, applicationText: str, notifierAUMID: str | None = None):
         super().__init__(applicationText)
         if notifierAUMID is None:
             self.defaultAUMID = True
