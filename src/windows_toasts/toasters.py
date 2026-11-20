@@ -18,6 +18,7 @@ from .toast import Toast
 from .toast_document import ToastDocument
 from .wrappers import NotificationSetting, ToastDuration, ToastImagePosition, ToastNotificationMode, ToastScenario
 
+#: A ToastNotification or ScheduledToastNotification, for code that builds either
 ToastNotificationT = TypeVar("ToastNotificationT", ToastNotification, ScheduledToastNotification)
 
 # HRESULT_FROM_WIN32(ERROR_NOT_FOUND), raised for an AUMID Windows has no notification settings for yet

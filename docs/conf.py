@@ -34,14 +34,7 @@ release = windows_toasts["__version__"]
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-extensions = [
-    "sphinx.ext.autodoc",
-    "sphinx.ext.autosectionlabel",
-    "sphinx.ext.autosummary",
-    "sphinx.ext.viewcode",
-    "sphinx_toolbox.more_autodoc.typevars",
-    "enum_tools.autoenum",
-]
+extensions = ["sphinx.ext.autodoc", "sphinx.ext.autosectionlabel", "sphinx.ext.autosummary", "sphinx.ext.viewcode"]
 
 templates_path = ["_templates"]
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
@@ -56,3 +49,16 @@ autodoc_default_options = {"members": True, "member-order": "bysource", "undoc-m
 
 html_theme = "furo"
 html_logo = "images/logo.png"
+
+
+def _hide_enum_signature(_app, what, _name, obj, _options, _signature, return_annotation):
+    from enum import Enum
+
+    # Enums would otherwise show as "ToastScenario(*values)"
+    if what == "class" and isinstance(obj, type) and issubclass(obj, Enum):
+        return "", return_annotation
+    return None
+
+
+def setup(app) -> None:
+    app.connect("autodoc-process-signature", _hide_enum_signature)

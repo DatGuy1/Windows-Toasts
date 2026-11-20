@@ -13,7 +13,7 @@ Classes
 Data
 ----
 
-.. autotypevar:: windows_toasts.toasters.ToastNotificationT
+.. autodata:: windows_toasts.toasters.ToastNotificationT
 
 API
 ---
