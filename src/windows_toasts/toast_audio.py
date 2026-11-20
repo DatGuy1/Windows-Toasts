@@ -44,7 +44,8 @@ class ToastAudio:
     """
     Audio configuration in a toast
 
-    :param sound: Selected AudioSource or pathlib.Path to an audio file to play
+    :param sound: Selected AudioSource or pathlib.Path to an audio file to play. Windows plays the default sound instead
+        if sandboxed apps can't read the file. See :ref:`custom-audio-files`
     :type sound: Union[AudioSource, Path]
     :param looping: Whether the audio should loop continuously. Stops abruptly when the notification is dismissed
     :type looping: bool

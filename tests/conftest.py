@@ -1,6 +1,8 @@
 import io
 import math
+import os
 import struct
+import subprocess
 import time
 import wave
 import zlib
@@ -76,6 +78,9 @@ def example_image_path(example_files_dir) -> Path:
 def example_audio_path(example_files_dir) -> Path:
     audioPath = example_files_dir / "audio.wav"
     audioPath.write_bytes(_make_wav())
+    # Windows reads custom toast audio from a sandboxed process, so let it read the file
+    icacls = Path(os.environ["SystemRoot"]) / "System32" / "icacls.exe"
+    subprocess.run([icacls, audioPath, "/grant", "*S-1-15-2-1:(R)"], check=True, capture_output=True)
     return audioPath
 
 

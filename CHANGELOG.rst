@@ -7,6 +7,7 @@ Unreleased
 - Moved ``register_hkey_aumid`` into ``windows_toasts``
 - Fixed a TypeError when showing an indeterminate progress bar without a ``progress_override``
 - A context menu ``ToastButton`` without content now raises a ``ValueError``
+- Documented that Windows plays the default sound instead of a custom audio file that sandboxed apps can't read (#185)
 - Added ``Toast.expires_on_reboot`` (#210)
 - Added ``ToastInputTextBox.default_input`` to prefill text boxes (#210)
 - Added ``notification_setting`` and ``notification_mode`` to toasters, to check whether Windows will show their

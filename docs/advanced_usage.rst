@@ -64,6 +64,8 @@ There is a list of available, out-of-the-box audio sources at :class:`windows_to
 
     toaster.show_toast(newToast)
 
+.. _custom-audio-files:
+
 Custom files
 ^^^^^^^^^^^^
 You can also play local audio files, with the following extensions:
@@ -93,6 +95,32 @@ You can also play local audio files, with the following extensions:
     This will make Windows play the default sound. There is no magic check for the file type – just its suffix.
 
     Additionally, some audio files will not work for seemingly no discernible reason. If this happens, the toast will be silent.
+
+Windows doesn't read the file from your process. A sandboxed (AppContainer) process opens it, and if that process can't,
+Windows plays the default sound without reporting an error. Files in your user folder or on other drives usually aren't
+readable by sandboxed processes, while files in ``C:\Windows\Media`` are. Windows-Toasts doesn't check or change a
+file's permissions.
+
+To let sandboxed processes read a file, grant read access to ``ALL APPLICATION PACKAGES`` with
+`icacls <https://learn.microsoft.com/windows-server/administration/windows-commands/icacls>`_ from a command prompt:
+
+.. code-block:: console
+
+    icacls notification_sound.wav /grant *S-1-15-2-1:(R)
+
+Or through the file's properties:
+
+#. Right-click the file and select **Properties**
+#. Open the **Security** tab and click **Edit...**
+#. Click **Add...**, enter ``ALL APPLICATION PACKAGES`` into the **Enter the object names to select** box, click
+   **Check Names**, then **OK**
+#. With ``ALL APPLICATION PACKAGES`` selected, make sure **Read** is allowed, then click **OK**
+
+This lets every sandboxed app on the computer read the file, so don't do it for audio you'd rather keep private.
+
+.. note::
+    Microsoft's documentation lists absolute file paths as an unsupported source for custom audio, so this could stop
+    working in a future version of Windows.
 
 Progress bars
 -------------
