@@ -53,7 +53,7 @@ dev = [
     "ty>=0.0.107",
 ]
 docs = [
-    "sphinx>=8.2.3,<9",
+    "sphinx>=8.2.3,<10",
     "sphinx-jinja2-compat>=0.4.1",
     "sphinx-toolbox>=4.3.1",
     "enum-tools>=0.13.0",
