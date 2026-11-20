@@ -22,7 +22,6 @@ class ToastActivatedEventArgs:
     inputs: dict | None = None
     """Inputs received when using :func:`~windows_toasts.toast.Toast.AddInput`"""
 
-    # noinspection PyProtectedMember
     @classmethod
     def fromWinRt(cls, eventArgs: system.Object) -> ToastActivatedEventArgs:
         activatedEventArgs = eventArgs.as_(WinRtToastActivatedEventArgs)

@@ -1,7 +1,5 @@
 import argparse
 import pathlib
-
-# noinspection PyCompatibility
 import winreg
 
 

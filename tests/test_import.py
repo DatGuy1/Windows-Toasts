@@ -3,7 +3,6 @@ from unittest.mock import patch
 from pytest import raises
 
 
-# noinspection PyUnresolvedReferences
 def test_import_current():
     import importlib
 

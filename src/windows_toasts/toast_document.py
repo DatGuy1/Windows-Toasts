@@ -228,7 +228,6 @@ class ToastDocument:
 
         if isinstance(toastInput, ToastInputTextBox):
             self.SetAttribute(inputNode, "type", "text")
-            # noinspection PyUnresolvedReferences
             self.SetAttribute(inputNode, "placeHolderContent", toastInput.placeholder)
         elif isinstance(toastInput, ToastInputSelectionBox):
             self.SetAttribute(inputNode, "type", "selection")
