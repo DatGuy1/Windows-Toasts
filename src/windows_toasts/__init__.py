@@ -16,6 +16,7 @@ from .toast import Toast
 from .toast_audio import AudioSource, ToastAudio
 from .toasters import InteractableWindowsToaster, WindowsToaster
 from .wrappers import (
+    NotificationSetting,
     ToastButton,
     ToastButtonColour,
     ToastDisplayImage,
@@ -24,6 +25,7 @@ from .wrappers import (
     ToastImagePosition,
     ToastInputSelectionBox,
     ToastInputTextBox,
+    ToastNotificationMode,
     ToastProgressBar,
     ToastScenario,
     ToastSelection,
@@ -57,6 +59,7 @@ __all__ = [
     "InteractableWindowsToaster",
     "WindowsToaster",
     # wrappers.py
+    "NotificationSetting",
     "ToastButton",
     "ToastButtonColour",
     "ToastDisplayImage",
@@ -65,6 +68,7 @@ __all__ = [
     "ToastImagePosition",
     "ToastInputSelectionBox",
     "ToastInputTextBox",
+    "ToastNotificationMode",
     "ToastProgressBar",
     "ToastScenario",
     "ToastSelection",

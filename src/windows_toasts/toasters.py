@@ -16,9 +16,12 @@ from .events import ToastActivatedEventArgs
 from .exceptions import ToastNotFoundError
 from .toast import Toast
 from .toast_document import ToastDocument
-from .wrappers import ToastDuration, ToastImagePosition, ToastScenario
+from .wrappers import NotificationSetting, ToastDuration, ToastImagePosition, ToastNotificationMode, ToastScenario
 
 ToastNotificationT = TypeVar("ToastNotificationT", ToastNotification, ScheduledToastNotification)
+
+# HRESULT_FROM_WIN32(ERROR_NOT_FOUND), raised for an AUMID Windows has no notification settings for yet
+_E_ELEMENT_NOT_FOUND = 0x80070490
 
 
 def _build_adaptable_data(toast: Toast) -> NotificationData:
@@ -97,6 +100,28 @@ class BaseWindowsToaster:
     @property
     def _AUMID(self) -> str:
         return self.notifierAUMID or self.applicationText
+
+    @property
+    def notification_setting(self) -> NotificationSetting | None:
+        """
+        Whether Windows will show this toaster's notifications, and if not, why.
+
+        :return: None if Windows doesn't know the toaster's AUMID yet, which is the case until it shows its first toast
+        """
+        try:
+            return NotificationSetting(self.toastNotifier.setting)
+        except OSError as e:
+            if e.winerror is not None and e.winerror & 0xFFFFFFFF == _E_ELEMENT_NOT_FOUND:
+                return None
+            raise
+
+    @property
+    def notification_mode(self) -> ToastNotificationMode:
+        """
+        Which notifications Windows currently lets through for the user, such as while Do Not Disturb is on.
+        This applies to the whole user, not just this toaster
+        """
+        return ToastNotificationMode(ToastNotificationManager.get_default().notification_mode)
 
     def _setup_toast(self, toast: Toast, dynamic: bool) -> ToastDocument:
         """

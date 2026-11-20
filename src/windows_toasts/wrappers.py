@@ -6,9 +6,30 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
+from typing import Self
 from urllib.parse import unquote, urlparse
 
 from .exceptions import InvalidImageException
+
+
+class _WindowsEnum(Enum):
+    """
+    Base for enums that mirror a WinRT enum's values. A newer version of Windows can return a value the enum doesn't
+    know, so like pywinrt's own enums, an unknown value becomes a member named after its number instead of raising
+    """
+
+    @classmethod
+    def _missing_(cls, value: object) -> Self | None:
+        if not isinstance(value, int):
+            return None
+
+        number = int(value)
+        member = object.__new__(cls)
+        member._name_ = str(number)
+        member._value_ = number
+        # Cached like Flag's pseudo-members, so the same value always gives the same, equal member
+        cls._value2member_map_[number] = member
+        return member
 
 
 class ToastButtonColour(Enum):
@@ -66,6 +87,36 @@ class ToastScenario(Enum):
     high-priority app notifications that can break through Focus Assist (Do not Disturb). \
     This can be modified in the notifications settings.
     """
+
+
+class NotificationSetting(_WindowsEnum):
+    """
+    Whether Windows will show a toaster's notifications, and if not, why
+    """
+
+    Enabled = 0
+    """Notifications can be displayed"""
+    DisabledForApplication = 1
+    """The user turned off notifications for this application"""
+    DisabledForUser = 2
+    """The user or an administrator turned off all notifications for this user"""
+    DisabledByGroupPolicy = 3
+    """An administrator turned off all notifications on this computer through group policy"""
+    DisabledByManifest = 4
+    """The application's package manifest doesn't declare it as able to show toasts"""
+
+
+class ToastNotificationMode(_WindowsEnum):
+    """
+    Which notifications Windows currently lets through for the user, such as while Do Not Disturb is on
+    """
+
+    Unrestricted = 0
+    """All notifications are shown"""
+    PriorityOnly = 1
+    """Only priority notifications are shown. This is what Do Not Disturb reports"""
+    AlarmsOnly = 2
+    """Only alarms are shown"""
 
 
 class ToastSystemButtonAction(Enum):

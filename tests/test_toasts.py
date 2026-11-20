@@ -318,6 +318,59 @@ def test_positional_arguments_deprecated():
         Toast(["Legacy"], *([None] * 17))
 
 
+def test_notification_enums_match_winrt():
+    from winrt.windows.ui.notifications import (
+        NotificationSetting as WinRtNotificationSetting,
+        ToastNotificationMode as WinRtToastNotificationMode,
+    )
+
+    from src.windows_toasts import NotificationSetting, ToastNotificationMode
+
+    for ours, theirs in (
+        (NotificationSetting, WinRtNotificationSetting),
+        (ToastNotificationMode, WinRtToastNotificationMode),
+    ):
+        assert [(member.name.replace("_", "").lower(), member.value) for member in ours] == [
+            (member.name.replace("_", "").lower(), int(member)) for member in theirs
+        ]
+        # Plain Enums so that a zero value, like NotificationSetting.Enabled, isn't falsy
+        assert all(member for member in ours)
+
+    # A value a newer Windows might return becomes a member instead of raising
+    unknown = NotificationSetting(99)
+    assert unknown.value == 99 and unknown.name == "99"
+    assert NotificationSetting(99) is unknown
+    assert unknown not in list(NotificationSetting)
+
+
+def test_notification_setting():
+    import uuid
+    from unittest.mock import Mock, PropertyMock
+
+    from winrt.windows.ui.notifications import NotificationSetting as WinRtNotificationSetting
+
+    from src.windows_toasts import NotificationSetting
+
+    # Windows has no settings for an AUMID until it shows its first toast
+    assert WindowsToaster(f"WindowsToasts.Tests.{uuid.uuid4()}").notification_setting is None
+
+    toaster = InteractableWindowsToaster("Python")
+    toaster.toastNotifier = Mock(setting=WinRtNotificationSetting.DISABLED_FOR_USER)
+    assert toaster.notification_setting is NotificationSetting.DisabledForUser
+
+    # Any other error still propagates
+    toaster.toastNotifier = Mock()
+    type(toaster.toastNotifier).setting = PropertyMock(side_effect=OSError(0, "Access is denied", None, 5))
+    with raises(OSError, match="Access is denied"):
+        _ = toaster.notification_setting
+
+
+def test_notification_mode():
+    from src.windows_toasts import ToastNotificationMode
+
+    assert isinstance(WindowsToaster("Python").notification_mode, ToastNotificationMode)
+
+
 def test_scheduled_toast(pytestconfig):
     from datetime import datetime, timedelta
 
