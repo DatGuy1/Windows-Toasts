@@ -8,6 +8,7 @@ Unreleased
 - A context menu ``ToastButton`` without content now raises a ``ValueError``
 - Added ``Toast.expires_on_reboot`` (#210)
 - Added ``ToastInputTextBox.default_input`` to prefill text boxes (#210)
+- Deprecated passing ``Toast`` arguments other than ``text_fields`` positionally
 
 1.3.1 (2025-05-06)
 ==================

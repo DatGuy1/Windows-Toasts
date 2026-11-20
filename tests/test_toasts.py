@@ -301,6 +301,23 @@ def test_text_box_default_input():
     assert "defaultInput" not in toaster._setup_toast(emptyToast, True).xmlDocument.get_xml()
 
 
+def test_positional_arguments_deprecated():
+    from src.windows_toasts import AudioSource, ToastAudio, ToastDuration
+
+    audio = ToastAudio(AudioSource.IM)
+
+    with warns(DeprecationWarning, match="audio, duration as keyword arguments"):
+        legacyToast = Toast(["Legacy"], audio, ToastDuration.Long)
+    assert legacyToast.audio is audio
+    assert legacyToast.duration is ToastDuration.Long
+
+    with raises(TypeError, match="multiple values for argument 'audio'"):
+        Toast(["Legacy"], audio, audio=audio)
+
+    with raises(TypeError, match="at most 17 positional arguments"):
+        Toast(["Legacy"], *([None] * 17))
+
+
 def test_scheduled_toast(pytestconfig):
     from datetime import datetime, timedelta
 
