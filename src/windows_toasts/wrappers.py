@@ -1,10 +1,10 @@
 from __future__ import annotations
 
 import abc
+import os
 from collections.abc import Sequence
 from dataclasses import dataclass
 from enum import Enum
-from os import PathLike
 from pathlib import Path
 from urllib.parse import unquote, urlparse
 
@@ -84,7 +84,7 @@ class ToastImage:
     path: str
     """The URI of the image source"""
 
-    def __init__(self, imagePath: str | PathLike):
+    def __init__(self, imagePath: str | os.PathLike):
         """
         Initialise an :class:`ToastImage` class to use in certain classes.
         Online images are supported only in packaged apps that have the internet capability in their manifest.
@@ -92,7 +92,7 @@ class ToastImage:
         and reference it locally.
 
         :param imagePath: The path to an image file
-        :type imagePath: Union[str, PathLike]
+        :type imagePath: Union[str, os.PathLike]
         :raises: InvalidImageException: If the path to an online image is supplied
         """
         if isinstance(imagePath, str) and urlparse(imagePath).scheme in ("http", "https"):
@@ -129,7 +129,7 @@ class ToastDisplayImage:
     @classmethod
     def fromPath(
         cls,
-        imagePath: str | PathLike,
+        imagePath: str | os.PathLike,
         altText: str | None = None,
         position: ToastImagePosition = ToastImagePosition.Inline,
         circleCrop: bool = False,

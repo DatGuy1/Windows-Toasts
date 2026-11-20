@@ -120,11 +120,13 @@ class BaseWindowsToaster:
         if toast.scenario != ToastScenario.Default:
             toastContent.SetScenario(toast.scenario)
 
-        if toast.launch_action is not None:
-            toastContent.SetAttribute(toastContent.GetElementByTagName("toast"), "launch", toast.launch_action)
-            toastContent.SetAttribute(toastContent.GetElementByTagName("toast"), "activationType", "protocol")
+        toastNode = toastContent.GetElementByTagName("toast")
+        launchAction = toast.launch_action
+        if launchAction is not None:
+            toastContent.SetAttribute(toastNode, "launch", launchAction)
+            toastContent.SetAttribute(toastNode, "activationType", "protocol")
         else:
-            toastContent.SetAttribute(toastContent.GetElementByTagName("toast"), "launch", toast.tag)
+            toastContent.SetAttribute(toastNode, "launch", toast.tag)
 
         return toastContent
 
@@ -293,14 +295,12 @@ class InteractableWindowsToaster(BaseWindowsToaster):
 
     def __init__(self, applicationText: str, notifierAUMID: str | None = None):
         super().__init__(applicationText)
+        self.defaultAUMID = notifierAUMID is None
         if notifierAUMID is None:
-            self.defaultAUMID = True
-            self.notifierAUMID = "{1AC14E77-02E7-4E5D-B744-2EB1AE5198B7}\\cmd.exe"
-        else:
-            self.defaultAUMID = False
-            self.notifierAUMID = notifierAUMID
+            notifierAUMID = "{1AC14E77-02E7-4E5D-B744-2EB1AE5198B7}\\cmd.exe"
 
-        self.toastNotifier = ToastNotificationManager.create_toast_notifier(self.notifierAUMID)
+        self.notifierAUMID = notifierAUMID
+        self.toastNotifier = ToastNotificationManager.create_toast_notifier(notifierAUMID)
 
     def _setup_toast(self, toast, dynamic):
         toastContent = super()._setup_toast(toast, dynamic)
