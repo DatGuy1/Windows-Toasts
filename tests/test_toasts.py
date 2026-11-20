@@ -560,6 +560,27 @@ def test_system_toast():
     InteractableWindowsToaster("Python").show_toast(newToast)
 
 
+def test_unsupported_types():
+    from types import SimpleNamespace
+
+    from src.windows_toasts import ToastGroup, ToastSubgroup, ToastSystemButton, ToastSystemButtonAction
+
+    # Nothing stops these from being given a type they don't support, so the toast raises instead of being incomplete
+    invalidButton = ToastSystemButton(ToastSystemButtonAction.Snooze)
+    invalidButton.action = 0
+    invalidToasts = (
+        Toast(["Invalid system button"], actions=[invalidButton]),
+        Toast(["Invalid action"], actions=[SimpleNamespace(content="Not a button")]),
+        Toast(["Invalid input"], inputs=[SimpleNamespace(input_id="notAnInput", caption="Not an input")]),
+        Toast(["Invalid group content"], groups=[ToastGroup([ToastSubgroup(["Not text or an image"])])]),
+    )
+
+    toaster = InteractableWindowsToaster("Python")
+    for invalidToast in invalidToasts:
+        with raises(AssertionError, match="Expected code to be unreachable"):
+            toaster.show_toast(invalidToast)
+
+
 def test_remove_toast():
     toaster = WindowsToaster("Python")
     newToast = Toast(["Disappearing act"])

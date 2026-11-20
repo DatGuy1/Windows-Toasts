@@ -1,5 +1,5 @@
 import datetime
-from typing import Union
+from typing import Union, assert_never
 
 from winrt.windows.data.xml.dom import IXmlNode, XmlDocument, XmlElement
 
@@ -240,28 +240,32 @@ class ToastDocument:
         <https://learn.microsoft.com/windows/apps/develop/notifications/app-notifications/app-notifications-content#quick-reply-text-box>`_
 
         :type toastInput: Union[ToastInputTextBox, ToastInputSelectionBox]
+        :raises: AssertionError: If the input isn't a :class:`ToastInputTextBox` or :class:`ToastInputSelectionBox`
         """
         self._inputFields += 1
         inputNode = self.xmlDocument.create_element("input")
         self.SetAttribute(inputNode, "id", toastInput.input_id)
         self.SetAttribute(inputNode, "title", toastInput.caption)
 
-        if isinstance(toastInput, ToastInputTextBox):
-            self.SetAttribute(inputNode, "type", "text")
-            self.SetAttribute(inputNode, "placeHolderContent", toastInput.placeholder)
-            # Undocumented for text boxes, but Windows prefills the box with it
-            if toastInput.default_input is not None:
-                self.SetAttribute(inputNode, "defaultInput", toastInput.default_input)
-        elif isinstance(toastInput, ToastInputSelectionBox):
-            self.SetAttribute(inputNode, "type", "selection")
-            if toastInput.default_selection is not None:
-                self.SetAttribute(inputNode, "defaultInput", toastInput.default_selection.selection_id)
+        match toastInput:
+            case ToastInputTextBox():
+                self.SetAttribute(inputNode, "type", "text")
+                self.SetAttribute(inputNode, "placeHolderContent", toastInput.placeholder)
+                # Undocumented for text boxes, but Windows prefills the box with it
+                if toastInput.default_input is not None:
+                    self.SetAttribute(inputNode, "defaultInput", toastInput.default_input)
+            case ToastInputSelectionBox():
+                self.SetAttribute(inputNode, "type", "selection")
+                if toastInput.default_selection is not None:
+                    self.SetAttribute(inputNode, "defaultInput", toastInput.default_selection.selection_id)
 
-            for selection in toastInput.selections:
-                selectionElement = self.xmlDocument.create_element("selection")
-                self.SetAttribute(selectionElement, "id", selection.selection_id)
-                self.SetAttribute(selectionElement, "content", selection.content)
-                inputNode.append_child(selectionElement)
+                for selection in toastInput.selections:
+                    selectionElement = self.xmlDocument.create_element("selection")
+                    self.SetAttribute(selectionElement, "id", selection.selection_id)
+                    self.SetAttribute(selectionElement, "content", selection.content)
+                    inputNode.append_child(selectionElement)
+            case _:
+                assert_never(toastInput)
 
         actionNodes = self.xmlDocument.get_elements_by_tag_name("actions")
         if actionNodes.length > 0:
@@ -291,6 +295,8 @@ class ToastDocument:
 
         :type action: Union[ToastButton, ToastSystemButton]
         :raises: ValueError: If a context menu button has no content
+        :raises: AssertionError: If the action isn't a :class:`ToastButton` or :class:`ToastSystemButton`, or a
+            :class:`ToastSystemButton`'s action isn't a :class:`ToastSystemButtonAction`
         """
         if isinstance(action, ToastButton) and action.inContextMenu and not action.content:
             raise ValueError("A ToastButton in the context menu must have content")
@@ -305,23 +311,30 @@ class ToastDocument:
         actionNode = self.xmlDocument.create_element("action")
         self.SetAttribute(actionNode, "content", action.content)
 
-        if isinstance(action, ToastButton):
-            if action.launch is None:
-                self.SetAttribute(actionNode, "arguments", action.arguments)
-            else:
-                self.SetAttribute(actionNode, "activationType", "protocol")
-                self.SetAttribute(actionNode, "arguments", action.launch)
+        match action:
+            case ToastButton():
+                if action.launch is None:
+                    self.SetAttribute(actionNode, "arguments", action.arguments)
+                else:
+                    self.SetAttribute(actionNode, "activationType", "protocol")
+                    self.SetAttribute(actionNode, "arguments", action.launch)
 
-            if action.inContextMenu:
-                self.SetAttribute(actionNode, "placement", "contextMenu")
-            if action.tooltip is not None:
-                self.SetAttribute(actionNode, "hint-tooltip", action.tooltip)
-        elif isinstance(action, ToastSystemButton):
-            self.SetAttribute(actionNode, "activationType", "system")
-            if action.action == ToastSystemButtonAction.Snooze:
-                self.SetAttribute(actionNode, "arguments", "snooze")
-            elif action.action == ToastSystemButtonAction.Dismiss:
-                self.SetAttribute(actionNode, "arguments", "dismiss")
+                if action.inContextMenu:
+                    self.SetAttribute(actionNode, "placement", "contextMenu")
+                if action.tooltip is not None:
+                    self.SetAttribute(actionNode, "hint-tooltip", action.tooltip)
+            case ToastSystemButton():
+                self.SetAttribute(actionNode, "activationType", "system")
+                match action.action:
+                    case ToastSystemButtonAction.Snooze:
+                        self.SetAttribute(actionNode, "arguments", "snooze")
+                    case ToastSystemButtonAction.Dismiss:
+                        self.SetAttribute(actionNode, "arguments", "dismiss")
+                    case _:
+                        # Nothing stops .action from being assigned something else, which can't be shown as a button
+                        assert_never(action.action)
+            case _:
+                assert_never(action)
 
         if action.image is not None:
             self.SetAttribute(actionNode, "imageUri", action.image.path)
@@ -371,6 +384,7 @@ class ToastDocument:
         #adaptive-content>`_
 
         :type group: ToastGroup
+        :raises: AssertionError: If a column's content isn't a :class:`ToastText` or :class:`ToastGroupImage`
         """
         groupNode = self.xmlDocument.create_element("group")
         for subgroup in group.subgroups:
@@ -381,10 +395,13 @@ class ToastDocument:
                 self.SetAttribute(subgroupNode, "hint-textStacking", subgroup.text_stacking.value)
 
             for content in subgroup.content:
-                if isinstance(content, ToastText):
-                    subgroupNode.append_child(self._CreateGroupText(content))
-                elif isinstance(content, ToastGroupImage):
-                    subgroupNode.append_child(self._CreateGroupImage(content))
+                match content:
+                    case ToastText():
+                        subgroupNode.append_child(self._CreateGroupText(content))
+                    case ToastGroupImage():
+                        subgroupNode.append_child(self._CreateGroupImage(content))
+                    case _:
+                        assert_never(content)
 
             groupNode.append_child(subgroupNode)
 

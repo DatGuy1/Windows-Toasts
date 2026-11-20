@@ -9,6 +9,7 @@ Unreleased
 - Fixed ``ToastDocument.SetAudioAttributes`` keeping the previous call's attributes, such as ``silent``, when called
   again
 - A context menu ``ToastButton`` without content now raises a ``ValueError``
+- An unsupported type now raises an ``AssertionError``
 - Documented that Windows plays the default sound instead of a custom audio file that sandboxed apps can't read (#185)
 - Added ``Toast.expires_on_reboot`` (#210)
 - Added ``ToastInputTextBox.default_input`` to prefill text boxes (#210)
