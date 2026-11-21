@@ -381,8 +381,8 @@ class WindowsToaster(BaseWindowsToaster):
         if len(toast.actions) > 0:
             warnings.warn(self.__InteractableWarningMessage.format("actions"), stacklevel=2)
 
-        if len(toast.images) > 2:
-            warnings.warn(self.__InteractableWarningMessage.format("more than two images"), stacklevel=2)
+        if len(toast.images) > 1:
+            warnings.warn(self.__InteractableWarningMessage.format("multiple images"), stacklevel=2)
 
         if toast.progress_bar is not None:
             warnings.warn(self.__InteractableWarningMessage.format("progress bars"), stacklevel=2)

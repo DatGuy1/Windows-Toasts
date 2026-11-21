@@ -8,6 +8,7 @@ Unreleased
 - Fixed a TypeError when showing an indeterminate progress bar without a ``progress_override``
 - Fixed ``ToastDocument.SetAudioAttributes`` keeping the previous call's attributes, such as ``silent``, when called
   again
+- ``WindowsToaster`` now warns about a second image, which Windows doesn't show, instead of only from the third
 - A context menu ``ToastButton`` without content now raises a ``ValueError``
 - An unsupported type now raises an ``AssertionError``
 - Documented that Windows plays the default sound instead of a custom audio file that sandboxed apps can't read (#185)

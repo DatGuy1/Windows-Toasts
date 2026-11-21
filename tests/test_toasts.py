@@ -1,3 +1,5 @@
+from warnings import catch_warnings, simplefilter
+
 from pytest import raises, warns
 
 from src.windows_toasts import InteractableWindowsToaster, Toast, WindowsToaster
@@ -171,6 +173,14 @@ def test_image_toast(example_image_path):
     newToast.AddImage(ToastDisplayImage.fromPath(str(example_image_path), circleCrop=True))
 
     InteractableWindowsToaster("Python").show_toast(newToast)
+
+    # WindowsToaster only shows the first image
+    with warns(UserWarning, match="multiple images are not supported"):
+        WindowsToaster("Python").show_toast(Toast(images=[ToastDisplayImage(toastImage)] * 2))
+
+    with catch_warnings():
+        simplefilter("error")
+        WindowsToaster("Python").show_toast(Toast(["One image"], images=[ToastDisplayImage(toastImage)]))
 
 
 def test_custom_timestamp_toast():
