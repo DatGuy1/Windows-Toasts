@@ -6,26 +6,9 @@ import subprocess
 import time
 import wave
 import zlib
-from collections.abc import Iterator
 from pathlib import Path
-from unittest.mock import patch
 
 from pytest import fixture
-
-
-# We used to just allow all the notifications to actually happen, but Windows doesn't like that
-@fixture(scope="session", autouse=True)
-def real_run_fixture(pytestconfig) -> Iterator[None]:
-    if pytestconfig.getoption("real_run"):
-        yield
-    else:
-        with (
-            patch("winrt.windows.ui.notifications.ToastNotifier.show"),
-            patch("winrt.windows.ui.notifications.ToastNotifier.add_to_schedule"),
-            patch("winrt.windows.ui.notifications.ToastNotificationHistory.clear"),
-            patch("time.sleep"),
-        ):
-            yield
 
 
 def _make_png(width: int = 64, height: int = 64) -> bytes:
@@ -89,9 +72,3 @@ def slow_down_tests(pytestconfig):
     yield
     if pytestconfig.getoption("real_run"):
         time.sleep(2)
-
-
-def pytest_addoption(parser):
-    parser.addoption(
-        "--real_run", action="store_true", default=False, help="Whether to actually display the notifications"
-    )

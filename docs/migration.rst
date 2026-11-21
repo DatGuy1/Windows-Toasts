@@ -19,6 +19,8 @@ For instance,
 
 Here is how you would configure toasts before:
 
+.. skip: next "The API before v1.0.0"
+
 .. code-block:: python
 
     from windows_toasts import WindowsToaster, ToastDuration

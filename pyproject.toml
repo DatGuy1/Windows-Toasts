@@ -50,6 +50,7 @@ dev = [
     "pytest>=9.2.0",
     "pytest-cov>=7.1.0",
     "ruff>=0.17.6",
+    "sybil>=10.1.0",
     "ty>=0.0.107",
 ]
 docs = [
@@ -84,6 +85,7 @@ combine-as-imports = true
 split-on-trailing-comma = false
 
 [tool.pytest.ini_options]
+testpaths = ["tests", "docs", "README.md"]
 pythonpath = ["src"]
 filterwarnings = ["error"]
 

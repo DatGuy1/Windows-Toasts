@@ -38,6 +38,8 @@ jobs:
           fail_ci_if_error: true
           verbose: true
           token: ${{ secrets.CODECOV_TOKEN }}
+      - name: Run the documentation examples
+        run: uv run --locked pytest docs README.md
 
   lint:
     runs-on: ubuntu-latest
