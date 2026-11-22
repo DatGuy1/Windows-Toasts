@@ -244,6 +244,24 @@ If the :attr:`~windows_toasts.wrappers.ToastSystemButton.relatedInput` is None, 
 .. note::
     Ensure the :attr:`~windows_toasts.wrappers.ToastSelection.selection_id` is a positive integer, which represents the interval in minutes.
 
+Reminders and alarms
+--------------------
+
+With the :attr:`~windows_toasts.wrappers.ToastScenario.Reminder` scenario, a toast stays on screen until the user acts on it, and :attr:`~windows_toasts.wrappers.ToastScenario.Alarm` loops a sound as well.
+Both only work on a toast with a button, such as the snooze and dismiss buttons above.
+As `Microsoft puts it <https://learn.microsoft.com/windows/apps/develop/notifications/app-notifications/app-notifications-content#scenarios>`_: "You must provide at least one button on your app notification. Otherwise, the notification will be treated as a normal notification."
+:class:`~windows_toasts.toasters.WindowsToaster` doesn't show buttons, so use :class:`~windows_toasts.toasters.InteractableWindowsToaster`.
+Showing or scheduling a reminder or alarm without a button warns that Windows will ignore the scenario.
+
+.. code-block:: python
+
+    from windows_toasts import InteractableWindowsToaster, Toast, ToastScenario, ToastSystemButton, ToastSystemButtonAction
+
+    newToast = Toast(['Reminder', 'It\'s time to stretch!'], scenario=ToastScenario.Reminder)
+    newToast.AddAction(ToastSystemButton(ToastSystemButtonAction.Dismiss))
+
+    InteractableWindowsToaster('Python').show_toast(newToast)
+
 Removing toasts
 ---------------
 

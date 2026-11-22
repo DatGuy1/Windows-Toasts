@@ -274,6 +274,12 @@ class BaseWindowsToaster:
         Build the toast's document, and pass the toast's activations from the activator to its on_activated if the
         toaster has one
         """
+        if toast.scenario in (ToastScenario.Alarm, ToastScenario.Reminder) and not toast.actions:
+            # Windows times it out like any other toast instead
+            _warn_caller(
+                f"Windows ignores the {toast.scenario.name} scenario for toasts without buttons. "
+                "Add one with InteractableWindowsToaster"
+            )
         dispatcher = self._activation_dispatcher()
         toastContent = self._setup_toast(toast, dynamic)
         if dispatcher is not None:

@@ -266,6 +266,33 @@ def test_scenario_toast():
     WindowsToaster("Python").show_toast(newToast)
 
 
+def test_ignored_scenarios():
+    from datetime import datetime, timedelta
+
+    from src.windows_toasts import ToastButton, ToastScenario
+
+    toaster = InteractableWindowsToaster("Python")
+    for scenario in (ToastScenario.Alarm, ToastScenario.Reminder):
+        newToast = Toast(["Wake up!"], scenario=scenario)
+        with pytest.warns(UserWarning, match=f"ignores the {scenario.name} scenario"):
+            toaster.show_toast(newToast)
+        with pytest.warns(UserWarning, match=f"ignores the {scenario.name} scenario"):
+            toaster.schedule_toast(newToast, datetime.now() + timedelta(minutes=1))
+
+        # A button makes Windows apply it
+        newToast.AddAction(ToastButton("Dismiss", "dismiss"))
+        toaster.show_toast(newToast)
+
+    # Windows applies an incoming call's without a button
+    toaster.show_toast(Toast(["Ring ring"], scenario=ToastScenario.IncomingCall))
+
+    # It points at the line that showed the toast, from either toaster
+    for anyToaster in (WindowsToaster("Python"), toaster):
+        with pytest.warns(UserWarning, match="ignores the Alarm scenario") as record:
+            anyToaster.show_toast(Toast(["Wake up!"], scenario=ToastScenario.Alarm))
+        assert [warning.filename for warning in record] == [__file__]
+
+
 def test_update_toast():
     toaster = WindowsToaster("Python")
 

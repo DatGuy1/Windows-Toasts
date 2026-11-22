@@ -76,9 +76,15 @@ class ToastScenario(Enum):
     Default = ""
     """The default; nothing special"""
     Alarm = "alarm"
-    """Causes the toast to stay on-screen and expanded until the user takes action as well as a default looping sound"""
+    """
+    Causes the toast to stay on-screen and expanded until the user takes action as well as a default looping sound.
+    Requires a button, which only :class:`~windows_toasts.toasters.InteractableWindowsToaster` shows
+    """
     Reminder = "reminder"
-    """The toast will stay on-screen and expanded until the user takes action"""
+    """
+    The toast will stay on-screen and expanded until the user takes action. Requires a button, which only
+    :class:`~windows_toasts.toasters.InteractableWindowsToaster` shows
+    """
     IncomingCall = "incomingCall"
     """
     The Toast will stay on-screen and expanded until the user takes action (on Mobile this expands to full screen). \

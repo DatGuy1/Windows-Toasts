@@ -32,6 +32,7 @@ Unreleased
   - Added ``launched_by_toast()`` to check whether Windows started the script to deliver an activation
 - Added ``ToastButton.background`` for buttons that are handled without bringing anything to the foreground, and
   ``ToastButton.pending_update`` to keep the toast pending until it's replaced (#45)
+- Showing an alarm or reminder toast without buttons now warns that Windows ignores the scenario
 - Deprecated passing ``Toast`` arguments other than ``text_fields`` positionally
 - ``on_dismissed`` and ``on_failed`` now receive the library's own ``ToastDismissedEventArgs`` and
   ``ToastFailedEventArgs`` instead of Windows', and ``ToastDismissalReason`` is now the library's own enum
