@@ -185,6 +185,28 @@ def test_image_toast(example_image_path):
         WindowsToaster("Python").show_toast(Toast(["One image"], images=[ToastDisplayImage(toastImage)]))
 
 
+def test_windows_toaster_warnings(example_image_path):
+    from src.windows_toasts import (
+        ToastButton,
+        ToastDisplayImage,
+        ToastImage,
+        ToastImagePosition,
+        ToastInputTextBox,
+        ToastProgressBar,
+    )
+
+    heroImage = ToastDisplayImage(ToastImage(example_image_path), position=ToastImagePosition.Hero)
+    # WindowsToaster still shows these toasts, without the parts it doesn't support
+    for feature, newToast in (
+        ("input fields", Toast(inputs=[ToastInputTextBox("input")])),
+        ("actions", Toast(actions=[ToastButton("Button", "button")])),
+        ("progress bars", Toast(progress_bar=ToastProgressBar("Preparing..."))),
+        ("hero placements", Toast(images=[heroImage])),
+    ):
+        with pytest.warns(UserWarning, match=f"^{feature} are not supported in WindowsToaster"):
+            WindowsToaster("Python").show_toast(newToast)
+
+
 def test_custom_timestamp_toast():
     from datetime import UTC, datetime, timedelta
 

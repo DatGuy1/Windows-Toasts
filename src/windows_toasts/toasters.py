@@ -249,17 +249,17 @@ class BaseWindowsToaster:
         # Copied to locals so the type checker knows they aren't None inside the lambdas
         onActivated, onDismissed, onFailed = toast.on_activated, toast.on_dismissed, toast.on_failed
 
-        if onActivated is not None:  # pragma: no cover
+        if onActivated is not None:
             toastNotification.add_activated(
                 lambda _, eventArgs: onActivated(ToastActivatedEventArgs.fromWinRt(eventArgs))
             )
 
-        if onDismissed is not None:  # pragma: no cover
+        if onDismissed is not None:
             toastNotification.add_dismissed(
                 lambda _, eventArgs: onDismissed(ToastDismissedEventArgs.fromWinRt(eventArgs))
             )
 
-        if onFailed is not None:  # pragma: no cover
+        if onFailed is not None:
             toastNotification.add_failed(lambda _, eventArgs: onFailed(ToastFailedEventArgs.fromWinRt(eventArgs)))
 
         notificationToSend = _build_toast_notification(toast, toastNotification)
@@ -374,7 +374,7 @@ class WindowsToaster(BaseWindowsToaster):
         # .create_toast_notifier() without an AUMID fails with "Element not found"
         self.toastNotifier = ToastNotificationManager.create_toast_notifier(applicationText)
 
-    def show_toast(self, toast: Toast) -> None:  # pragma: no cover
+    def show_toast(self, toast: Toast) -> None:
         if len(toast.inputs) > 0:
             warnings.warn(self.__InteractableWarningMessage.format("input fields"), stacklevel=2)
 
