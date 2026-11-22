@@ -12,6 +12,14 @@ The library comes with a command to implement it, :code:`register_hkey_aumid`.
 The arguments can be understood using the --help argument. If you have the Python Scripts directory in your path, you should be able to execute it by opening the command console and simply executing :code:`register_hkey_aumid`.
 Otherwise, run it through Python with :code:`python -m windows_toasts.register_hkey_aumid`.
 
+To remove an AUMID you installed, run :code:`register_hkey_aumid --app_id <AUMID> --remove`.
+
+You can also install and remove AUMIDs from Python:
+
+.. autofunction:: windows_toasts.register_hkey_aumid.register_hkey
+
+.. autofunction:: windows_toasts.register_hkey_aumid.unregister_hkey
+
 Using an installed AUMID
 ------------------------
 Microsoft.com has a page on `finding the Application User Model ID of an installed app <https://learn.microsoft.com/windows/configuration/store/find-aumid>`_.

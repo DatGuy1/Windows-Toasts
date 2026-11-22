@@ -41,7 +41,7 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 autosectionlabel_prefix_document = True
 
-autodoc_mock_imports = ["winrt"]
+autodoc_mock_imports = ["winrt", "winreg"]
 autodoc_default_options = {"members": True, "member-order": "bysource", "undoc-members": True}
 
 # -- Options for HTML output -------------------------------------------------
