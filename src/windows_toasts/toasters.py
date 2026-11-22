@@ -1,3 +1,4 @@
+import dataclasses
 import warnings
 from datetime import datetime
 from typing import TypeVar, cast
@@ -246,12 +247,16 @@ class BaseWindowsToaster:
         toastNotification = ToastNotification(self._setup_toast(toast, True).xmlDocument)
         toastNotification.data = _build_adaptable_data(toast)
 
-        # Copied to locals so the type checker knows they aren't None inside the lambdas
+        # Copy to locals so the type checker knows they aren't None inside the lambdas and that changing the toast
+        # afterwards doesn't change which toast the event args name
         onActivated, onDismissed, onFailed = toast.on_activated, toast.on_dismissed, toast.on_failed
+        tag, group = toast.tag, toast.group
 
         if onActivated is not None:
             toastNotification.add_activated(
-                lambda _, eventArgs: onActivated(ToastActivatedEventArgs.fromWinRt(eventArgs))
+                lambda _, eventArgs: onActivated(
+                    dataclasses.replace(ToastActivatedEventArgs.fromWinRt(eventArgs), tag=tag, group=group)
+                )
             )
 
         if onDismissed is not None:

@@ -42,3 +42,21 @@ def test_activated_event_args_unreadable_inputs():
     type(activatedEventArgs).user_input = PropertyMock(side_effect=OSError)
 
     assert ToastActivatedEventArgs.fromWinRt(eventArgs) == ToastActivatedEventArgs("clicked=first", None)
+
+
+def test_activated_event_args_name_the_toast():
+    from unittest.mock import patch
+
+    from src.windows_toasts import InteractableWindowsToaster, Toast
+
+    received: list[ToastActivatedEventArgs] = []
+    toast = Toast(["Hello"], tag="tag", group="group")
+    toast.on_activated = received.append
+    with patch("winrt.windows.ui.notifications.ToastNotification.add_activated") as addActivated:
+        InteractableWindowsToaster("Python").show_toast(toast)
+
+    # Changing the toast afterwards doesn't change which toast the event args name
+    toast.tag = "other"
+    handler = addActivated.call_args.args[0]
+    handler(None, _make_event_args("clicked=first", ValueSet())[0])
+    assert received == [ToastActivatedEventArgs("clicked=first", {}, "tag", "group")]

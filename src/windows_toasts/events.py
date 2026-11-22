@@ -50,6 +50,11 @@ class ToastActivatedEventArgs:
     """Arguments provided to :func:`~windows_toasts.toast.Toast.AddAction`"""
     inputs: dict | None = None
     """Inputs received when using :func:`~windows_toasts.toast.Toast.AddInput`"""
+    tag: str | None = None
+    """The :attr:`~windows_toasts.toast.Toast.tag` of the toast that was activated, so you can update it or remove it.
+    None if Windows didn't say which toast it was"""
+    group: str | None = None
+    """The :attr:`~windows_toasts.toast.Toast.group` of the toast that was activated"""
 
     @classmethod
     def fromWinRt(cls, eventArgs: system.Object) -> ToastActivatedEventArgs:
