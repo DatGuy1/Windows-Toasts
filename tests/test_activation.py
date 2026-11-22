@@ -196,6 +196,35 @@ def test_activation_tags():
     assert protocolDocument.GetAttributeValue(protocolNode, "launch") == "https://example.com"
 
 
+def test_background_buttons():
+    toast = Toast(["Order lunch?"])
+    toast.AddAction(ToastButton("Yes", "order", background=True, pending_update=True))
+    toast.AddAction(ToastButton("No", "cancel", background=True))
+
+    document = ToastDocument(toast)
+    for action in toast.actions:
+        document.AddAction(action)
+
+    actions = document.xmlDocument.get_elements_by_tag_name("action")
+    assert document.GetAttributeValue(actions.item(0), "activationType") == "background"
+    assert document.GetAttributeValue(actions.item(0), "afterActivationBehavior") == "pendingUpdate"
+    assert document.GetAttributeValue(actions.item(1), "activationType") == "background"
+    assert actions.item(1).attributes.get_named_item("afterActivationBehavior") is None
+
+    with pytest.raises(ValueError, match="must also be a background button"):
+        document.AddAction(ToastButton("Yes", "order", pending_update=True))
+    with pytest.raises(ValueError, match="launch a protocol"):
+        document.AddAction(ToastButton("Yes", launch="https://example.com", background=True))
+
+
+def test_background_button_without_activator():
+    toast = Toast(["Order lunch?"], actions=[ToastButton("Yes", "order", background=True)])
+    with pytest.warns(UserWarning, match="background buttons") as record:
+        InteractableWindowsToaster("Python").show_toast(toast)
+    # It points at the line that showed the toast
+    assert [warning.filename for warning in record] == [__file__]
+
+
 def test_on_activated_requires_activator():
     with pytest.raises(ValueError, match="no activator registered"):
         InteractableWindowsToaster("Python").on_activated = print

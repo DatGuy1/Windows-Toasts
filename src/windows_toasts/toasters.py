@@ -1,4 +1,6 @@
 import dataclasses
+import os
+import sys
 import uuid
 import warnings
 from datetime import datetime
@@ -22,6 +24,7 @@ from .toast import ActionCenterToast, Toast
 from .toast_document import ToastDocument
 from .wrappers import (
     NotificationSetting,
+    ToastButton,
     ToastDuration,
     ToastImagePosition,
     ToastNotificationMode,
@@ -34,6 +37,23 @@ ToastNotificationT = TypeVar("ToastNotificationT", ToastNotification, ScheduledT
 
 # HRESULT_FROM_WIN32(ERROR_NOT_FOUND), raised for an AUMID Windows has no notification settings for yet
 _E_ELEMENT_NOT_FOUND = 0x80070490
+
+
+def _warn_caller(message: str) -> None:
+    """
+    Warn about the line that called into the library, however deep in it the warning is raised.
+    This is basically next_external_frame in Python's _warnings.c.
+    TODO: Once Python 3.11 is dropped, use skip_file_prefixes instead
+    """
+    packageDirectory = os.path.dirname(__file__) + os.sep
+    # Level 1 is this function, and level 2 its caller
+    stacklevel = 2
+    frame = sys._getframe(1)
+    while frame is not None and frame.f_code.co_filename.startswith(packageDirectory):
+        frame = frame.f_back
+        stacklevel += 1
+
+    warnings.warn(message, stacklevel=stacklevel)
 
 
 def _default_progress_override(progress: float) -> str:
@@ -533,6 +553,15 @@ class InteractableWindowsToaster(BaseWindowsToaster):
 
     def _setup_toast(self, toast: Toast, dynamic: bool) -> ToastDocument:
         toastContent = super()._setup_toast(toast, dynamic)
+
+        if (
+            any(isinstance(action, ToastButton) and action.background for action in toast.actions)
+            and self._activator_clsid() is None
+        ):
+            _warn_caller(
+                "Windows only delivers clicks on background buttons to an activator, so they won't do anything. "
+                "Register the toaster's AUMID with register_hkey_aumid --activator"
+            )
 
         for i, fieldContent in enumerate(toast.text_fields):
             if fieldContent is None:

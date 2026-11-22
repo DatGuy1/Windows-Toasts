@@ -30,6 +30,8 @@ Unreleased
   - With an activator, a scheduled toast's ``on_activated`` is called too. ``InteractableWindowsToaster.on_activated``
     gets the activations of toasts the script didn't show in its current run
   - Added ``launched_by_toast()`` to check whether Windows started the script to deliver an activation
+- Added ``ToastButton.background`` for buttons that are handled without bringing anything to the foreground, and
+  ``ToastButton.pending_update`` to keep the toast pending until it's replaced (#45)
 - Deprecated passing ``Toast`` arguments other than ``text_fields`` positionally
 - ``on_dismissed`` and ``on_failed`` now receive the library's own ``ToastDismissedEventArgs`` and
   ``ToastFailedEventArgs`` instead of Windows', and ``ToastDismissalReason`` is now the library's own enum

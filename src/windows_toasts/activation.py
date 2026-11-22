@@ -96,8 +96,8 @@ class _ActivationDispatcher:
         """
         Pass a click on the first time it arrives, and drop it when it arrives the other way. A click on a toast this
         process showed, on screen or in Action Center, arrives from the toast's Activated event, and from the
-        activator too if this process registered the activator first. Clicks on toasts this process didn't show
-        only arrive from the activator
+        activator too if this process registered the activator first. Clicks on background buttons, and on toasts
+        this process didn't show, only arrive from the activator
         """
         click = _Click(eventArgs.tag, eventArgs.group, eventArgs.arguments, eventArgs.inputs or {})
         now = time.monotonic()

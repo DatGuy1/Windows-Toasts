@@ -317,8 +317,17 @@ class ToastDocument:
 
         match action:
             case ToastButton():
+                if action.pending_update and not action.background:
+                    raise ValueError("A ToastButton with pending_update must also be a background button")
+                if action.background and action.launch is not None:
+                    raise ValueError("A ToastButton can't both launch a protocol and activate in the background")
+
                 if action.launch is None:
                     self.SetAttribute(actionNode, "arguments", action.arguments)
+                    if action.background:
+                        self.SetAttribute(actionNode, "activationType", "background")
+                    if action.pending_update:
+                        self.SetAttribute(actionNode, "afterActivationBehavior", "pendingUpdate")
                 else:
                     self.SetAttribute(actionNode, "activationType", "protocol")
                     self.SetAttribute(actionNode, "arguments", action.launch)

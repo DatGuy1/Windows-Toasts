@@ -89,8 +89,8 @@ def register_hkey(
     :param appId: The AUMID
     :param appName: The name toasts show for the app
     :param iconPath: An .ico file for toasts to show
-    :param activator: True to register an activator, so that clicks on toasts from earlier runs also reach your
-        script. Removes the command a file registered before. See :ref:`register-activator`.
+    :param activator: True to register an activator, so that clicks on toasts from earlier runs and on background
+        buttons also reach your script. Removes the command a file registered before. See :ref:`register-activator`.
 
         Pass a .py, .pyw or .exe file instead to also have Windows start it when one of the AUMID's toasts is clicked
         while nothing is listening for it; see :ref:`activation-after-exit`. This stores the command to start it in the
@@ -172,7 +172,7 @@ def main() -> None:
         default=False,
         type=pathlib.Path,
         metavar="PATH",
-        help="Register an activator, so clicks on toasts from earlier runs reach your "
+        help="Register an activator, so clicks on toasts from earlier runs and on background buttons reach your "
         "running script. Pass a script or executable to also have Windows start it when a toast is clicked while "
         "nothing is listening",
     )

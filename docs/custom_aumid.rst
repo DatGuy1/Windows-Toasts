@@ -12,7 +12,7 @@ The library comes with a command to implement it, :code:`register_hkey_aumid`.
 The arguments can be understood using the --help argument. If you have the Python Scripts directory in your path, you should be able to execute it by opening the command console and simply executing :code:`register_hkey_aumid`.
 Otherwise, run it through Python with :code:`python -m windows_toasts.register_hkey_aumid`.
 
-Pass :code:`--activator` to also handle clicks on toasts from earlier runs, and optionally after your script has exited. See :doc:`activation`.
+Pass :code:`--activator` to also handle clicks on toasts from earlier runs and on background buttons, and optionally after your script has exited. See :doc:`activation`.
 To remove an AUMID you installed, along with its activator, run :code:`register_hkey_aumid --app_id <AUMID> --remove`.
 
 You can also install and remove AUMIDs from Python:

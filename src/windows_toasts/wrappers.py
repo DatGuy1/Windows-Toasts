@@ -332,6 +332,16 @@ class ToastButton:
     """An optional protocol to launch when the button is pressed"""
     colour: ToastButtonColour = ToastButtonColour.Default
     """:class:`ToastButtonColour` for the button"""
+    background: bool = False
+    """
+    Handle the click without bringing anything to the foreground. Windows only delivers these clicks to the toaster's
+    activator, so the toaster's AUMID has to be registered with one. See :ref:`register-activator`
+    """
+    pending_update: bool = False
+    """
+    After the click, keep the toast open in a pending state until you replace it. Requires
+    :attr:`background`. See :ref:`pending-update`
+    """
 
 
 @dataclass
