@@ -26,6 +26,8 @@ Let's try out displaying an image
       position is ignored, so it can't be a hero image.
     | A `hero image <https://learn.microsoft.com/windows/apps/develop/notifications/app-notifications/app-notifications-content#hero-image>`_ is an image that is prominently displayed at the top of the notification.
 
+.. _launch-protocol:
+
 Open a website on click
 -----------------------
 
@@ -304,7 +306,7 @@ A :class:`~windows_toasts.wrappers.ToastHeader` shows related toasts together un
 
 Toasts are grouped by :attr:`~windows_toasts.wrappers.ToastHeader.header_id` alone, which defaults to the title, so toasts sent with the same title share a header even when they come from different runs of your script. If toasts with the same ``header_id`` have different titles, the header shows the most recent one's.
 
-Clicking the header launches its :attr:`~windows_toasts.wrappers.ToastHeader.launch` protocol. Without one, clicking the header does nothing, and it doesn't trigger :attr:`~windows_toasts.toast.Toast.on_activated`.
+Clicking the header launches its :attr:`~windows_toasts.wrappers.ToastHeader.launch` protocol. Without one, clicking the header doesn't trigger :attr:`~windows_toasts.toast.Toast.on_activated`, unless your AUMID has an :doc:`activator <activation>`, which passes the click to the toaster's :attr:`~windows_toasts.toasters.InteractableWindowsToaster.on_activated`.
 
 To remove a header's toasts together, give them the same :attr:`~windows_toasts.toast.Toast.group` and use :meth:`~windows_toasts.toasters.BaseWindowsToaster.remove_toast_group`.
 

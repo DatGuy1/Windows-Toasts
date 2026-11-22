@@ -10,6 +10,7 @@ if platform.system() == "Windows" and (osVersion := int(platform.version().split
     )
 
 from ._version import __author__, __description__, __license__, __title__, __url__, __version__
+from .activation import launched_by_toast
 from .adaptive import (
     ToastGroup,
     ToastGroupImage,
@@ -52,6 +53,8 @@ __all__ = [
     "__title__",
     "__url__",
     "__version__",
+    # activation.py
+    "launched_by_toast",
     # adaptive.py
     "ToastGroup",
     "ToastGroupImage",

@@ -1,4 +1,5 @@
 import dataclasses
+import uuid
 import warnings
 from datetime import datetime
 from typing import TypeVar, cast
@@ -14,6 +15,7 @@ from winrt.windows.ui.notifications import (
     ToastNotifier,
 )
 
+from . import activation
 from .events import ToastActivatedEventArgs, ToastDismissedEventArgs, ToastFailedEventArgs
 from .exceptions import ToastNotFoundError
 from .toast import ActionCenterToast, Toast
@@ -237,6 +239,29 @@ class BaseWindowsToaster:
 
         return toastContent
 
+    def _activation_dispatcher(self) -> activation._ActivationDispatcher | None:
+        """
+        Start listening for activations through the toaster's activator, if its AUMID has one
+
+        :return: What to give the on_activated of toasts to, or None if the toaster has no activator
+        """
+        return None
+
+    def _build_toast(
+        self, toast: Toast, dynamic: bool
+    ) -> tuple[ToastDocument, activation._ActivationDispatcher | None]:
+        """
+        Build the toast's document, and pass the toast's activations from the activator to its on_activated if the
+        toaster has one
+        """
+        dispatcher = self._activation_dispatcher()
+        toastContent = self._setup_toast(toast, dynamic)
+        if dispatcher is not None:
+            toastContent.AddActivationTags(toast)
+            dispatcher.set_toast_callback(toast, toast.on_activated)
+
+        return toastContent, dispatcher
+
     def show_toast(self, toast: Toast) -> None:
         """
         Displays the specified toast notification.
@@ -244,7 +269,8 @@ class BaseWindowsToaster:
 
         :param toast: Toast to display
         """
-        toastNotification = ToastNotification(self._setup_toast(toast, True).xmlDocument)
+        toastContent, dispatcher = self._build_toast(toast, True)
+        toastNotification = ToastNotification(toastContent.xmlDocument)
         toastNotification.data = _build_adaptable_data(toast)
 
         # Copy to locals so the type checker knows they aren't None inside the lambdas and that changing the toast
@@ -252,7 +278,11 @@ class BaseWindowsToaster:
         onActivated, onDismissed, onFailed = toast.on_activated, toast.on_dismissed, toast.on_failed
         tag, group = toast.tag, toast.group
 
-        if onActivated is not None:
+        if dispatcher is not None:
+            toastNotification.add_activated(
+                lambda _, eventArgs: dispatcher.deliver_activated(ToastActivatedEventArgs.fromWinRt(eventArgs))
+            )
+        elif onActivated is not None:
             toastNotification.add_activated(
                 lambda _, eventArgs: onActivated(
                     dataclasses.replace(ToastActivatedEventArgs.fromWinRt(eventArgs), tag=tag, group=group)
@@ -285,14 +315,17 @@ class BaseWindowsToaster:
 
     def schedule_toast(self, toast: Toast, displayTime: datetime) -> None:
         """
-        Schedule the passed notification toast. Warning: scheduled toasts cannot be updated or activated (i.e. on_X)
+        Schedule the passed notification toast. Scheduled toasts can't be updated, and their on_dismissed and on_failed
+        aren't called. Their on_activated is only called if the toaster has an activator; see
+        :ref:`register-activator`
 
         :param toast: Toast to display
         :type toast: Toast
         :param displayTime: Time to display the toast on
         :type displayTime: datetime
         """
-        toastNotification = ScheduledToastNotification(self._setup_toast(toast, False).xmlDocument, displayTime)
+        toastContent, _ = self._build_toast(toast, False)
+        toastNotification = ScheduledToastNotification(toastContent.xmlDocument, displayTime)
         scheduledNotificationToSend = _build_toast_notification(toast, toastNotification)
 
         self.toastNotifier.add_to_schedule(scheduledNotificationToSend)
@@ -434,6 +467,69 @@ class InteractableWindowsToaster(BaseWindowsToaster):
 
         self.notifierAUMID = notifierAUMID
         self.toastNotifier = ToastNotificationManager.create_toast_notifier(notifierAUMID)
+        self._onActivated: activation.ActivatedCallback | None = None
+
+    @property
+    def on_activated(self) -> activation.ActivatedCallback | None:
+        """
+        Called when one of the toaster's toasts is activated and the toast has no on_activated of its own, such as a
+        toast an earlier run of your script showed. Requires an AUMID registered with an activator, and setting it
+        starts listening for activations. See :ref:`register-activator`.
+
+        While it's set, the library keeps a reference to the toaster, so the callback keeps being called even if your
+        script no longer references the toaster. Set it back to None to stop
+
+        :raises ValueError: If the toaster's AUMID has no activator registered
+        :raises OSError: If COM refuses to register the activator
+        """
+        return self._onActivated
+
+    @on_activated.setter
+    def on_activated(self, callback: activation.ActivatedCallback | None) -> None:
+        if callback is None:
+            self._onActivated = None
+            activation._stop_delivering_to(self)
+            return
+
+        clsid = self._activator_clsid()
+        if clsid is None:
+            raise ValueError(
+                f"The AUMID {self.notifierAUMID} has no activator registered by register_hkey. Register it with "
+                "register_hkey_aumid --activator"
+            )
+
+        previous = self._onActivated
+        # Set before listening, so it gets the activations Windows is waiting to deliver
+        self._onActivated = callback
+        try:
+            activation._listen(clsid, self)
+        except OSError:
+            self._onActivated = previous
+            if previous is None:
+                activation._stop_delivering_to(self)
+            raise
+
+    def _activator_clsid(self) -> uuid.UUID | None:
+        """
+        The CLSID of the activator register_hkey registered for the toaster's AUMID, if it has one
+        """
+        # Never give the default AUMID, which is Command Prompt's, an activator
+        if self.defaultAUMID or self.notifierAUMID is None:
+            return None
+
+        return activation._own_activator_clsid(self.notifierAUMID)
+
+    def _activation_dispatcher(self) -> activation._ActivationDispatcher | None:
+        clsid = self._activator_clsid()
+        if clsid is None:
+            return None
+
+        try:
+            return activation._listen(clsid)
+        except OSError as e:
+            # Better to show the toast without its activator than not at all
+            warnings.warn(f"Showing the toast without the AUMID's activator, since COM refused it: {e}", stacklevel=4)
+            return None
 
     def _setup_toast(self, toast: Toast, dynamic: bool) -> ToastDocument:
         toastContent = super()._setup_toast(toast, dynamic)

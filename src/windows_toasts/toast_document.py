@@ -1,9 +1,10 @@
 import datetime
-from typing import Union, assert_never
+from typing import Union, assert_never, cast
 
 from winrt.windows.data.xml.dom import IXmlNode, XmlDocument, XmlElement
 
 from .adaptive import ToastGroup, ToastGroupImage, ToastText
+from .events import _encode_arguments
 from .toast import Toast
 from .toast_audio import ToastAudio
 from .wrappers import (
@@ -347,6 +348,24 @@ class ToastDocument:
             self.SetAttribute(actionNode, "hint-buttonStyle", action.colour.value)
 
         actionsNode.append_child(actionNode)
+
+    def AddActivationTags(self, toast: Toast) -> None:
+        """
+        Add the toast's tag and group to the arguments of the toast and its buttons, since Windows only gives an
+        activator the arguments. Protocol and system activations are left as they are
+        """
+        actionNodes = self.xmlDocument.get_elements_by_tag_name("action")
+        nodes = [self.GetElementByTagName("toast"), *(actionNodes.item(i) for i in range(actionNodes.length))]
+        for node in nodes:
+            # pywinrt's stubs don't say so, but get_named_item returns None for a missing attribute
+            activationType = cast(IXmlNode | None, node.attributes.get_named_item("activationType"))
+            if activationType is not None and activationType.inner_text in ("protocol", "system"):
+                continue
+
+            attributeName = "launch" if node.node_name == "toast" else "arguments"
+            current = cast(IXmlNode | None, node.attributes.get_named_item(attributeName))
+            arguments = "" if current is None else current.inner_text
+            self.SetAttribute(node, attributeName, _encode_arguments(toast.tag, toast.group, arguments))
 
     def AddProgressBar(self) -> None:
         """

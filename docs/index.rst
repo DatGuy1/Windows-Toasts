@@ -55,12 +55,14 @@ Contents
    interactable
    advanced_usage
    custom_aumid
+   activation
 
 .. toctree::
    :maxdepth: 2
    :caption: User reference
 
    user/toasters
+   user/activation
    user/toast
    user/audio
    user/wrappers

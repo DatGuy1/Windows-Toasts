@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import contextlib
+import json
 import warnings
 from dataclasses import dataclass
 from enum import Enum, IntEnum
@@ -16,6 +17,31 @@ from winrt.windows.ui.notifications import (
 from .wrappers import _WindowsEnum
 
 EnumT = TypeVar("EnumT", bound=Enum)
+
+_ARGUMENTS_PREFIX = "windows_toasts:"
+
+
+def _encode_arguments(tag: str, group: str | None, arguments: str) -> str:
+    return _ARGUMENTS_PREFIX + json.dumps([tag, group, arguments], separators=(",", ":"))
+
+
+def _decode_arguments(arguments: str) -> tuple[str | None, str | None, str]:
+    """
+    Toasts shown through an activator carry their tag and group in their arguments, since Windows only passes the
+    activator the arguments
+
+    :return: The tag, group and original arguments, or no tag and group if the arguments weren't encoded
+    """
+    if arguments.startswith(_ARGUMENTS_PREFIX):
+        try:
+            tag, group, original = json.loads(arguments[len(_ARGUMENTS_PREFIX) :])
+        except (ValueError, TypeError):
+            pass
+        else:
+            if isinstance(tag, str) and isinstance(group, str | None) and isinstance(original, str):
+                return tag, group, original
+
+    return None, None, arguments
 
 
 class _DeprecatedAlias:
@@ -64,7 +90,13 @@ class ToastActivatedEventArgs:
         with contextlib.suppress(OSError):
             receivedInputs = {k: system.unbox_string(v) for k, v in activatedEventArgs.user_input.items()}
 
-        return cls(activatedEventArgs.arguments, receivedInputs)
+        tag, group, arguments = _decode_arguments(activatedEventArgs.arguments)
+        return cls(arguments, receivedInputs, tag, group)
+
+    @classmethod
+    def _fromActivator(cls, arguments: str, inputs: dict[str, str]) -> ToastActivatedEventArgs:
+        tag, group, arguments = _decode_arguments(arguments)
+        return cls(arguments, inputs, tag, group)
 
 
 class ToastDismissalReason(IntEnum, _WindowsEnum):

@@ -40,6 +40,7 @@ Here it waits for Enter.
 
 .. note::
     To make sure the activation of the toast triggers the callback following its relegation to Action Center, you must use a :doc:`custom AUMID <custom_aumid>`.
+    To handle clicks after your script has exited, register the AUMID with an :doc:`activator <activation>`.
 
 Input fields
 ~~~~~~~~~~~~

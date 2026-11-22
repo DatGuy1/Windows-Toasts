@@ -209,7 +209,10 @@ class ToastHeader:
     a header, even across runs. Set it to keep toasts grouped while changing the title
     """
     launch: str | None = None
-    """An optional protocol to launch when the header is clicked. Without one, clicking the header does nothing"""
+    """
+    An optional protocol to launch when the header is clicked. Without one, clicking the header does nothing, unless the
+    AUMID has an activator, which passes the click to the toaster's on_activated
+    """
 
     def __init__(self, title: str, header_id: str | None = None, launch: str | None = None) -> None:
         self.title = title

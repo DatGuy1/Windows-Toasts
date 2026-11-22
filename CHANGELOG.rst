@@ -23,6 +23,13 @@ Unreleased
 - ``Toast.tag`` and ``Toast.group`` now raise a ``ValueError`` if they aren't 1 to 63 characters long
 - Added ``unregister_hkey()`` and ``register_hkey_aumid --remove`` to remove an AUMID
 - ``ToastActivatedEventArgs`` now has the activated toast's ``tag`` and ``group``
+- Added activators, so a script gets clicks on toasts from its earlier runs, and can be started by a click after it
+  exits (#12)
+  - ``register_hkey_aumid --activator`` registers one. Given a script or executable, Windows also starts it when a
+    toast is clicked while nothing is listening. Removing the AUMID also removes its activator
+  - With an activator, a scheduled toast's ``on_activated`` is called too. ``InteractableWindowsToaster.on_activated``
+    gets the activations of toasts the script didn't show in its current run
+  - Added ``launched_by_toast()`` to check whether Windows started the script to deliver an activation
 - Deprecated passing ``Toast`` arguments other than ``text_fields`` positionally
 - ``on_dismissed`` and ``on_failed`` now receive the library's own ``ToastDismissedEventArgs`` and
   ``ToastFailedEventArgs`` instead of Windows', and ``ToastDismissalReason`` is now the library's own enum
