@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import contextlib
 import warnings
 from dataclasses import dataclass
 from enum import Enum, IntEnum
@@ -23,7 +24,7 @@ class _DeprecatedAlias:
     name is left out of iteration and ``__members__``
     """
 
-    def __init__(self, memberName: str):
+    def __init__(self, memberName: str) -> None:
         self.memberName = memberName
         self.name = ""
 
@@ -55,10 +56,8 @@ class ToastActivatedEventArgs:
         activatedEventArgs = eventArgs.as_(WinRtToastActivatedEventArgs)
         receivedInputs: dict[str, str] | None = None
         # Windows gives the inputs as boxed values, so they're unboxed into plain strings here
-        try:
+        with contextlib.suppress(OSError):
             receivedInputs = {k: system.unbox_string(v) for k, v in activatedEventArgs.user_input.items()}
-        except OSError:
-            pass
 
         return cls(activatedEventArgs.arguments, receivedInputs)
 

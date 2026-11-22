@@ -65,13 +65,12 @@ class ToastAudio:
         """
         if isinstance(self.sound, AudioSource):
             return f"ms-winsoundevent:Notification.{self.sound.value}"
-        else:
-            # We warn instead of erroring out because that's what Windows does, but I'm open to changing it
-            if not self.sound.exists():
-                warnings.warn(f"Custom audio file '{self.sound}' could not be found", stacklevel=2)
-            if self.sound.suffix not in SUPPORTED_FILE_TYPES:
-                warnings.warn(
-                    f"Custom audio file '{self.sound}' has unsupported extension '{self.sound.suffix}'", stacklevel=2
-                )
+        # We warn instead of erroring out because that's what Windows does, but I'm open to changing it
+        if not self.sound.exists():
+            warnings.warn(f"Custom audio file '{self.sound}' could not be found", stacklevel=2)
+        if self.sound.suffix not in SUPPORTED_FILE_TYPES:
+            warnings.warn(
+                f"Custom audio file '{self.sound}' has unsupported extension '{self.sound.suffix}'", stacklevel=2
+            )
 
-            return self.sound.absolute().as_uri()
+        return self.sound.absolute().as_uri()

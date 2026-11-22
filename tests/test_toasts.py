@@ -1,6 +1,6 @@
 from warnings import catch_warnings, simplefilter
 
-from pytest import raises, warns
+import pytest
 
 from src.windows_toasts import InteractableWindowsToaster, Toast, WindowsToaster
 
@@ -56,7 +56,7 @@ def test_context_menu_button_without_content():
 
     newToast = Toast(["Hello, context menu!"])
     newToast.AddAction(ToastButton("", "clicked=context", tooltip="Tooltip", inContextMenu=True))
-    with raises(ValueError, match="context menu"):
+    with pytest.raises(ValueError, match="context menu"):
         InteractableWindowsToaster("Python").show_toast(newToast)
 
 
@@ -72,7 +72,8 @@ def test_audio_toast():
 
     # Branching
     silentToast = originalToast.clone()
-    assert silentToast != "False EQ" and silentToast != originalToast
+    assert silentToast != "False EQ"
+    assert silentToast != originalToast
 
     silentToast.text_fields = ["Silence..."]
     silentToast.audio.silent = True
@@ -80,7 +81,8 @@ def test_audio_toast():
     toaster.show_toast(silentToast)
 
     loopingToast = silentToast.clone()
-    assert loopingToast != silentToast and loopingToast != originalToast
+    assert loopingToast != silentToast
+    assert loopingToast != originalToast
 
     loopingToast.audio.sound = AudioSource.Call7
     loopingToast.audio.looping = True
@@ -105,12 +107,12 @@ def test_custom_audio_toast(example_audio_path, example_image_path):
 
     nonExistantFile = example_audio_path.with_stem("nonexistant")
     toast = Toast(["This should pop with the default sound"], audio=ToastAudio(nonExistantFile))
-    with warns(UserWarning, match="could not be found"):
+    with pytest.warns(UserWarning, match="could not be found"):
         toaster.show_toast(toast)
 
     unsupportedFile = example_image_path
     toast.audio = ToastAudio(unsupportedFile)
-    with warns(UserWarning, match=f"has unsupported extension '{example_image_path.suffix}'"):
+    with pytest.warns(UserWarning, match=f"has unsupported extension '{example_image_path.suffix}'"):
         toaster.show_toast(toast)
 
     toast.audio = ToastAudio(example_audio_path)
@@ -127,14 +129,14 @@ def test_errors_toast(example_image_path):
     displayImage = ToastDisplayImage.fromPath(example_image_path)
 
     fakeProtocol = "notanactualprotocol"
-    with warns(UserWarning, match=f"Ensure your launch action of {fakeProtocol} is of a proper protocol"):
+    with pytest.warns(UserWarning, match=f"Ensure your launch action of {fakeProtocol} is of a proper protocol"):
         textToast.launch_action = fakeProtocol
 
     assert textToast.text_fields[0] == "Hello, World!"
 
     newToast = Toast(["Hello, World!"])
 
-    with raises(InvalidImageException, match="could not be found"):
+    with pytest.raises(InvalidImageException, match="could not be found"):
         _ = ToastImage(example_image_path.with_suffix(".nonexistant"))
 
     newToast.AddImage(displayImage)
@@ -145,13 +147,13 @@ def test_errors_toast(example_image_path):
         else:
             newToast.AddInput(ToastInputTextBox(f"Input #{i}", str(i)))
 
-    with warns(UserWarning, match="Cannot add action 'Button 6', you've already reached"):
+    with pytest.warns(UserWarning, match="Cannot add action 'Button 6', you've already reached"):
         newToast.AddAction(ToastButton("Button 6", str(6)))
 
-    with warns(UserWarning, match="Cannot add input 'Input 6', you've already reached"):
+    with pytest.warns(UserWarning, match="Cannot add input 'Input 6', you've already reached"):
         newToast.AddInput(ToastInputTextBox("Input 6", str(6)))
 
-    with raises(InvalidImageException, match="Online images are not supported"):
+    with pytest.raises(InvalidImageException, match="Online images are not supported"):
         ToastImage("https://www.python.org/static/community_logos/python-powered-h-140x182.png")
 
     assert len(newToast.actions) + len(newToast.inputs) == 5
@@ -175,7 +177,7 @@ def test_image_toast(example_image_path):
     InteractableWindowsToaster("Python").show_toast(newToast)
 
     # WindowsToaster only shows the first image
-    with warns(UserWarning, match="multiple images are not supported"):
+    with pytest.warns(UserWarning, match="multiple images are not supported"):
         WindowsToaster("Python").show_toast(Toast(images=[ToastDisplayImage(toastImage)] * 2))
 
     with catch_warnings():
@@ -394,7 +396,7 @@ def test_groups(example_image_path):
         toaster._setup_toast(plainImageToast, True).xmlDocument.get_xml()
     )
 
-    with warns(UserWarning, match="groups are not supported"):
+    with pytest.warns(UserWarning, match="groups are not supported"):
         WindowsToaster("Python").show_toast(newToast)
     assert "<group" not in WindowsToaster("Python")._setup_toast(newToast, True).xmlDocument.get_xml()
 
@@ -404,15 +406,15 @@ def test_positional_arguments_deprecated():
 
     audio = ToastAudio(AudioSource.IM)
 
-    with warns(DeprecationWarning, match="audio, duration as keyword arguments"):
+    with pytest.warns(DeprecationWarning, match="audio, duration as keyword arguments"):
         legacyToast = Toast(["Legacy"], audio, ToastDuration.Long)
     assert legacyToast.audio is audio
     assert legacyToast.duration is ToastDuration.Long
 
-    with raises(TypeError, match="multiple values for argument 'audio'"):
+    with pytest.raises(TypeError, match="multiple values for argument 'audio'"):
         Toast(["Legacy"], audio, audio=audio)
 
-    with raises(TypeError, match="at most 17 positional arguments"):
+    with pytest.raises(TypeError, match="at most 17 positional arguments"):
         Toast(["Legacy"], *([None] * 17))
 
 
@@ -436,10 +438,11 @@ def test_notification_enums_match_winrt():
 
     # A value a newer Windows might return becomes a member instead of raising
     unknown = NotificationSetting(99)
-    assert unknown.value == 99 and unknown.name == "99"
+    assert unknown.value == 99
+    assert unknown.name == "99"
     assert NotificationSetting(99) is unknown
     assert unknown not in list(NotificationSetting)
-    with raises(ValueError):
+    with pytest.raises(ValueError, match="is not a valid NotificationSetting"):
         NotificationSetting("Enabled")
 
 
@@ -461,7 +464,7 @@ def test_notification_setting():
     # Any other error still propagates
     toaster.toastNotifier = Mock()
     type(toaster.toastNotifier).setting = PropertyMock(side_effect=OSError(0, "Access is denied", None, 5))
-    with raises(OSError, match="Access is denied"):
+    with pytest.raises(OSError, match="Access is denied"):
         _ = toaster.notification_setting
 
 
@@ -486,13 +489,14 @@ def test_dismissal_reason():
         ("APPLICATION_HIDDEN", ToastDismissalReason.ApplicationHidden),
         ("TIMED_OUT", ToastDismissalReason.TimedOut),
     ):
-        with warns(DeprecationWarning, match=f"ToastDismissalReason.{old} is deprecated") as record:
+        with pytest.warns(DeprecationWarning, match=f"ToastDismissalReason.{old} is deprecated") as record:
             assert getattr(ToastDismissalReason, old) is new
         assert record[0].filename == __file__
         assert old not in ToastDismissalReason.__members__
 
     unknown = ToastDismissalReason(7)
-    assert unknown == 7 and unknown.name == "7"
+    assert unknown == 7
+    assert unknown.name == "7"
     assert ToastDismissalReason(7) is unknown
 
 
@@ -536,7 +540,7 @@ def test_scheduled_toast(pytestconfig):
     if pytestconfig.getoption("real_run"):
         toaster.unschedule_toast(clonedToast)
     else:
-        with raises(ToastNotFoundError, match="Toast unscheduling failed."):
+        with pytest.raises(ToastNotFoundError, match=r"Toast unscheduling failed\."):
             toaster.unschedule_toast(clonedToast)
 
         scheduledToasts = [call.args[0] for call in ToastNotifier.add_to_schedule.call_args_list]
@@ -637,7 +641,7 @@ def test_unsupported_types():
 
     toaster = InteractableWindowsToaster("Python")
     for invalidToast in invalidToasts:
-        with raises(AssertionError, match="Expected code to be unreachable"):
+        with pytest.raises(AssertionError, match="Expected code to be unreachable"):
             toaster.show_toast(invalidToast)
 
 
@@ -666,9 +670,9 @@ def test_toast_tag():
     assert Toast(tag="reminder") != Toast(tag="reminder", group="a")
 
     for invalid in ("", "a" * 64, "🐍" * 32):
-        with raises(ValueError, match="1 to 63 characters"):
+        with pytest.raises(ValueError, match="1 to 63 characters"):
             Toast(tag=invalid)
-        with raises(ValueError, match="1 to 63 characters"):
+        with pytest.raises(ValueError, match="1 to 63 characters"):
             defaultToast.group = invalid
 
 

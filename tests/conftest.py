@@ -8,7 +8,7 @@ import wave
 import zlib
 from pathlib import Path
 
-from pytest import fixture
+import pytest
 
 
 def _make_png(width: int = 64, height: int = 64) -> bytes:
@@ -45,29 +45,29 @@ def _make_wav(seconds: float = 1.0, frequency: int = 523, sampleRate: int = 2205
     return buffer.getvalue()
 
 
-@fixture(scope="session")
+@pytest.fixture(scope="session")
 def example_files_dir(tmp_path_factory) -> Path:
     return tmp_path_factory.mktemp("example_files")
 
 
-@fixture(scope="session")
+@pytest.fixture(scope="session")
 def example_image_path(example_files_dir) -> Path:
     imagePath = example_files_dir / "image.png"
     imagePath.write_bytes(_make_png())
     return imagePath
 
 
-@fixture(scope="session")
+@pytest.fixture(scope="session")
 def example_audio_path(example_files_dir) -> Path:
     audioPath = example_files_dir / "audio.wav"
     audioPath.write_bytes(_make_wav())
     # Windows reads custom toast audio from a sandboxed process, so let it read the file
-    icacls = Path(os.environ["SystemRoot"]) / "System32" / "icacls.exe"
+    icacls = Path(os.environ["SYSTEMROOT"]) / "System32" / "icacls.exe"
     subprocess.run([icacls, audioPath, "/grant", "*S-1-15-2-1:(R)"], check=True, capture_output=True)
     return audioPath
 
 
-@fixture(scope="function", autouse=True)
+@pytest.fixture(autouse=True)
 def slow_down_tests(pytestconfig):
     yield
     if pytestconfig.getoption("real_run"):

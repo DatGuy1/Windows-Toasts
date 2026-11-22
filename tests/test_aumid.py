@@ -1,6 +1,6 @@
 import shutil
 
-from pytest import raises
+import pytest
 
 
 def test_register_hkey_icon(example_image_path):
@@ -9,9 +9,9 @@ def test_register_hkey_icon(example_image_path):
     appId = "Test.Notification"
     appName = "Notification Test"
 
-    with raises(ValueError, match="does not exist"):
+    with pytest.raises(ValueError, match="does not exist"):
         register_hkey(appId, appName, example_image_path.with_suffix(".nonexistant"))
-    with raises(ValueError, match="must be of type .ico"):
+    with pytest.raises(ValueError, match=r"must be of type \.ico"):
         register_hkey(appId, appName, example_image_path)
 
     exampleIcoPath = example_image_path.with_suffix(".ico")
@@ -33,11 +33,11 @@ def test_register_hkey_icon(example_image_path):
             assert iconUri[1] == winreg.REG_SZ
             assert iconUri[0] == str(exampleIcoPath)
         else:
-            with raises(FileNotFoundError):
+            with pytest.raises(FileNotFoundError):
                 winreg.QueryValueEx(masterKey, "IconUri")
 
         winreg.DeleteKeyEx(winreg.HKEY_CURRENT_USER, keyPath)
-        with raises(OSError):
+        with pytest.raises(OSError, match="WinError 1018"):
             winreg.QueryInfoKey(masterKey)
 
     exampleIcoPath.unlink()
@@ -60,9 +60,9 @@ def test_register_hkey_no_icon():
         assert displayValue[1] == winreg.REG_SZ
         assert displayValue[0] == appName
 
-        with raises(FileNotFoundError):
+        with pytest.raises(FileNotFoundError):
             winreg.QueryValueEx(masterKey, "IconUri")
 
         winreg.DeleteKeyEx(winreg.HKEY_CURRENT_USER, keyPath)
-        with raises(OSError):
+        with pytest.raises(OSError, match="WinError 1018"):
             winreg.QueryInfoKey(masterKey)

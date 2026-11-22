@@ -168,7 +168,7 @@ class BaseWindowsToaster:
     notifierAUMID: str | None
     toastNotifier: ToastNotifier
 
-    def __init__(self, applicationText: str):
+    def __init__(self, applicationText: str) -> None:
         self.applicationText = applicationText
 
     @property
@@ -368,7 +368,7 @@ class WindowsToaster(BaseWindowsToaster):
         "instantiate a InteractableWindowsToaster class instead"
     )
 
-    def __init__(self, applicationText: str):
+    def __init__(self, applicationText: str) -> None:
         super().__init__(applicationText)
         self.notifierAUMID = None
         # .create_toast_notifier() without an AUMID fails with "Element not found"
@@ -395,7 +395,7 @@ class WindowsToaster(BaseWindowsToaster):
 
         super().show_toast(toast)
 
-    def _setup_toast(self, toast, dynamic) -> ToastDocument:
+    def _setup_toast(self, toast: Toast, dynamic: bool) -> ToastDocument:
         toastContent = super()._setup_toast(toast, dynamic)
 
         for i, fieldContent in enumerate(toast.text_fields):
@@ -421,7 +421,7 @@ class InteractableWindowsToaster(BaseWindowsToaster):
     :param notifierAUMID: AUMID to use. Defaults to Command Prompt. To use a custom AUMID, see one of the scripts
     """
 
-    def __init__(self, applicationText: str, notifierAUMID: str | None = None):
+    def __init__(self, applicationText: str, notifierAUMID: str | None = None) -> None:
         super().__init__(applicationText)
         self.defaultAUMID = notifierAUMID is None
         if notifierAUMID is None:
@@ -430,7 +430,7 @@ class InteractableWindowsToaster(BaseWindowsToaster):
         self.notifierAUMID = notifierAUMID
         self.toastNotifier = ToastNotificationManager.create_toast_notifier(notifierAUMID)
 
-    def _setup_toast(self, toast, dynamic):
+    def _setup_toast(self, toast: Toast, dynamic: bool) -> ToastDocument:
         toastContent = super()._setup_toast(toast, dynamic)
 
         for i, fieldContent in enumerate(toast.text_fields):

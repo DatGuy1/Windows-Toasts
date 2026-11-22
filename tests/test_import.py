@@ -1,6 +1,6 @@
 from unittest.mock import patch
 
-from pytest import raises
+import pytest
 
 
 def test_import_current():
@@ -10,7 +10,9 @@ def test_import_current():
     import src.windows_toasts
 
     # 6.1.7601 = Windows 7
-    with patch("platform.version", return_value="6.1.7601"):
-        with raises(src.windows_toasts.UnsupportedOSVersionException):
-            # Reload
-            importlib.reload(src.windows_toasts)
+    with (
+        patch("platform.version", return_value="6.1.7601"),
+        pytest.raises(src.windows_toasts.UnsupportedOSVersionException),
+    ):
+        # Reload
+        importlib.reload(src.windows_toasts)

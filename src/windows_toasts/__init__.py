@@ -9,7 +9,7 @@ if platform.system() == "Windows" and (osVersion := int(platform.version().split
         f"Platform version {osVersion} is not supported. Required minimum is {MIN_VERSION}"
     )
 
-from ._version import __author__, __description__, __license__, __title__, __url__, __version__  # noqa: F401
+from ._version import __author__, __description__, __license__, __title__, __url__, __version__
 from .adaptive import (
     ToastGroup,
     ToastGroupImage,

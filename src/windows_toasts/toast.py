@@ -8,7 +8,7 @@ import uuid
 import warnings
 from collections.abc import Callable, Iterable
 from dataclasses import dataclass
-from typing import Any, TypeVar, cast
+from typing import TypeVar, cast
 
 from .adaptive import ToastGroup
 from .events import ToastActivatedEventArgs, ToastDismissedEventArgs, ToastFailedEventArgs
@@ -69,7 +69,7 @@ def _deprecate_positional_parameters(init: InitT) -> InitT:
     """
 
     @functools.wraps(init)
-    def wrapper(*args: Any, **kwargs: Any) -> None:
+    def wrapper(*args: object, **kwargs: object) -> None:
         # args[0] is self and args[1] is text_fields
         legacyArgs = args[2:]
         if legacyArgs:
@@ -215,14 +215,14 @@ class Toast:
         self.tag = str(uuid.uuid4()) if tag is None else tag
         self.updates = 0
 
-    def __eq__(self, other):
+    def __eq__(self, other: object) -> bool:
         if isinstance(other, Toast):
             # Windows identifies a toast by its tag and group, using the tag as the group when there's none
             return (other.tag, other.group or other.tag) == (self.tag, self.group or self.tag)
 
         return False
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         kws = [f"{key}={value!r}" for key, value in self.__dict__.items()]
         return "{}({})".format(type(self).__name__, ", ".join(kws))
 
@@ -277,7 +277,7 @@ class Toast:
         return self._tag
 
     @tag.setter
-    def tag(self, value: str):
+    def tag(self, value: str) -> None:
         _validate_identifier("tag", value)
         self._tag = value
 
@@ -291,7 +291,7 @@ class Toast:
         return self._group
 
     @group.setter
-    def group(self, value: str | None):
+    def group(self, value: str | None) -> None:
         if value is not None:
             _validate_identifier("group", value)
 
@@ -303,7 +303,7 @@ class Toast:
         return self._launch_action
 
     @launch_action.setter
-    def launch_action(self, value: str | None):
+    def launch_action(self, value: str | None) -> None:
         if value is None:
             self._launch_action = None
         else:

@@ -3,11 +3,11 @@ import pathlib
 import winreg
 
 
-def register_hkey(appId: str, appName: str, iconPath: pathlib.Path | None):
+def register_hkey(appId: str, appName: str, iconPath: pathlib.Path | None) -> None:
     if iconPath is not None:
         if not iconPath.exists():
             raise ValueError(f"Could not register the application: File {iconPath} does not exist")
-        elif iconPath.suffix != ".ico":
+        if iconPath.suffix != ".ico":
             raise ValueError(f"Could not register the application: File {iconPath} must be of type .ico")
 
     winreg.ConnectRegistry(None, winreg.HKEY_CURRENT_USER)
@@ -18,7 +18,7 @@ def register_hkey(appId: str, appName: str, iconPath: pathlib.Path | None):
             winreg.SetValueEx(masterKey, "IconUri", 0, winreg.REG_SZ, str(iconPath.resolve()))
 
 
-def main():  # pragma: no cover
+def main() -> None:  # pragma: no cover
     parser = argparse.ArgumentParser(description="Register AUMID in the registry for use in toast notifications")
     parser.add_argument("--app_id", "-a", type=str, required=True, help="Application User Model ID for identification")
     parser.add_argument("--name", "-n", type=str, required=True, help="Display name on notification")

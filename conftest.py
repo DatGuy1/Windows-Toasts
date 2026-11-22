@@ -2,7 +2,7 @@ from collections.abc import Iterator
 from pathlib import Path
 from unittest.mock import patch
 
-from pytest import MonkeyPatch, fixture
+import pytest
 from sybil import Sybil
 from sybil.parsers.markdown import CodeBlockParser, PythonCodeBlockParser as MarkdownPythonCodeBlockParser
 from sybil.parsers.rest import PythonCodeBlockParser, SkipParser
@@ -15,7 +15,7 @@ def pytest_addoption(parser):
 
 
 # We used to just allow all the notifications to actually happen, but Windows doesn't like that
-@fixture(scope="session", autouse=True)
+@pytest.fixture(scope="session", autouse=True)
 def real_run_fixture(pytestconfig) -> Iterator[None]:
     if pytestconfig.getoption("real_run"):
         yield
@@ -29,8 +29,8 @@ def real_run_fixture(pytestconfig) -> Iterator[None]:
             yield
 
 
-@fixture
-def docs_environment(tmp_path: Path, monkeypatch: MonkeyPatch) -> None:
+@pytest.fixture
+def docs_environment(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """
     Accessible examples that don't require internet or user input
     """

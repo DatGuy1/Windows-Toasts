@@ -138,7 +138,7 @@ class ToastImage:
     path: str
     """The URI of the image source"""
 
-    def __init__(self, imagePath: str | os.PathLike):
+    def __init__(self, imagePath: str | os.PathLike) -> None:
         """
         Initialise an :class:`ToastImage` class to use in certain classes.
         Online images are supported only in packaged apps that have the internet capability in their manifest.
@@ -151,7 +151,7 @@ class ToastImage:
         """
         if isinstance(imagePath, str) and urlparse(imagePath).scheme in ("http", "https"):
             raise InvalidImageException("Online images are not supported")
-        elif not isinstance(imagePath, Path):
+        if not isinstance(imagePath, Path):
             imagePath = Path(imagePath)
 
         if not imagePath.exists():
@@ -211,7 +211,7 @@ class ToastHeader:
     launch: str | None = None
     """An optional protocol to launch when the header is clicked. Without one, clicking the header does nothing"""
 
-    def __init__(self, title: str, header_id: str | None = None, launch: str | None = None):
+    def __init__(self, title: str, header_id: str | None = None, launch: str | None = None) -> None:
         self.title = title
         self.header_id = title if header_id is None else header_id
         self.launch = launch
@@ -262,7 +262,9 @@ class ToastInputTextBox(_ToastInput):
     default_input: str | None = None
     """Text to prefill the box with. If None, the box starts empty and shows the placeholder"""
 
-    def __init__(self, input_id: str, caption: str = "", placeholder: str = "", default_input: str | None = None):
+    def __init__(
+        self, input_id: str, caption: str = "", placeholder: str = "", default_input: str | None = None
+    ) -> None:
         super().__init__(input_id, caption)
         self.placeholder = placeholder
         self.default_input = default_input
@@ -297,7 +299,7 @@ class ToastInputSelectionBox(_ToastInput):
         caption: str = "",
         selections: Sequence[ToastSelection] = (),
         default_selection: ToastSelection | None = None,
-    ):
+    ) -> None:
         super().__init__(input_id, caption)
         self.selections = selections
         self.default_selection = default_selection
