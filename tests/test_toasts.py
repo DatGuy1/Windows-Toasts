@@ -1,3 +1,4 @@
+import re
 from warnings import catch_warnings, simplefilter
 
 import pytest
@@ -682,15 +683,24 @@ def test_unsupported_types():
     invalidButton = ToastSystemButton(ToastSystemButtonAction.Snooze)
     invalidButton.action = 0
     invalidToasts = (
-        Toast(["Invalid system button"], actions=[invalidButton]),
-        Toast(["Invalid action"], actions=[SimpleNamespace(content="Not a button")]),
-        Toast(["Invalid input"], inputs=[SimpleNamespace(input_id="notAnInput", caption="Not an input")]),
-        Toast(["Invalid group content"], groups=[ToastGroup([ToastSubgroup(["Not text or an image"])])]),
+        (Toast(["Invalid system button"], actions=[invalidButton]), "Expected a ToastSystemButtonAction, got 0"),
+        (
+            Toast(["Invalid action"], actions=[SimpleNamespace(content="Not a button")]),
+            "Expected a ToastButton or ToastSystemButton, got namespace",
+        ),
+        (
+            Toast(["Invalid input"], inputs=[SimpleNamespace(input_id="notAnInput", caption="Not an input")]),
+            "Expected a ToastInputTextBox or ToastInputSelectionBox, got namespace",
+        ),
+        (
+            Toast(["Invalid group content"], groups=[ToastGroup([ToastSubgroup(["Not text or an image"])])]),
+            "Expected a ToastText or ToastGroupImage, got 'Not text or an image'",
+        ),
     )
 
     toaster = InteractableWindowsToaster("Python")
-    for invalidToast in invalidToasts:
-        with pytest.raises(AssertionError, match="Expected code to be unreachable"):
+    for invalidToast, message in invalidToasts:
+        with pytest.raises(TypeError, match=re.escape(message)):
             toaster.show_toast(invalidToast)
 
 

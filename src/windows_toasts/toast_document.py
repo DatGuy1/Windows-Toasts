@@ -1,5 +1,5 @@
 import datetime
-from typing import Union, assert_never, cast
+from typing import Never, Union, cast
 
 from winrt.windows.data.xml.dom import IXmlNode, XmlDocument, XmlElement
 
@@ -23,6 +23,13 @@ from .wrappers import (
 
 # winrt is mocked in the docs build, and the mocks don't support |
 IXmlType = Union[IXmlNode, XmlElement]  # noqa: UP007
+
+
+def _unsupported(value: Never, expected: str) -> Never:
+    """
+    Raise for a value no case of a match handles. Functionally equivalent to assert_never but with a TypeError
+    """
+    raise TypeError(f"Expected {expected}, got {value!r}")
 
 
 class ToastDocument:
@@ -241,7 +248,7 @@ class ToastDocument:
         <https://learn.microsoft.com/windows/apps/develop/notifications/app-notifications/app-notifications-content#quick-reply-text-box>`_
 
         :type toastInput: Union[ToastInputTextBox, ToastInputSelectionBox]
-        :raises: AssertionError: If the input isn't a :class:`~windows_toasts.wrappers.ToastInputTextBox` or
+        :raises: TypeError: If the input isn't a :class:`~windows_toasts.wrappers.ToastInputTextBox` or
             :class:`~windows_toasts.wrappers.ToastInputSelectionBox`
         """
         self._inputFields += 1
@@ -267,7 +274,7 @@ class ToastDocument:
                     self.SetAttribute(selectionElement, "content", selection.content)
                     inputNode.append_child(selectionElement)
             case _:
-                assert_never(toastInput)
+                _unsupported(toastInput, "a ToastInputTextBox or ToastInputSelectionBox")
 
         actionNodes = self.xmlDocument.get_elements_by_tag_name("actions")
         if actionNodes.length > 0:
@@ -297,7 +304,7 @@ class ToastDocument:
 
         :type action: Union[ToastButton, ToastSystemButton]
         :raises: ValueError: If a context menu button has no content
-        :raises: AssertionError: If the action isn't a :class:`~windows_toasts.wrappers.ToastButton` or
+        :raises: TypeError: If the action isn't a :class:`~windows_toasts.wrappers.ToastButton` or
             :class:`~windows_toasts.wrappers.ToastSystemButton`, or a
             :class:`~windows_toasts.wrappers.ToastSystemButton`'s action isn't a
             :class:`~windows_toasts.wrappers.ToastSystemButtonAction`
@@ -345,9 +352,9 @@ class ToastDocument:
                         self.SetAttribute(actionNode, "arguments", "dismiss")
                     case _:
                         # Nothing stops .action from being assigned something else, which can't be shown as a button
-                        assert_never(action.action)
+                        _unsupported(action.action, "a ToastSystemButtonAction")
             case _:
-                assert_never(action)
+                _unsupported(action, "a ToastButton or ToastSystemButton")
 
         if action.image is not None:
             self.SetAttribute(actionNode, "imageUri", action.image.path)
@@ -415,7 +422,7 @@ class ToastDocument:
         #adaptive-content>`_
 
         :type group: ToastGroup
-        :raises: AssertionError: If a column's content isn't a :class:`~windows_toasts.adaptive.ToastText` or
+        :raises: TypeError: If a column's content isn't a :class:`~windows_toasts.adaptive.ToastText` or
             :class:`~windows_toasts.adaptive.ToastGroupImage`
         """
         groupNode = self.xmlDocument.create_element("group")
@@ -433,7 +440,7 @@ class ToastDocument:
                     case ToastGroupImage():
                         subgroupNode.append_child(self._CreateGroupImage(content))
                     case _:
-                        assert_never(content)
+                        _unsupported(content, "a ToastText or ToastGroupImage")
 
             groupNode.append_child(subgroupNode)
 
