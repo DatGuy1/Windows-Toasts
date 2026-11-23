@@ -32,6 +32,9 @@ InitT = TypeVar("InitT", bound=Callable[..., None])
 # Windows accepts tags and groups of up to 64 characters, but can't read one that long back from Action Center
 _MAX_IDENTIFIER_LENGTH = 63
 
+# Windows shows at most five actions and inputs between them
+_MAX_ACTIONS_AND_INPUTS = 5
+
 # The order Toast.__init__ used to accept these positionally in, after text_fields
 _LEGACY_POSITIONAL_PARAMETERS = (
     "audio",
@@ -98,7 +101,8 @@ def _deprecate_positional_parameters(init: InitT) -> InitT:
     return cast(InitT, wrapper)
 
 
-class Toast:
+# Pending issue #220
+class Toast:  # noqa: PLW1641
     text_fields: list[str | None]
     """Various text fields"""
     images: list[ToastDisplayImage]
@@ -145,7 +149,7 @@ class Toast:
     """See :attr:`launch_action`"""
 
     @_deprecate_positional_parameters
-    def __init__(
+    def __init__(  # noqa: PLR0913
         self,
         text_fields: list[str | None] | tuple[str | None] | set[str | None] | None = None,
         *,
@@ -233,7 +237,7 @@ class Toast:
 
         :type action: Union[ToastButton, ToastSystemButton]
         """
-        if len(self.actions) + len(self.inputs) >= 5:
+        if len(self.actions) + len(self.inputs) >= _MAX_ACTIONS_AND_INPUTS:
             warnings.warn(
                 f"Cannot add action '{action.content}', you've already reached the maximum of five actions + inputs",
                 stacklevel=2,
@@ -257,7 +261,7 @@ class Toast:
 
         :param toast_input: :class:`ToastInput` to display in the toast
         """
-        if len(self.actions) + len(self.inputs) >= 5:
+        if len(self.actions) + len(self.inputs) >= _MAX_ACTIONS_AND_INPUTS:
             warnings.warn(
                 f"Cannot add input '{toast_input.input_id}', "
                 f"you've already reached the maximum of five actions + inputs",

@@ -291,7 +291,7 @@ class ToastDocument:
         toastNode = self.GetElementByTagName("toast")
         self.SetAttribute(toastNode, "duration", duration.value)
 
-    def AddAction(self, action: ToastButton | ToastSystemButton) -> None:
+    def AddAction(self, action: ToastButton | ToastSystemButton) -> None:  # noqa: PLR0912
         """
         Adds a button to the toast. Only works on :obj:`~windows_toasts.toasters.InteractableWindowsToaster`
 

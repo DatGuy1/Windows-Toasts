@@ -30,11 +30,12 @@ def find_notes(sections: dict[str, str], tag: str) -> str | None:
 
 
 def main(argv: list[str]) -> int:
-    if len(argv) != 2:
+    try:
+        _, tag = argv
+    except ValueError:
         print(__doc__, file=sys.stderr)
         return 2
 
-    tag = argv[1]
     notes = find_notes(parse_sections(CHANGELOG_PATH.read_text(encoding="utf-8")), tag)
     if notes is None:
         print(f"CHANGELOG.rst has no dated, non-empty section for {tag}", file=sys.stderr)

@@ -158,7 +158,7 @@ def _listen(clsid: uuid.UUID, toaster: InteractableWindowsToaster | None = None)
     :raises OSError: If COM refuses to register the activator
     """
     # Only loaded once something uses an activator
-    from . import _com_server
+    from . import _com_server  # noqa: PLC0415
 
     with _lock:
         dispatcher = _dispatchers.get(clsid)

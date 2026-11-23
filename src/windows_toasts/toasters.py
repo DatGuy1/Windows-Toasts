@@ -463,13 +463,10 @@ class WindowsToaster(BaseWindowsToaster):
         toastContent = super()._setup_toast(toast, dynamic)
 
         for i, fieldContent in enumerate(toast.text_fields):
-            if fieldContent is None:
-                fieldContent = ""
-
             if dynamic:
                 toastContent.SetTextField(i)
             else:
-                toastContent.SetTextFieldStatic(i, fieldContent)
+                toastContent.SetTextFieldStatic(i, fieldContent or "")
 
         toastContent.SetAttribute(toastContent.bindingNode, "template", "ToastImageAndText04")
 
