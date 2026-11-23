@@ -43,7 +43,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y pandoc
-          uv run --no-project python scripts/extract_release_notes.py "$GITHUB_REF_NAME" | pandoc --from rst --to gfm --wrap=preserve --output release-notes.md
+          uv run --no-project python scripts/extract_release_notes.py "$GITHUB_REF_NAME" | pandoc --from rst --to gfm --wrap=none --shift-heading-level-by=1 --output release-notes.md
           cat release-notes.md
 
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
