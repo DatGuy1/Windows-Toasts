@@ -1,43 +1,57 @@
-Unreleased
-==========
-- Require pywinrt>=4
-  - ``ToastFailedEventArgs.error_code`` is now an ``int``, and its ``.value`` is deprecated
+1.4.0 (2026-11-23)
+==================
+
 - Dropped support for EOL Python 3.9 and 3.10, and added support for 3.13, 3.14, and 3.15
-- Moved package metadata from ``setup.py`` to ``pyproject.toml`` (#165)
-- Moved ``register_hkey_aumid`` into ``windows_toasts``
-- Fixed a TypeError when showing an indeterminate progress bar without a ``progress_override``
-- Fixed ``ToastDocument.SetAudioAttributes`` keeping the previous call's attributes, such as ``silent``, when called
-  again
-- ``WindowsToaster`` now warns about a second image, which Windows doesn't show, instead of only from the third
-- A context menu ``ToastButton`` without content now raises a ``ValueError``
-- An unsupported type now raises an ``AssertionError``
-- Documented that Windows plays the default sound instead of a custom audio file that sandboxed apps can't read (#185)
-- Added ``Toast.expires_on_reboot`` (#210)
-- Added ``ToastInputTextBox.default_input`` to prefill text boxes (#210)
-- Added ``notification_setting`` and ``notification_mode`` to toasters, to check whether Windows will show their
+- Require pywinrt 4 or later
+
+Added
+-----
+- Activators, so a script gets clicks on toasts from its earlier runs and on background buttons, and can be started
+  by a click after it exits (#12)
+
+  - ``register_hkey_aumid --activator`` registers one. Given a script or executable, Windows starts it for a click
+    while nothing is listening
+  - Clicks on toasts the script didn't show in its current run go to ``InteractableWindowsToaster.on_activated``, and
+    clicks on a scheduled toast go to its own ``on_activated``
+  - ``ToastActivatedEventArgs`` has the clicked toast's ``tag`` and ``group``, to tell which toast it was
+  - ``launched_by_toast()`` checks whether Windows started the script to deliver a click
+  - ``unregister_hkey()`` and ``register_hkey_aumid --remove`` remove an AUMID and its activator
+
+- ``ToastButton.background`` for buttons handled without bringing anything to the foreground, and
+  ``ToastButton.pending_update`` to keep the toast loading until it's replaced (#45). Both need an activator
+- ``Toast.header`` and ``ToastHeader`` to group toasts under a header in Action Center (#206)
+- ``Toast.groups`` and ``ToastGroup`` for columns of styled text and images (#207)
+- ``get_action_center_toasts()`` on toasters, to list their toasts in Action Center (#209). ``Toast`` also takes a
+  ``tag`` argument
+- ``notification_setting`` and ``notification_mode`` on toasters, to check whether Windows will show their
   notifications (#208)
-- Added ``Toast.header`` and ``ToastHeader`` to group toasts under a header in Action Center (#206)
-- Added ``Toast.groups`` and ``ToastGroup`` for columns of styled text and images (#207)
-- Added a ``tag`` argument to ``Toast``, and ``get_action_center_toasts()`` to toasters to list their toasts in
-  Action Center (#209)
-- ``Toast.tag`` and ``Toast.group`` now raise a ``ValueError`` if they aren't 1 to 63 characters long
-- Added ``unregister_hkey()`` and ``register_hkey_aumid --remove`` to remove an AUMID
-- ``ToastActivatedEventArgs`` now has the activated toast's ``tag`` and ``group``
-- Added activators, so a script gets clicks on toasts from its earlier runs, and can be started by a click after it
-  exits (#12)
-  - ``register_hkey_aumid --activator`` registers one. Given a script or executable, Windows also starts it when a
-    toast is clicked while nothing is listening. Removing the AUMID also removes its activator
-  - With an activator, a scheduled toast's ``on_activated`` is called too. ``InteractableWindowsToaster.on_activated``
-    gets the activations of toasts the script didn't show in its current run
-  - Added ``launched_by_toast()`` to check whether Windows started the script to deliver an activation
-- Added ``ToastButton.background`` for buttons that are handled without bringing anything to the foreground, and
-  ``ToastButton.pending_update`` to keep the toast pending until it's replaced (#45)
-- Showing an alarm or reminder toast without buttons now warns that Windows ignores the scenario
-- Deprecated passing ``Toast`` arguments other than ``text_fields`` positionally
-- ``on_dismissed`` and ``on_failed`` now receive the library's own ``ToastDismissedEventArgs`` and
-  ``ToastFailedEventArgs`` instead of Windows', and ``ToastDismissalReason`` is now the library's own enum
-  - Its members are now named ``UserCanceled``, ``ApplicationHidden`` and ``TimedOut``. The old ``USER_CANCELED``-style
-    names are deprecated
+- ``Toast.expires_on_reboot`` and ``ToastInputTextBox.default_input`` (#210)
+
+Changed
+-------
+- ``ToastDismissalReason``, ``ToastDismissedEventArgs`` and ``ToastFailedEventArgs`` are now the library's own classes
+  instead of re-exports of pywinrt's, with the same attributes
+- Toasts now compare equal when their tag and group match, instead of only their tag
+- ``Toast.tag`` and ``Toast.group`` are now validated to be 1 to 63 characters long, and raise a ``ValueError``
+  otherwise
+- A context menu ``ToastButton`` is now validated to have content, and raises a ``ValueError`` otherwise
+- ``WindowsToaster`` warns about a second image, which Windows doesn't show, instead of only from the third
+- Showing an alarm or reminder toast without buttons warns that Windows ignores the scenario
+- ``register_hkey_aumid`` is now ``windows_toasts.register_hkey_aumid``. The command is unchanged, but the top-level
+  ``scripts`` package is gone
+
+Deprecated
+----------
+- Passing ``Toast`` arguments other than ``text_fields`` positionally
+- ``ToastDismissalReason``'s ``USER_CANCELED``-style names, now ``UserCanceled``, ``ApplicationHidden`` and ``TimedOut``
+- ``ToastFailedEventArgs.error_code.value``. ``error_code`` is now an ``int``
+
+Fixed
+-----
+- A TypeError when showing an indeterminate progress bar without a ``progress_override``
+- ``ToastDocument.SetAudioAttributes`` keeping the previous call's attributes, such as ``silent``
+- ``AddAction``, ``AddInput`` and ``AddGroup`` left out values of unsupported types; they now raise a ``TypeError``
+
 
 1.3.1 (2025-05-06)
 ==================
